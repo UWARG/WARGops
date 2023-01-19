@@ -1,3 +1,3 @@
-module github.com/UWARG/wargops
+module github.com/UWARG/WARGops
 
 go 1.17
