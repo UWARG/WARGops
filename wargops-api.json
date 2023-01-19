@@ -1,0 +1,767 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "WARGOps - OpenAPI 3.0",
+    "description": "This is the WARGOps API definition.",
+    "termsOfService": "",
+    "contact": {
+      "email": "uwwarg.business@gmail.com",
+      "name": "Hamza",
+      "url": "https://www.uwarg.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://hamza.mit-license.org/"
+    },
+    "version": "0.0.1"
+  },
+  "externalDocs": {
+    "description": "Join our discord! https://discord.com/invite/rqMEV3m3hh",
+    "url": "https://discord.com/invite/rqMEV3m3hh"
+  },
+  "servers": [
+    {
+      "url": "/api/v1",
+      "varibles": {}
+    }
+  ],
+  "tags": [
+    {
+      "name": "accounts",
+      "description": "Creating and managing accounts",
+      "externalDocs": {
+        "description": "",
+        "url": ""
+      }
+    },
+    {
+      "name": "transactions",
+      "description": "Creating, updating and managing transactions",
+      "externalDocs": {
+        "description": "",
+        "url": ""
+      }
+    }
+  ],
+  "paths": {
+    "/accounts": {
+      "get": {
+        "summary": "Retrieve the list of available accounts.",
+        "description": "",
+        "operationId": "list_accounts",
+        "tags": [
+          "accounts"
+        ],
+        "parameters": [],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "$ref",
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "user": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create a new account.",
+        "description": "",
+        "operationId": "create_account",
+        "tags": [
+          "accounts"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "$ref",
+                "$ref": "#/components/schemas/NewAccount"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "$ref",
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "team lead": []
+          }
+        ]
+      }
+    },
+    "/transactions": {
+      "post": {
+        "summary": "Create a new transaction.",
+        "description": "",
+        "operationId": "create_transaction",
+        "tags": [
+          "transactions"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "$ref",
+                "$ref": "#/components/schemas/NewTransaction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "$ref",
+                  "$ref": "#/components/schemas/Transaction"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "user": []
+          }
+        ]
+      }
+    },
+    "/transactions/{account_id}": {
+      "get": {
+        "summary": "Retrieve the active transactions for an account.",
+        "description": "",
+        "operationId": "list_transactions",
+        "tags": [
+          "transactions"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "$ref",
+                    "$ref": "#/components/schemas/Transaction"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "user": []
+          }
+        ]
+      }
+    },
+    "/transactions/{account_id}/all": {
+      "get": {
+        "summary": "Retrieve all transactions, including those that are currently a request and not approved.",
+        "description": "",
+        "operationId": "list_all_transactions",
+        "tags": [
+          "transactions"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "$ref",
+                    "$ref": "#/components/schemas/Transaction"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "team lead": []
+          }
+        ]
+      }
+    },
+    "/transactions/{account_id}/rejected": {
+      "get": {
+        "summary": "Retrieve all rejected transactions for an account.",
+        "description": "",
+        "operationId": "list_rejected_transactions",
+        "tags": [
+          "transactions"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "$ref",
+                    "$ref": "#/components/schemas/Transaction"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "team lead": []
+          }
+        ]
+      }
+    },
+    "/transactions/{account_id}/{transaction_id}:approve": {
+      "post": {
+        "summary": "Approve a transaction.",
+        "description": "",
+        "operationId": "approve_transaction",
+        "tags": [
+          "transactions"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "transaction_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "$ref",
+                    "$ref": "#/components/schemas/Transaction"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "team lead": []
+          }
+        ]
+      }
+    },
+    "/transactions/{account_id}/{transaction_id}:hold": {
+      "post": {
+        "summary": "Hold back a transaction, and reset it to pending",
+        "description": "",
+        "operationId": "hold_transaction",
+        "tags": [
+          "transactions"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "transaction_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "$ref",
+                    "$ref": "#/components/schemas/Transaction"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "team lead": []
+          }
+        ]
+      }
+    },
+    "/transactions/{account_id}/{transaction_id}:pay": {
+      "post": {
+        "summary": "Mark a transaction as paid.",
+        "description": "",
+        "operationId": "pay_transaction",
+        "tags": [
+          "transactions"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "transaction_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "$ref",
+                    "$ref": "#/components/schemas/Transaction"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "user": []
+          }
+        ]
+      }
+    },
+    "/transactions/{account_id}/{transaction_id}:reject": {
+      "post": {
+        "summary": "Reject a transaction.",
+        "description": "",
+        "operationId": "reject_transaction",
+        "tags": [
+          "transactions"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "transaction_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "$ref",
+                    "$ref": "#/components/schemas/Transaction"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "team lead": []
+          }
+        ]
+      }
+    },
+    "/transactions/{account_id}/{transaction_id}/ref": {
+      "get": {
+        "summary": "Get transaction documents",
+        "description": "",
+        "operationId": "transaction_ref",
+        "tags": [
+          "transactions"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "transaction_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "content": {
+              "application/zip": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "team lead": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NewAccount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "waterloo_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "allocation_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiry_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "creator": {
+            "type": "string"
+          },
+          "point_of_contact": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": [
+          "point_of_contact",
+          "creator",
+          "active",
+          "expiry_date",
+          "allocation_date",
+          "source",
+          "name",
+          "waterloo_id",
+          "id"
+        ]
+      },
+      "Account": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "waterloo_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "allocation_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiry_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "creator": {
+            "type": "string"
+          },
+          "point_of_contact": {
+            "type": "string",
+            "format": "email"
+          },
+          "allocated": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "balance": {
+            "type": "integer"
+          },
+          "used": {
+            "type": "integer"
+          },
+          "pending": {
+            "type": "integer"
+          },
+          "creation_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "point_of_contact",
+          "creator",
+          "active",
+          "expiry_date",
+          "allocation_date",
+          "source",
+          "name",
+          "waterloo_id",
+          "id",
+          "allocated",
+          "balance",
+          "used",
+          "pending",
+          "creation_date"
+        ]
+      },
+      "TransactionType": {
+        "type": "integer",
+        "enumDesc": "0: Deposit\n\n1: Reimbursement\n\n2: Procurement",
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "TransactionStatus": {
+        "type": "integer",
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "enumDesc": "0: Created\n\n1: Pending\n\n2: Paid\n\n3:Rejected"
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "account_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "$ref",
+            "$ref": "#/components/schemas/TransactionType"
+          },
+          "status": {
+            "type": "$ref",
+            "$ref": "#/components/schemas/TransactionStatus"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "approval_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "payment_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "creation_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "rejected_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "account_id",
+          "type",
+          "status",
+          "amount",
+          "approval_date",
+          "payment_date",
+          "creation_date",
+          "rejected_date",
+          "notes",
+          "id"
+        ]
+      },
+      "NewTransaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "account_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "$ref",
+            "$ref": "#/components/schemas/TransactionType"
+          },
+          "status": {
+            "type": "$ref",
+            "$ref": "#/components/schemas/TransactionStatus"
+          },
+          "amount": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "account_id",
+          "type",
+          "status",
+          "amount",
+          "id"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "user": {
+        "type": "apiKey",
+        "schema": "Bearer",
+        "flows": {},
+        "in": "cookie",
+        "name": "session cookie"
+      },
+      "team lead": {
+        "type": "apiKey",
+        "schema": "Basic",
+        "name": "session cookie",
+        "in": "cookie"
+      }
+    }
+  },
+  "security": []
+}
