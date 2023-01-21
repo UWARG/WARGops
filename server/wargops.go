@@ -1,4 +1,4 @@
-package main
+package server
 
 var (
 	TypeDeposit       = TransactionType{0}
