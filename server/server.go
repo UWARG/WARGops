@@ -6,14 +6,12 @@ import (
 )
 
 type Finances struct {
-	Accounts     map[string]Account
-	Transactions map[string]Transaction
+	db DB
 }
 
-func NewFinances() *Finances {
+func NewFinances(db DB) *Finances {
 	return &Finances{
-		Accounts:     make(map[string]Account),
-		Transactions: make(map[string]Transaction),
+		db: db,
 	}
 }
 
@@ -22,12 +20,16 @@ var _ ServerInterface = (*Finances)(nil)
 // Retrieve the list of available accounts.
 // (GET /accounts)
 func (f *Finances) ListAccounts(w http.ResponseWriter, r *http.Request) *Response {
-	fmt.Println("called!")
-	return ListAccountsJSON200Response([]Account{
-		{
-			PointOfContact: "h2ali@uwaterloo.ca",
-		},
-	})
+	accounts, err := f.db.ListAccounts(r.Context())
+	fmt.Println(accounts, err)
+	if err != nil {
+		return &Response{
+			body:        err,
+			Code:        500,
+			contentType: "application/json",
+		}
+	}
+	return ListAccountsJSON200Response(accounts)
 }
 
 // Create a new account.

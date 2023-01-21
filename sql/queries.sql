@@ -1,3 +1,19 @@
+--- create an account
+INSERT INTO accounts (
+	id,
+	waterloo_id,
+	source,
+	allocation_date,
+	expiry_date,
+	active,
+	creator,
+	point_of_contact,
+	creation_date
+) VALUES (
+	$1, $2, $3, $4, $5, $6, $7, $8, $9
+);
+
+
 --- list all accounts, list all active accounts (oldest first), then all expired accounts (most recently expired first)
 SELECT * FROM accounts
 WHERE expiry_date < DATE('now')

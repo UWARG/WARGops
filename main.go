@@ -27,7 +27,12 @@ func main() {
 	swagger.Servers = nil
 
 	// Create an instance of our handler which satisfies the generated interface
-	service := server.NewFinances()
+	db, err := server.NewDB("db.sqlite")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Could not open database: %v", err)
+		os.Exit(1)
+	}
+	service := server.NewFinances(db)
 
 	// This is how you set up a basic chi router
 	r := chi.NewRouter()
