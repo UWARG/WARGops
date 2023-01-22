@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/go-chi/chi/v5"
-
 	"github.com/UWARG/WARGops/server"
+	"github.com/go-chi/chi/v5"
 )
 
 func main() {
+
 	port := flag.Int("port", 8080, "Port for test HTTP server")
 	flag.Parse()
 
@@ -43,6 +43,8 @@ func main() {
 		Handler: r,
 		Addr:    fmt.Sprintf("0.0.0.0:%d", *port),
 	}
+
+	fmt.Printf("Starting server on port http://localhost:%d/", *port)
 
 	// And we serve HTTP until the world ends.
 	log.Fatal(s.ListenAndServe())

@@ -1,7 +1,7 @@
 package server
 
 import (
-	"fmt"
+	"encoding/json"
 	"net/http"
 )
 
@@ -21,7 +21,6 @@ var _ ServerInterface = (*Finances)(nil)
 // (GET /accounts)
 func (f *Finances) ListAccounts(w http.ResponseWriter, r *http.Request) *Response {
 	accounts, err := f.db.ListAccounts(r.Context())
-	fmt.Println(accounts, err)
 	if err != nil {
 		return &Response{
 			body:        err,
@@ -34,28 +33,102 @@ func (f *Finances) ListAccounts(w http.ResponseWriter, r *http.Request) *Respons
 
 // Create a new account.
 // (POST /accounts)
-func (f *Finances) CreateAccount(w http.ResponseWriter, r *http.Request) *Response { return nil }
+func (f *Finances) CreateAccount(w http.ResponseWriter, r *http.Request) *Response {
+	newAccount := NewAccount{}
+	if err := json.NewDecoder(r.Body).Decode(&newAccount); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return &Response{
+			body:        "Invalid JSON",
+			Code:        400,
+			contentType: "application/json",
+		}
+	}
+
+	if err := f.db.CreateAccount(r.Context(), newAccount); err != nil {
+		return &Response{
+			body:        err,
+			Code:        500,
+			contentType: "application/json",
+		}
+	}
+
+	return &Response{
+		body:        "Account created",
+		Code:        200,
+		contentType: "application/json",
+	}
+}
 
 // Create a new transaction.
 // (POST /transactions)
-func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Response { return nil }
+func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Response {
+	newTransaction := NewTransaction{}
+	if err := json.NewDecoder(r.Body).Decode(&newTransaction); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return &Response{
+			body:        "Invalid JSON",
+			Code:        400,
+			contentType: "application/json",
+		}
+	}
+
+	if err := f.db.CreateTransaction(r.Context(), newTransaction); err != nil {
+		return &Response{
+			body:        err,
+			Code:        500,
+			contentType: "application/json",
+		}
+	}
+
+	return nil
+}
 
 // Retrieve the active transactions for an account.
 // (GET /transactions/{account_id})
 func (f *Finances) ListTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
-	return nil
+	transactions := []Transaction{}
+	transactions, err := f.db.ListTransactions(r.Context(), accountID)
+	if err != nil {
+		return &Response{
+			body:        err,
+			Code:        500,
+			contentType: "application/json",
+		}
+	}
+
+	return ListTransactionsJSON200Response(transactions)
 }
 
 // Retrieve all transactions, including those that are currently a request and not approved.
 // (GET /transactions/{account_id}/all)
 func (f *Finances) ListAllTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
-	return nil
+	transactions := []Transaction{}
+	transactions, err := f.db.ListAllTransactions(r.Context(), accountID)
+	if err != nil {
+		return &Response{
+			body:        err,
+			Code:        500,
+			contentType: "application/json",
+		}
+	}
+	
+	return ListAllTransactionsJSON200Response(transactions)
 }
 
 // Retrieve all rejected transactions for an account.
 // (GET /transactions/{account_id}/rejected)
 func (f *Finances) ListRejectedTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
-	return nil
+	transactions := []Transaction{}
+	transactions, err := f.db.ListRejectedTransactions(r.Context(), accountID)
+	if err != nil {
+		return &Response{
+			body:        err,
+			Code:        500,
+			contentType: "application/json",
+		}
+	}
+	
+	return ListRejectedTransactionsJSON200Response(transactions)
 }
 
 // Get transaction documents

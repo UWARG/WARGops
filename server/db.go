@@ -49,13 +49,12 @@ func (db DB) CreateAccount(ctx context.Context, acc NewAccount) error {
 }
 
 func (db DB) ListAccounts(ctx context.Context) ([]Account, error) {
-	rows, err := db.DB.QueryContext(ctx, `
-	SELECT * FROM accounts
+	rows, err := db.DB.QueryContext(ctx,
+		`SELECT * FROM accounts
 	WHERE expiry_date < DATE('now')
 	UNION
 	SELECT * FROM accounts
-	WHERE expiry_date >= DATE('now')
-	`)
+	WHERE expiry_date >= DATE('now')`)
 	if err != nil {
 		return nil, err
 	}
@@ -86,3 +85,125 @@ func (db DB) ListAccounts(ctx context.Context) ([]Account, error) {
 
 	return accounts, nil
 }
+
+func (db DB) CreateTransaction(ctx context.Context, t NewTransaction) error {
+	_, err := db.DB.ExecContext(ctx, `INSERT INTO transactions (
+		id,
+		account_id,
+		amount,
+		status,
+		type,
+	) VALUES (
+		$1, $2, $3, $4, $5,
+	)`,
+		t.ID,
+		t.AccountID,
+		t.Amount,
+		t.Status,
+		t.Type,
+		time.Now(),
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db DB) ListTransactions(ctx context.Context, accountID string) ([]Transaction, error) {
+	rows, err := db.DB.QueryContext(ctx,
+		`SELECT * FROM transactions
+		WHERE account_id = $1
+		  AND status <> 3 -- 3 = rejected status
+		ORDER BY status ASC, creation_date ASC`, accountID)
+	if err != nil {
+		return nil, err
+	}
+	var transactions []Transaction
+
+	for rows.Next() {
+		var t Transaction
+		if err := rows.Scan(
+			&t.ID,
+			&t.AccountID,
+			&t.Amount,
+			&t.Status,
+			&t.Type,
+			&t.CreationDate,
+		); err != nil {
+			return nil, err
+		}
+		transactions = append(transactions, t)
+	}
+
+	if rows.Err() != nil {
+		return nil, err
+	}
+
+	return transactions, nil
+}
+
+func (db DB) ListAllTransactions(ctx context.Context, accountID string) ([]Transaction, error) {
+	rows, err := db.DB.QueryContext(ctx,
+		`SELECT * FROM transactions
+		WHERE account_id = $1
+		ORDER BY status ASC, creation_date ASC`, accountID)
+	if err != nil {
+		return nil, err
+	}
+	var transactions []Transaction
+
+	for rows.Next() {
+		var t Transaction
+		if err := rows.Scan(
+			&t.ID,
+			&t.AccountID,
+			&t.Amount,
+			&t.Status,
+			&t.Type,
+			&t.CreationDate,
+		); err != nil {
+			return nil, err
+		}
+		transactions = append(transactions, t)
+	}
+
+	if rows.Err() != nil {
+		return nil, err
+	}
+
+	return transactions, nil
+}
+
+func (db Db) ListRejectedTransactions(ctx context.Context, accountID string) ([]Transaction, error) {
+	rows, err := db.DB.QueryContext(ctx,
+		`SELECT * FROM transactions
+		WHERE account_id = $1
+		  AND status = 3 -- 3 = rejected status
+		ORDER BY status ASC, creation_date ASC`, accountID)
+	if err != nil {
+		return nil, err
+	}
+	var transactions []Transaction
+
+	for rows.Next() {
+		var t Transaction
+		if err := rows.Scan(
+			&t.ID,
+			&t.AccountID,
+			&t.Amount,
+			&t.Status,
+			&t.Type,
+			&t.CreationDate,
+		); err != nil {
+			return nil, err
+		}
+		transactions = append(transactions, t)
+	}
+
+	if rows.Err() != nil {
+		return nil, err
+	}
+
+	return transactions, nil
+}
+

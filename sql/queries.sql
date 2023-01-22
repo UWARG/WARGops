@@ -13,6 +13,20 @@ INSERT INTO accounts (
 	$1, $2, $3, $4, $5, $6, $7, $8, $9
 );
 
+-- create a transaction
+INSERT INTO transactions (
+  id,
+  account_id,
+  amount,
+  type,
+  creation_date,
+  creator,
+  status,
+  notes
+) VALUES (
+  $1, $2, $3, $4, $5, $6, $7, $8
+);
+
 
 --- list all accounts, list all active accounts (oldest first), then all expired accounts (most recently expired first)
 SELECT * FROM accounts
