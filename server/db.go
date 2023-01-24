@@ -21,6 +21,7 @@ func (db DB) CreateAccount(ctx context.Context, acc NewAccount) error {
 	_, err := db.DB.ExecContext(ctx, `INSERT INTO accounts (
 		id,
 		waterloo_id,
+		name,
 		source,
 		allocation_date,
 		expiry_date,
@@ -29,7 +30,7 @@ func (db DB) CreateAccount(ctx context.Context, acc NewAccount) error {
 		point_of_contact,
 		creation_date
 	) VALUES (
-		$1, $2, $3, $4, $5, $6, $7, $8, $9
+		$1, $2, $3, $4, $5, $6, $7, $8, $9, $10
 	)`,
 		acc.ID,
 		acc.WaterlooID,
@@ -207,3 +208,7 @@ func (db Db) ListRejectedTransactions(ctx context.Context, accountID string) ([]
 	return transactions, nil
 }
 
+// func (db DB) GetTransactionDocument(ctx context.Context, transactionID string) (string, error) {
+// 	// TODO: query for transaction at get the ref row?
+// 	return
+// }

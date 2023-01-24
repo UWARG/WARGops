@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -35,6 +36,7 @@ func (f *Finances) ListAccounts(w http.ResponseWriter, r *http.Request) *Respons
 // (POST /accounts)
 func (f *Finances) CreateAccount(w http.ResponseWriter, r *http.Request) *Response {
 	newAccount := NewAccount{}
+	fmt.Println("Hit CreateAccount")
 	if err := json.NewDecoder(r.Body).Decode(&newAccount); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return &Response{
@@ -43,6 +45,8 @@ func (f *Finances) CreateAccount(w http.ResponseWriter, r *http.Request) *Respon
 			contentType: "application/json",
 		}
 	}
+
+	fmt.Println("New Account: ", newAccount)
 
 	if err := f.db.CreateAccount(r.Context(), newAccount); err != nil {
 		return &Response{
@@ -111,7 +115,7 @@ func (f *Finances) ListAllTransactions(w http.ResponseWriter, r *http.Request, a
 			contentType: "application/json",
 		}
 	}
-	
+
 	return ListAllTransactionsJSON200Response(transactions)
 }
 
@@ -127,14 +131,14 @@ func (f *Finances) ListRejectedTransactions(w http.ResponseWriter, r *http.Reque
 			contentType: "application/json",
 		}
 	}
-	
+
 	return ListRejectedTransactionsJSON200Response(transactions)
 }
 
 // Get transaction documents
 // (GET /transactions/{account_id}/{transaction_id}/ref)
 func (f *Finances) TransactionRef(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
-	return nil
+
 }
 
 // Approve a transaction.
