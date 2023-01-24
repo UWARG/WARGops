@@ -90,7 +90,6 @@ func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Re
 // Retrieve the active transactions for an account.
 // (GET /transactions/{account_id})
 func (f *Finances) ListTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
-	transactions := []Transaction{}
 	transactions, err := f.db.ListTransactions(r.Context(), accountID)
 	if err != nil {
 		return &Response{
@@ -138,7 +137,7 @@ func (f *Finances) ListRejectedTransactions(w http.ResponseWriter, r *http.Reque
 // Get transaction documents
 // (GET /transactions/{account_id}/{transaction_id}/ref)
 func (f *Finances) TransactionRef(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
-
+	return nil
 }
 
 // Approve a transaction.

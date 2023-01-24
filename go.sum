@@ -1,5 +1,3 @@
-github.com/UWARG/WARGops v0.0.0-20230121223158-18416790a092 h1:U8Y7eRf6EBRC5nNQRpyyDvD8VTBQq0Ku5ULsOl3ouPA=
-github.com/UWARG/WARGops v0.0.0-20230121223158-18416790a092/go.mod h1:VOf0/JOBJC31qsHGR/1Meg2nPQNhU2RD4WX+2xGwIxM=
 github.com/ajg/form v1.5.1 h1:t9c7v8JUKu/XxOGBU0yjNpaMloxGEJhUkqFRq0ibGeU=
 github.com/ajg/form v1.5.1/go.mod h1:uL1WgH+h2mgNtvBq0339dVnzXdBETtL2LeUXaIv25UY=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=

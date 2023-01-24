@@ -57,7 +57,7 @@ func main() {
 		Addr:    fmt.Sprintf("0.0.0.0:%d", *port),
 	}
 
-	fmt.Printf("Starting server on port http://localhost:%d/", *port)
+	fmt.Printf("Starting server on port http://localhost:%d/\n", *port)
 
 	// And we serve HTTP until the world ends.
 	log.Fatal(s.ListenAndServe())

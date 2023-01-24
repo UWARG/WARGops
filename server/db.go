@@ -119,7 +119,7 @@ func (db DB) ListTransactions(ctx context.Context, accountID string) ([]Transact
 	if err != nil {
 		return nil, err
 	}
-	var transactions []Transaction
+	transactions := make([]Transaction, 0)
 
 	for rows.Next() {
 		var t Transaction
@@ -175,7 +175,7 @@ func (db DB) ListAllTransactions(ctx context.Context, accountID string) ([]Trans
 	return transactions, nil
 }
 
-func (db Db) ListRejectedTransactions(ctx context.Context, accountID string) ([]Transaction, error) {
+func (db DB) ListRejectedTransactions(ctx context.Context, accountID string) ([]Transaction, error) {
 	rows, err := db.DB.QueryContext(ctx,
 		`SELECT * FROM transactions
 		WHERE account_id = $1
