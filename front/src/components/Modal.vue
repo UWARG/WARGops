@@ -2,7 +2,8 @@
     <v-card>
         <v-toolbar color="">
             <v-toolbar-title color="primary" class="text-3xl font-bold"> Create New Account</v-toolbar-title>
-            <v-btn :disabled="true">Submit</v-btn>
+            <v-btn :disabled="false" color="red" @click="closeModal">Cancel</v-btn>
+            <v-btn :disabled="true" color="green">Submit</v-btn>
         </v-toolbar>
         <v-card-text>
             <v-form>
@@ -26,12 +27,15 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-    setup() {
+    setup(props, context) {
+        const closeModal = () => {
+            context.emit('closeModal');
+        };
 
-
-        return {};
+        return { closeModal };
     }
 });
+
 </script>
 
 <style scoped>

@@ -15,7 +15,8 @@ const wargDark = {
   dark: true,
   colors: {
     background: "#3a3a3a",
-    'background-darken': "#2a2a2a",
+    'background-dark-1': "#2a2a2a",
+    'background-light-1': "#525252",
     primary: "#FFEB3B",
 
   },
@@ -24,7 +25,7 @@ const wargDark = {
 const wargLight = {
   dark: false,
   colors: {
-    background: "#FFFFFF",
+    background: "#f4f4f4",
     primary: "#FFEB3B",
   },
 };

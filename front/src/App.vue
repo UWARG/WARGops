@@ -4,33 +4,50 @@
       <div class="text-3xl font-bold ml-8">
         WARG ✈️
       </div>
-      <v-btn :prepend-icon="theme.global.name.value === 'wargDark' ? 'mdi-weather-sunny' : 'mdi-weather-night'" @click="toggleTheme">
-        Toggle Theme
-      </v-btn>
+      <v-btn :icon="theme.global.name.value === 'wargDark' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+        @click="toggleTheme" />
     </v-app-bar>
 
     <v-main>
-      <v-card-title class="text-3xl font-bold">
-        Accounts
-      </v-card-title>
-      <v-card class="p-4" width="500">
 
-        <v-expansion-panels color="background-darken">
-          <v-expansion-panel title="WEEF" text="This is a cool account">
-          </v-expansion-panel>
-          <v-expansion-panel title="WARG" text="This is a cool account">
-          </v-expansion-panel>
-          <v-expansion-panel title="MEF" text="This is a cool account">
-          </v-expansion-panel>
-        </v-expansion-panels>
+      <div class="flex">
+        <div class="flex-1">
+          <v-card class="p-4 mr-4">
+            <div class="flex justify-between items-center mb-4">
+              <v-card-title class="text-3xl font-bold">
+                Accounts
+              </v-card-title>
+              <v-dialog v-model="dialog" width="800">
+                <template v-slot:activator="{ props }">
+                  <v-btn v-bind="props" color="primary" class=""> Create New Account</v-btn>
+                </template>
+                <Modal @closeModal="dialog = false" />
+              </v-dialog>
+            </div>
 
-      </v-card>
-      <v-dialog v-model="dialog" width="800">
-        <template v-slot:activator="{ props }">
-          <v-btn v-bind="props" color="primary" class="mt-4"> Create New Account</v-btn>
-        </template>
-        <Modal />
-      </v-dialog>
+            <v-expansion-panels color="background-dark-1">
+              <v-expansion-panel title="WEEF" text="This is a cool account">
+              </v-expansion-panel>
+              <v-expansion-panel title="WARG" text="This is a cool account">
+              </v-expansion-panel>
+              <v-expansion-panel title="MEF" text="This is a cool account">
+              </v-expansion-panel>
+            </v-expansion-panels>
+
+          </v-card>
+
+        </div>
+        <v-card class="flex-1 ml-4 p-4">
+          <v-card-title class="text-3xl font-bold mb-4">
+            Transactions for WEEF
+          </v-card-title>
+          <v-card color="background-light-1 ">
+            Test
+          </v-card>
+        </v-card>
+
+      </div>
+
 
 
     </v-main>
