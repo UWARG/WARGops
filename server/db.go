@@ -52,13 +52,14 @@ func (db DB) CreateAccount(ctx context.Context, acc NewAccount) error {
 func (db DB) ListAccounts(ctx context.Context) ([]Account, error) {
 	rows, err := db.DB.QueryContext(ctx,
 		`SELECT * FROM accounts
-	WHERE expiry_date < DATE('now')
-	UNION
-	SELECT * FROM accounts
-	WHERE expiry_date >= DATE('now')`)
+		WHERE expiry_date < DATE('now')
+		UNION
+		SELECT * FROM accounts
+		WHERE expiry_date >= DATE('now')`)
 	if err != nil {
 		return nil, err
 	}
+
 	var accounts []Account
 
 	for rows.Next() {
@@ -83,7 +84,6 @@ func (db DB) ListAccounts(ctx context.Context) ([]Account, error) {
 	if rows.Err() != nil {
 		return nil, err
 	}
-
 	return accounts, nil
 }
 

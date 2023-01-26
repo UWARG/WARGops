@@ -1,5 +1,11 @@
 import { createApp } from 'vue';
+import * as VueRouter from 'vue-router';
+import { routes } from './router';
 import App from './App.vue';
+import 'v-calendar/dist/style.css';
+
+//@ts-ignore
+import VCalendar from 'v-calendar';
 
 // Vuetify
 import 'vuetify/styles';
@@ -30,6 +36,11 @@ const wargLight = {
   },
 };
 
+const router = VueRouter.createRouter({
+  history: VueRouter.createWebHistory(),
+  routes,
+});
+
 const vuetify = createVuetify({
   components,
   directives,
@@ -43,4 +54,8 @@ const vuetify = createVuetify({
 
 });
 
-createApp(App).use(vuetify).mount('#app');
+const app = createApp(App);
+app.use(vuetify);
+app.use(router);
+app.use(VCalendar, {});
+app.mount('#app');

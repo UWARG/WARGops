@@ -29,6 +29,8 @@ func (f *Finances) ListAccounts(w http.ResponseWriter, r *http.Request) *Respons
 			contentType: "application/json",
 		}
 	}
+
+	fmt.Println("Accounts: ", accounts)
 	return ListAccountsJSON200Response(accounts)
 }
 
@@ -36,7 +38,6 @@ func (f *Finances) ListAccounts(w http.ResponseWriter, r *http.Request) *Respons
 // (POST /accounts)
 func (f *Finances) CreateAccount(w http.ResponseWriter, r *http.Request) *Response {
 	newAccount := NewAccount{}
-	fmt.Println("Hit CreateAccount")
 	if err := json.NewDecoder(r.Body).Decode(&newAccount); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return &Response{
@@ -45,10 +46,9 @@ func (f *Finances) CreateAccount(w http.ResponseWriter, r *http.Request) *Respon
 			contentType: "application/json",
 		}
 	}
-
-	fmt.Println("New Account: ", newAccount)
-
+	fmt.Printf("New Account: %+v\n", newAccount)
 	if err := f.db.CreateAccount(r.Context(), newAccount); err != nil {
+		fmt.Println("Error: ", err)
 		return &Response{
 			body:        err,
 			Code:        500,
@@ -56,11 +56,7 @@ func (f *Finances) CreateAccount(w http.ResponseWriter, r *http.Request) *Respon
 		}
 	}
 
-	return &Response{
-		body:        "Account created",
-		Code:        200,
-		contentType: "application/json",
-	}
+	return nil
 }
 
 // Create a new transaction.
