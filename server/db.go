@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	_ "modernc.org/sqlite"
@@ -91,35 +92,41 @@ func (db DB) CreateTransaction(ctx context.Context, t NewTransaction) error {
 	_, err := db.DB.ExecContext(ctx, `INSERT INTO transactions (
 		id,
 		account_id,
-		amount,
-		status,
+		creator,
 		type,
+		status,
+		amount
 	) VALUES (
-		$1, $2, $3, $4, $5,
+		$1, $2, $3, $4, $5, $6
 	)`,
 		t.ID,
 		t.AccountID,
+		"test",
+		t.Status.value,
+		t.Type.value,
 		t.Amount,
-		t.Status,
-		t.Type,
-		time.Now(),
 	)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 	return nil
 }
 
 func (db DB) ListTransactions(ctx context.Context, accountID string) ([]Transaction, error) {
+	// rows, err := db.DB.QueryContext(ctx,
+	// 	`SELECT * FROM transactions
+	// 	WHERE account_id = $1
+	// 	  AND status <> 3 -- 3 = rejected status
+	// 	ORDER BY status ASC, creation_date ASC`, accountID)
+
 	rows, err := db.DB.QueryContext(ctx,
-		`SELECT * FROM transactions
-		WHERE account_id = $1
-		  AND status <> 3 -- 3 = rejected status
-		ORDER BY status ASC, creation_date ASC`, accountID)
+		`SELECT * FROM transactions WHERE account_id = $1`, accountID)
 	if err != nil {
 		return nil, err
 	}
-	transactions := make([]Transaction, 0)
+
+	var transactions []Transaction
 
 	for rows.Next() {
 		var t Transaction
@@ -130,6 +137,12 @@ func (db DB) ListTransactions(ctx context.Context, accountID string) ([]Transact
 			&t.Status,
 			&t.Type,
 			&t.CreationDate,
+			&t.ApprovalDate,
+			&t.CreationDate,
+			&t.Notes,
+			&t.PaymentDate,
+			&t.RejectedDate,
+			
 		); err != nil {
 			return nil, err
 		}
@@ -140,6 +153,7 @@ func (db DB) ListTransactions(ctx context.Context, accountID string) ([]Transact
 		return nil, err
 	}
 
+	fmt.Println("Transactions: ", transactions)
 	return transactions, nil
 }
 
@@ -208,7 +222,18 @@ func (db DB) ListRejectedTransactions(ctx context.Context, accountID string) ([]
 	return transactions, nil
 }
 
-// func (db DB) GetTransactionDocument(ctx context.Context, transactionID string) (string, error) {
-// 	// TODO: query for transaction at get the ref row?
-// 	return
-// }
+func (db DB) ApproveTransaction(ctx context.Context, accountID string, transactionID string) error {
+	_, err := db.DB.ExecContext(ctx, `UPDATE transactions
+	SET status = 1,
+		approval_date = DATE('now'),
+		approved_by = $3,
+		notes = $4
+	WHERE id = $1
+	  AND account_id = $2;`,
+		transactionID,
+		accountID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

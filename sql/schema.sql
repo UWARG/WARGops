@@ -20,9 +20,9 @@ CREATE TABLE transactions (
 	status INTEGER NOT NULL,
 	amount INTEGER NOT NULL,
 	approval_date TIMESTAMP,
-	approved_by VARCHAR(32) NOT NULL,
+	approved_by VARCHAR(32),
 	payment_date TIMESTAMP,
-	creation_date TIMESTAMP NOT NULL,
-	rejected_date TIMESTAMP NOT NULL,
+	creation_date TIMESTAMP,
+	rejected_date TIMESTAMP,
 	notes TEXT
 )

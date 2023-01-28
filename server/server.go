@@ -63,6 +63,7 @@ func (f *Finances) CreateAccount(w http.ResponseWriter, r *http.Request) *Respon
 // (POST /transactions)
 func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Response {
 	newTransaction := NewTransaction{}
+
 	if err := json.NewDecoder(r.Body).Decode(&newTransaction); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return &Response{
@@ -71,6 +72,7 @@ func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Re
 			contentType: "application/json",
 		}
 	}
+	fmt.Printf("New Transaction: %+v\n", newTransaction)
 
 	if err := f.db.CreateTransaction(r.Context(), newTransaction); err != nil {
 		return &Response{
@@ -86,15 +88,18 @@ func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Re
 // Retrieve the active transactions for an account.
 // (GET /transactions/{account_id})
 func (f *Finances) ListTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
+	fmt.Println("List Transactions")
+	fmt.Println("Account ID: ", accountID)
 	transactions, err := f.db.ListTransactions(r.Context(), accountID)
 	if err != nil {
+		fmt.Println("Error: ", err)
 		return &Response{
 			body:        err,
 			Code:        500,
 			contentType: "application/json",
 		}
 	}
-
+	fmt.Println("Transactions: ", transactions)
 	return ListTransactionsJSON200Response(transactions)
 }
 
@@ -139,6 +144,15 @@ func (f *Finances) TransactionRef(w http.ResponseWriter, r *http.Request, accoun
 // Approve a transaction.
 // (POST /transactions/{account_id}/{transaction_id}:approve)
 func (f *Finances) ApproveTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
+	err := f.db.ApproveTransaction(r.Context(), accountID, transactionID)
+	if err != nil {
+		return &Response{
+			body:        err,
+			Code:        500,
+			contentType: "application/json",
+		}
+	}
+
 	return nil
 }
 
