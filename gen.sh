@@ -5,11 +5,14 @@ SRC=$(realpath $(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd))
 FILE=db.sqlite
 
 REGEN=0
+SEED=0
+
 while getopts "r" opt; do
 	case "$opt" in
-		r) REGEN=1
+		r) REGEN=1;;
 	esac
 done
+
 
 popd &> /dev/null
 
@@ -19,5 +22,6 @@ if [[ "$REGEN" = "1" ]]; then
 		(set -x; rm $FILE)
 	fi
 	(set -x; sqlite3 $FILE < $SRC/sql/schema.sql)
+	(set -x; sqlite3 $FILE < $SRC/sql/seed.sql)
 fi
 

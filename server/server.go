@@ -23,6 +23,7 @@ var _ ServerInterface = (*Finances)(nil)
 func (f *Finances) ListAccounts(w http.ResponseWriter, r *http.Request) *Response {
 	accounts, err := f.db.ListAccounts(r.Context())
 	if err != nil {
+		fmt.Println("Error: ", err)
 		return &Response{
 			body:        err,
 			Code:        500,

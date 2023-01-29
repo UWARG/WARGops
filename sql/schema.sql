@@ -25,4 +25,5 @@ CREATE TABLE transactions (
 	creation_date TIMESTAMP,
 	rejected_date TIMESTAMP,
 	notes TEXT
-)
+);
+

@@ -91,20 +91,34 @@ func (db DB) ListAccounts(ctx context.Context) ([]Account, error) {
 func (db DB) CreateTransaction(ctx context.Context, t NewTransaction) error {
 	_, err := db.DB.ExecContext(ctx, `INSERT INTO transactions (
 		id,
-		account_id,
-		creator,
-		type,
-		status,
-		amount
+        account_id,
+        creator,
+        type,
+        ref,
+        status,
+        amount,
+        approval_date,
+        approved_by,
+        payment_date,
+        creation_date,
+        rejected_date,
+        notes
 	) VALUES (
-		$1, $2, $3, $4, $5, $6
+		$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
 	)`,
 		t.ID,
 		t.AccountID,
-		"test",
-		t.Status.value,
+		"",
 		t.Type.value,
+		"",
+		t.Status.value,
 		t.Amount,
+		time.Now(),
+		"",
+		time.Now(),
+		time.Now(),
+		time.Now(),
+		"",
 	)
 	if err != nil {
 		fmt.Println(err)
@@ -127,22 +141,25 @@ func (db DB) ListTransactions(ctx context.Context, accountID string) ([]Transact
 	}
 
 	var transactions []Transaction
-
+	var ref sql.NullString
+	var creator string
+	var approvedBy string
 	for rows.Next() {
 		var t Transaction
 		if err := rows.Scan(
 			&t.ID,
 			&t.AccountID,
+			&creator,
+			&t.Type.value,
+			&ref,
+			&t.Status.value,
 			&t.Amount,
-			&t.Status,
-			&t.Type,
-			&t.CreationDate,
 			&t.ApprovalDate,
-			&t.CreationDate,
-			&t.Notes,
+			&approvedBy,
 			&t.PaymentDate,
+			&t.CreationDate,
 			&t.RejectedDate,
-			
+			&t.Notes,
 		); err != nil {
 			return nil, err
 		}
