@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"time"
 
 	_ "modernc.org/sqlite"
@@ -19,7 +18,7 @@ func NewDB(path string) (DB, error) {
 }
 
 func (db DB) CreateAccount(ctx context.Context, acc NewAccount) error {
-	_, err := db.DB.ExecContext(ctx, `INSERT INTO accounts (
+	_, err := db.ExecContext(ctx, `INSERT INTO accounts (
 		id,
 		waterloo_id,
 		name,
@@ -51,7 +50,7 @@ func (db DB) CreateAccount(ctx context.Context, acc NewAccount) error {
 }
 
 func (db DB) ListAccounts(ctx context.Context) ([]Account, error) {
-	rows, err := db.DB.QueryContext(ctx,
+	rows, err := db.QueryContext(ctx,
 		`SELECT * FROM accounts
 		WHERE expiry_date < DATE('now')
 		UNION
@@ -88,53 +87,39 @@ func (db DB) ListAccounts(ctx context.Context) ([]Account, error) {
 	return accounts, nil
 }
 
-func (db DB) CreateTransaction(ctx context.Context, t NewTransaction) error {
-	_, err := db.DB.ExecContext(ctx, `INSERT INTO transactions (
+func (db DB) CreateTransaction(ctx context.Context, t NewTransaction, creator string) error {
+	_, err := db.ExecContext(ctx, `INSERT INTO transactions (
 		id,
         account_id,
         creator,
         type,
-        ref,
         status,
         amount,
-        approval_date,
-        approved_by,
-        payment_date,
         creation_date,
-        rejected_date,
         notes
 	) VALUES (
 		$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
 	)`,
 		t.ID,
 		t.AccountID,
-		"",
+		creator,
 		t.Type.value,
-		"",
 		t.Status.value,
 		t.Amount,
 		time.Now(),
 		"",
-		time.Now(),
-		time.Now(),
-		time.Now(),
-		"",
 	)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-	return nil
+	return err
 }
 
 func (db DB) ListTransactions(ctx context.Context, accountID string) ([]Transaction, error) {
-	// rows, err := db.DB.QueryContext(ctx,
+	// rows, err := db.QueryContext(ctx,
 	// 	`SELECT * FROM transactions
 	// 	WHERE account_id = $1
 	// 	  AND status <> 3 -- 3 = rejected status
 	// 	ORDER BY status ASC, creation_date ASC`, accountID)
 
-	rows, err := db.DB.QueryContext(ctx,
+	rows, err := db.QueryContext(ctx,
 		`SELECT * FROM transactions WHERE account_id = $1`, accountID)
 	if err != nil {
 		return nil, err
@@ -169,13 +154,11 @@ func (db DB) ListTransactions(ctx context.Context, accountID string) ([]Transact
 	if rows.Err() != nil {
 		return nil, err
 	}
-
-	fmt.Println("Transactions: ", transactions)
 	return transactions, nil
 }
 
 func (db DB) ListAllTransactions(ctx context.Context, accountID string) ([]Transaction, error) {
-	rows, err := db.DB.QueryContext(ctx,
+	rows, err := db.QueryContext(ctx,
 		`SELECT * FROM transactions
 		WHERE account_id = $1
 		ORDER BY status ASC, creation_date ASC`, accountID)
@@ -207,7 +190,7 @@ func (db DB) ListAllTransactions(ctx context.Context, accountID string) ([]Trans
 }
 
 func (db DB) ListRejectedTransactions(ctx context.Context, accountID string) ([]Transaction, error) {
-	rows, err := db.DB.QueryContext(ctx,
+	rows, err := db.QueryContext(ctx,
 		`SELECT * FROM transactions
 		WHERE account_id = $1
 		  AND status = 3 -- 3 = rejected status
@@ -239,16 +222,17 @@ func (db DB) ListRejectedTransactions(ctx context.Context, accountID string) ([]
 	return transactions, nil
 }
 
-func (db DB) ApproveTransaction(ctx context.Context, accountID string, transactionID string) error {
-	_, err := db.DB.ExecContext(ctx, `UPDATE transactions
+func (db DB) ApproveTransaction(ctx context.Context, accountID string, transactionID string, approver string) error {
+	_, err := db.ExecContext(ctx, `UPDATE transactions
 	SET status = 1,
 		approval_date = DATE('now'),
 		approved_by = $3,
-		notes = $4
+		-- notes = $4
 	WHERE id = $1
 	  AND account_id = $2;`,
 		transactionID,
-		accountID)
+		accountID,
+		approver)
 	if err != nil {
 		return err
 	}

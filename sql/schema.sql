@@ -22,7 +22,7 @@ CREATE TABLE transactions (
 	approval_date TIMESTAMP,
 	approved_by VARCHAR(32),
 	payment_date TIMESTAMP,
-	creation_date TIMESTAMP,
+	creation_date TIMESTAMP NOT NULL,
 	rejected_date TIMESTAMP,
 	notes TEXT
 );

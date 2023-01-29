@@ -63,9 +63,9 @@ func (f *Finances) CreateAccount(w http.ResponseWriter, r *http.Request) *Respon
 // Create a new transaction.
 // (POST /transactions)
 func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Response {
-	newTransaction := NewTransaction{}
+	var nt NewTransaction
 
-	if err := json.NewDecoder(r.Body).Decode(&newTransaction); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&nt); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return &Response{
 			body:        "Invalid JSON",
@@ -73,9 +73,9 @@ func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Re
 			contentType: "application/json",
 		}
 	}
-	fmt.Printf("New Transaction: %+v\n", newTransaction)
+	fmt.Printf("New Transaction: %+v\n", nt)
 
-	if err := f.db.CreateTransaction(r.Context(), newTransaction); err != nil {
+	if err := f.db.CreateTransaction(r.Context(), nt, "test"); err != nil {
 		return &Response{
 			body:        err,
 			Code:        500,
@@ -107,7 +107,6 @@ func (f *Finances) ListTransactions(w http.ResponseWriter, r *http.Request, acco
 // Retrieve all transactions, including those that are currently a request and not approved.
 // (GET /transactions/{account_id}/all)
 func (f *Finances) ListAllTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
-	transactions := []Transaction{}
 	transactions, err := f.db.ListAllTransactions(r.Context(), accountID)
 	if err != nil {
 		return &Response{
@@ -123,7 +122,6 @@ func (f *Finances) ListAllTransactions(w http.ResponseWriter, r *http.Request, a
 // Retrieve all rejected transactions for an account.
 // (GET /transactions/{account_id}/rejected)
 func (f *Finances) ListRejectedTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
-	transactions := []Transaction{}
 	transactions, err := f.db.ListRejectedTransactions(r.Context(), accountID)
 	if err != nil {
 		return &Response{
@@ -145,7 +143,7 @@ func (f *Finances) TransactionRef(w http.ResponseWriter, r *http.Request, accoun
 // Approve a transaction.
 // (POST /transactions/{account_id}/{transaction_id}:approve)
 func (f *Finances) ApproveTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
-	err := f.db.ApproveTransaction(r.Context(), accountID, transactionID)
+	err := f.db.ApproveTransaction(r.Context(), accountID, transactionID, "test")
 	if err != nil {
 		return &Response{
 			body:        err,
