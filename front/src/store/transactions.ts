@@ -29,6 +29,28 @@ export const useTransactionStore = defineStore('Transactions', {
             const response = await axios.get(`http://localhost:8080/transactions/${accountId}`);
             const transactions = await response.data;
             this.transactions = transactions;
+        },
+        rejectTransaction(account_id: string, transactionId: string) {
+            axios.post(`http://localhost:8080/transactions/${account_id}/${transactionId}:reject`).then(
+                (response) => {
+                    this.loadTransactions(account_id);
+                }
+            );
+        },
+        holdTransaction(account_id: string, transactionId: string) {
+            axios.post(`http://localhost:8080/transactions/${account_id}/${transactionId}:hold`).then(
+                (response) => {
+                    this.loadTransactions(account_id);
+                }
+            );
+        },
+        payTransaction(account_id: string, transactionId: string) {
+            axios.post(`http://localhost:8080/transactions/${account_id}/${transactionId}:pay`).then(
+                (response) => {
+                    this.loadTransactions(account_id);
+                }
+            );
         }
+
     }
 });

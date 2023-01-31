@@ -76,6 +76,7 @@ func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Re
 	fmt.Printf("New Transaction: %+v\n", nt)
 
 	if err := f.db.CreateTransaction(r.Context(), nt, "test"); err != nil {
+		fmt.Println("Error: ", err)
 		return &Response{
 			body:        err,
 			Code:        500,
@@ -89,7 +90,6 @@ func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Re
 // Retrieve the active transactions for an account.
 // (GET /transactions/{account_id})
 func (f *Finances) ListTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
-	fmt.Println("List Transactions")
 	fmt.Println("Account ID: ", accountID)
 	transactions, err := f.db.ListTransactions(r.Context(), accountID)
 	if err != nil {
@@ -158,17 +158,42 @@ func (f *Finances) ApproveTransaction(w http.ResponseWriter, r *http.Request, ac
 // Hold back a transaction, and reset it to pending
 // (POST /transactions/{account_id}/{transaction_id}:hold)
 func (f *Finances) HoldTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
+	err := f.db.HoldTransaction(r.Context(), accountID, transactionID)
+	if err != nil {
+		return &Response{
+			body:        err,
+			Code:        500,
+			contentType: "application/json",
+		}
+	}
 	return nil
 }
 
 // Mark a transaction as paid.
 // (POST /transactions/{account_id}/{transaction_id}:pay)
 func (f *Finances) PayTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
+	err := f.db.PayTransaction(r.Context(), accountID, transactionID)
+	if err != nil {
+		return &Response{
+			body:        err,
+			Code:        500,
+			contentType: "application/json",
+		}
+	}
 	return nil
 }
 
 // Reject a transaction.
 // (POST /transactions/{account_id}/{transaction_id}:reject)
 func (f *Finances) RejectTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
+	err := f.db.RejectTransaction(r.Context(), accountID, transactionID, "test")
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return &Response{
+			body:        err,
+			Code:        500,
+			contentType: "application/json",
+		}
+	}
 	return nil
 }

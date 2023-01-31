@@ -93,19 +93,29 @@ func (db DB) CreateTransaction(ctx context.Context, t NewTransaction, creator st
         account_id,
         creator,
         type,
+        ref,
         status,
         amount,
+        approval_date,
+        approved_by,
+        payment_date,
         creation_date,
+        rejected_date,
         notes
 	) VALUES (
-		$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+		$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
 	)`,
 		t.ID,
 		t.AccountID,
 		creator,
 		t.Type.value,
+		nil,
 		t.Status.value,
 		t.Amount,
+		time.Now(),
+		"",
+		time.Now(),
+		time.Now(),
 		time.Now(),
 		"",
 	)
@@ -113,17 +123,11 @@ func (db DB) CreateTransaction(ctx context.Context, t NewTransaction, creator st
 }
 
 func (db DB) ListTransactions(ctx context.Context, accountID string) ([]Transaction, error) {
-	// rows, err := db.QueryContext(ctx,
-	// 	`SELECT * FROM transactions
-	// 	WHERE account_id = $1
-	// 	  AND status <> 3 -- 3 = rejected status
-	// 	ORDER BY status ASC, creation_date ASC`, accountID)
-
 	rows, err := db.QueryContext(ctx,
-		`SELECT * FROM transactions WHERE account_id = $1`, accountID)
-	if err != nil {
-		return nil, err
-	}
+		`SELECT * FROM transactions
+		WHERE account_id = $1
+		  AND status <> 3 -- 3 = rejected status
+		ORDER BY status ASC, creation_date ASC`, accountID)
 
 	var transactions []Transaction
 	var ref sql.NullString
@@ -233,6 +237,52 @@ func (db DB) ApproveTransaction(ctx context.Context, accountID string, transacti
 		transactionID,
 		accountID,
 		approver)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db DB) RejectTransaction(ctx context.Context, accountID string, transactionID string, approver string) error {
+	_, err := db.ExecContext(ctx, `UPDATE transactions
+	SET status = 3,
+		rejected_date = DATE('now'),
+		notes = $3
+	WHERE id = $1
+	  AND account_id = $2`,
+		transactionID,
+		accountID,
+		approver)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db DB) PayTransaction(ctx context.Context, accountID string, transactionID string) error {
+	_, err := db.ExecContext(ctx, `UPDATE transactions
+	SET status = 2,
+		payment_date = DATE('now'),
+		ref = $3,
+		notes = $4
+	WHERE id = $1
+	  AND account_id = $2`,
+		transactionID,
+		accountID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db DB) HoldTransaction(ctx context.Context, accountID string, transactionID string) error {
+	_, err := db.ExecContext(ctx, `UPDATE transactions
+SET status = 0,
+    notes = $3
+WHERE id = $1
+  AND account_id = $2`,
+		transactionID,
+		accountID)
 	if err != nil {
 		return err
 	}

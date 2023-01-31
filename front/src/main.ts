@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
-import * as VueRouter from 'vue-router';
-import { routes } from './router';
 import App from './App.vue';
+
+import router from './router';
 import 'v-calendar/dist/style.css';
 
 //@ts-ignore
@@ -23,6 +23,7 @@ const wargDark = {
     'background-dark-1': "#2a2a2a",
     'background-light-1': "#525252",
     primary: "#FFEB3B",
+    discord: "#5865F2",
 
   },
 };
@@ -34,11 +35,6 @@ const wargLight = {
     primary: "#FFEB3B",
   },
 };
-
-const router = VueRouter.createRouter({
-  history: VueRouter.createWebHistory(),
-  routes,
-});
 
 const vuetify = createVuetify({
   components,

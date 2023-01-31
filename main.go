@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -10,10 +11,13 @@ import (
 	"github.com/UWARG/WARGops/server"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
+	"github.com/markbates/goth"
+	"github.com/markbates/goth/gothic"
+	"github.com/markbates/goth/providers/discord"
 )
 
 func main() {
-
+	var user goth.User
 	port := flag.Int("port", 8080, "Port for test HTTP server")
 	flag.Parse()
 
@@ -50,6 +54,43 @@ func main() {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
+	// AUTHENTICATION
+	goth.UseProviders(
+		discord.New(
+			//TODO: move to env variables
+			"1069446618056761375",
+			"9-pHUrOkF4pJnPdxFwFQebgtI6mbf5gq",
+			"http://localhost:8080/auth/callback?provider=discord",
+			"identify", "guilds",
+		),
+	)
+
+	r.Get("/auth", func(w http.ResponseWriter, r *http.Request) {
+		gothic.BeginAuthHandler(w, r)
+	})
+
+	r.Get("/auth/callback", func(w http.ResponseWriter, r *http.Request) {
+		user, err = gothic.CompleteUserAuth(w, r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		fmt.Println(user.RawData["username"], "has logged in")
+		fmt.Println("")
+		fmt.Printf("+%v", user)
+		fmt.Println("")
+		fmt.Println("")
+
+		http.Redirect(w, r, "http://localhost:5173/", http.StatusMovedPermanently)
+		// Use the user data however you want.
+		// E.g. store in a database, set a session, etc.
+	})
+
+	r.Get("/user", func(w http.ResponseWriter, r *http.Request) {
+		json.NewDecoder(r.Body).Decode(&user)
+		respondwithJSON(w, http.StatusOK, user)
+	})
+
 	server.Handler(service, server.WithRouter(r))
 
 	s := &http.Server{
@@ -61,4 +102,14 @@ func main() {
 
 	// And we serve HTTP until the world ends.
 	log.Fatal(s.ListenAndServe())
+
+}
+
+// respondwithJSON write json response format
+func respondwithJSON(w http.ResponseWriter, code int, payload interface{}) {
+	response, _ := json.Marshal(payload)
+	fmt.Println(payload)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	w.Write(response)
 }

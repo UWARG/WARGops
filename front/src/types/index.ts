@@ -42,3 +42,21 @@ export interface Transaction {
     status: number,
     type: number,
 }
+
+export interface Profile {
+    code: string,
+    access_token: string,
+    refresh_token: string,
+    expires_in: number,
+    token_type: string,
+    scope: string,
+    id_token: string,
+    user_id: string,
+    user_name: string,
+    user_email: string,
+    user_avatar: string,
+    user_discriminator: string,
+    user_public_flags: number,
+    user_flags: number,
+    user_locale: string,
+}

@@ -18,13 +18,12 @@
                         <div class="flex justify-center items-center mr-4">
                             <v-dialog v-model="newTransactionModal" width="800">
                                 <template v-slot:activator="{ props }">
-                                    <v-btn v-bind="props" color="primary" class=""> Add Income</v-btn>
+                                    <v-btn v-bind="props" color="primary" class="">New Transaction</v-btn>
                                 </template>
 
                                 <NewTranscationModal @closeModal="newTransactionModal = false"
                                     :accountId="account_id" />
                             </v-dialog>
-                            <v-btn color="background-dark-1" class=""> Add Expense </v-btn>
                         </div>
                     </div>
                     <!-- Search -->
@@ -46,7 +45,7 @@
                     </div>
                     <!-- Transactions -->
                     <div>
-                        <v-table >
+                        <v-table>
                             <thead color="background-light-1">
                                 <tr>
                                     <th>Amount</th>
