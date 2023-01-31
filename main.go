@@ -61,7 +61,7 @@ func main() {
 			"1069446618056761375",
 			"9-pHUrOkF4pJnPdxFwFQebgtI6mbf5gq",
 			"http://localhost:8080/auth/callback?provider=discord",
-			"identify", "guilds",
+			"identify", "guilds.members.read",
 		),
 	)
 

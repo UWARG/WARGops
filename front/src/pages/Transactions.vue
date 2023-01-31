@@ -18,7 +18,7 @@
                         <div class="flex justify-center items-center mr-4">
                             <v-dialog v-model="newTransactionModal" width="800">
                                 <template v-slot:activator="{ props }">
-                                    <v-btn v-bind="props" color="primary" class="">New Transaction</v-btn>
+                                    <v-btn v-bind="props" color="primary" variant="tonal">New Transaction</v-btn>
                                 </template>
 
                                 <NewTranscationModal @closeModal="newTransactionModal = false"

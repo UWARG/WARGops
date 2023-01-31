@@ -2,12 +2,7 @@
     <v-app class="p-4">
         <nav-bar>
             <template #button>
-                <v-dialog v-model="dialog" width="800">
-                    <template v-slot:activator="{ props }">
-                        <v-btn v-bind="props" color="primary" class=""> Create New Account</v-btn>
-                    </template>
-                    <account-modal @closeModal="dialog = false" />
-                </v-dialog>
+
             </template>
         </nav-bar>
 
@@ -17,9 +12,18 @@
                     <v-card class="p-4">
                         <div class="flex">
                             <v-card class="p-4 flex-1 mr-2" color="background-light-1">
-                                <v-card-title class="text-3xl font-bold mb-2">
-                                    Accounts
-                                </v-card-title>
+                                <div class="flex justify-between">
+                                    <v-card-title class="text-3xl font-bold mb-2">
+                                        Accounts
+                                    </v-card-title>
+                                    <v-dialog v-model="dialog" width="800">
+                                        <template v-slot:activator="{ props }">
+                                            <v-btn v-bind="props" color="primary" variant="tonal"> Create New Account</v-btn>
+                                        </template>
+                                        <account-modal @closeModal="dialog = false" />
+                                    </v-dialog>
+                                </div>
+
                                 <v-text-field density="compact" variant="solo" label="Search Accounts"
                                     append-inner-icon="mdi-magnify" single-line hide-details v-model="filter" />
                                 <div>
