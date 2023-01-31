@@ -2,8 +2,8 @@
     <v-date-picker class="inline-block h-full" v-model="date" color="yellow" is-dark>
         <template v-slot="{ inputValue, togglePopover }">
             <div class="flex items-center">
-                <v-text-field class="w-full" :value="inputValue" @click="togglePopover"
-                    prepend-inner-icon="mdi-calendar-range" label="Expiry Date" variant="outlined" readonl0 />
+                <v-text-field class="w-full" :value="inputValue" @click="togglePopover" @change="dateChanged"
+                    prepend-inner-icon="mdi-calendar-range" label="Expiry Date" variant="outlined" readonly />
             </div>
         </template>
     </v-date-picker>
@@ -21,11 +21,11 @@ export default defineComponent({
         };
         const date = ref(new Date());
 
-        const dateChanged = (date: Date) => {
-            context.emit('input', date)
+        const dateChanged = () => {
+            context.emit('input', date.value)
         };
 
-        return { openDatePicker, showDatePicker, date };
+        return { openDatePicker, showDatePicker, date, dateChanged };
     }
 });
 </script>

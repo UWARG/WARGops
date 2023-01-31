@@ -12,13 +12,9 @@
                 <v-text-field class="ml-2" label="Name" variant="outlined" :rules="[rules.required]"
                     v-model="accountInfo.name" />
             </div>
-            <div class="flex">
-                <v-text-field label="Allocation Date" class="w-full mr-2" variant="outlined" :rules="[rules.required]"
-                    v-model="accountInfo.allocation_date" />
-                <v-text-field label="Expiry Date" class="w-full ml-2" variant="outlined" :rules="[rules.required]"
-                    v-model="accountInfo.expiry_date" />
-                <!-- <warg-date-picker class="flex-1 mr-2"> </warg-date-picker>
-                <warg-date-picker class="flex-1 ml-2"> </warg-date-picker> -->
+            <div class="flex mb-4">
+                <v-date-picker class="inline-block h-full flex-1 m-2" v-model="accountInfo.allocation_date" color="yellow" is-dark />
+                <v-date-picker class="inline-block h-full flex-1 m-2 " v-model="accountInfo.expiry_date" color="yellow" is-dark />
             </div>
             <div class="flex">
                 <v-text-field label="Source" class="w-full" variant="outlined" :rules="[rules.required]"
@@ -69,12 +65,15 @@ export default defineComponent({
             console.log('open date picker');
         };
 
+        const date = ref(new Date());
+
         return {
             closeModal,
             submit,
             accountInfo,
             valid,
-            rules
+            rules,
+            date,
 
         };
     }
@@ -83,5 +82,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-
+.vc-container {
+    background-color: #2a2a2a;
+    border-color: #2a2a2a;
+}
 </style>
