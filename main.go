@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/UWARG/WARGops/bot"
+	"github.com/UWARG/WARGops/bot/commands"
 	"github.com/UWARG/WARGops/server"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
@@ -19,7 +21,17 @@ import (
 func main() {
 	var user goth.User
 	port := flag.Int("port", 8080, "Port for test HTTP server")
+	flag.StringVar(&commands.LeadRoleID, "leads", "820466330456162354", "team lead role")
+	flag.StringVar(&commands.WorkspaceID, "workspace", "71624493506711", "asana workspace ID")
+	botToken := flag.String("discord", "", "discord bot token")
+	asanaToken := flag.String("asana", "", "discord personal access token")
 	flag.Parse()
+
+	if *botToken != "" {
+		go func() {
+			bot.Start(*botToken, *asanaToken)
+		}()
+	}
 
 	swagger, err := server.GetSwagger()
 	if err != nil {
@@ -42,7 +54,7 @@ func main() {
 	// This is how you set up a basic chi router
 	r := chi.NewRouter()
 
-	//TODO: improve cors handling
+	// TODO: improve cors handling
 	r.Use(cors.Handler(cors.Options{
 		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
 		AllowedOrigins: []string{"https://*", "http://*"},
@@ -57,7 +69,7 @@ func main() {
 	// AUTHENTICATION
 	goth.UseProviders(
 		discord.New(
-			//TODO: move to env variables
+			// TODO: move to env variables
 			"1069446618056761375",
 			"9-pHUrOkF4pJnPdxFwFQebgtI6mbf5gq",
 			"http://localhost:8080/auth/callback?provider=discord",
@@ -102,7 +114,6 @@ func main() {
 
 	// And we serve HTTP until the world ends.
 	log.Fatal(s.ListenAndServe())
-
 }
 
 // respondwithJSON write json response format

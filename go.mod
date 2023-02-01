@@ -3,24 +3,35 @@ module github.com/UWARG/WARGops
 go 1.19
 
 require (
+	bitbucket.org/mikehouston/asana-go v0.0.0-20221230134324-ca4a5f164c12
+	github.com/bwmarrin/discordgo v0.27.0
+	github.com/bwmarrin/lit v0.0.0-20190813132558-fd4b44871312
 	github.com/discord-gophers/goapi-gen v0.2.2
 	github.com/getkin/kin-openapi v0.113.0
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-chi/render v1.0.2
+	github.com/lithammer/fuzzysearch v1.1.5
 	github.com/markbates/goth v1.76.0
 	modernc.org/sqlite v1.20.3
 )
 
 require (
-	github.com/golang/protobuf v1.4.2 // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/gorilla/sessions v1.1.1 // indirect
-	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
-	golang.org/x/oauth2 v0.0.0-20200902213428-5d25da1a8d43 // indirect
-	google.golang.org/appengine v1.6.6 // indirect
-	google.golang.org/protobuf v1.25.0 // indirect
+	github.com/gorilla/websocket v1.4.2 // indirect
+	github.com/imdario/mergo v0.3.13 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
+	github.com/rs/xid v1.4.0 // indirect
+	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
+	golang.org/x/net v0.0.0-20220812174116-3211cb980234 // indirect
+	golang.org/x/oauth2 v0.0.0-20220808172628-8227340efae7 // indirect
+	golang.org/x/text v0.3.7 // indirect
+	google.golang.org/appengine v1.6.7 // indirect
+	google.golang.org/protobuf v1.28.1 // indirect
 )
 
 require (
