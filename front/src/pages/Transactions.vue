@@ -8,8 +8,6 @@
         <v-main>
             <v-card class="p-4">
                 <v-card color="background-light-1" class="p-4">
-
-
                     <!-- Header -->
                     <div class="flex justify-between">
                         <v-card-title class="text-3xl font-bold mb-2">
@@ -54,6 +52,7 @@
                                     <th>Approval Date</th>
                                     <th>Creation Date</th>
                                     <th>Rejected Date</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody v-if="transactionStore.transactions">
@@ -65,6 +64,12 @@
                                     <th> {{ new Date(transaction.approval_date).toLocaleDateString() }}</th>
                                     <th> {{ new Date(transaction.creation_date).toLocaleDateString() }}</th>
                                     <th> {{ new Date(transaction.rejected_date).toLocaleDateString() }}</th>
+                                    <th v-if="transaction.status === 0" class="flex justify-around items-center">
+                                        <v-btn variant="tonal" color="green" size="x-small" icon=""
+                                            @click="transactionStore.payTransaction(account_id, transaction.id)">Pay</v-btn>
+                                        <v-btn variant="tonal" color="red" size="x-small" icon=""
+                                            @click="transactionStore.rejectTransaction(account_id, transaction.id)">Rej</v-btn>
+                                    </th>
                                 </tr>
                             </tbody>
                         </v-table>

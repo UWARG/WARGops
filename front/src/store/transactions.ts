@@ -22,6 +22,10 @@ export const useTransactionStore = defineStore('Transactions', {
                 return state.transactions.filter((transaction) => statuses.includes(transaction.status));
             }
             return state.transactions.filter((transaction) => statuses.includes(transaction.status) && types.includes(transaction.type));
+        },
+
+        getTransactionById: (state) => (id: string): Transaction | undefined => {
+            return state.transactions.find((transaction) => transaction.id === id);
         }
     },
     actions: {

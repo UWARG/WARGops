@@ -58,8 +58,9 @@ export default defineComponent({
             //@ts-ignore
             id: crypto.randomUUID()
         });
-        const submit = () => {
-            axios.post('http://localhost:8080/accounts', accountInfo);
+        const submit = async () => {
+            await axios.post('http://localhost:8080/accounts', accountInfo);
+            closeModal();
         };
         const openDatePicker = () => {
             console.log('open date picker');

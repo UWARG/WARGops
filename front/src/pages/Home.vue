@@ -18,7 +18,8 @@
                                     </v-card-title>
                                     <v-dialog v-model="dialog" width="800">
                                         <template v-slot:activator="{ props }">
-                                            <v-btn v-bind="props" color="primary" variant="tonal"> Create New Account</v-btn>
+                                            <v-btn v-bind="props" color="primary" variant="tonal"> Create New
+                                                Account</v-btn>
                                         </template>
                                         <account-modal @closeModal="dialog = false" />
                                     </v-dialog>
@@ -33,8 +34,6 @@
                                         @click="activeAccount = accountStore.getAccountById(account.id)">
                                         <div class="flex justify-between items-center">
                                             <div class="my-4"> {{ account.name }}</div>
-                                            <v-chip color="green" @click="switchTransaction(account.id)">Open
-                                                Transactions</v-chip>
                                         </div>
                                         <v-divider v-if="index != accountStore.accounts.length - 1" />
                                     </div>
@@ -43,14 +42,43 @@
                             </v-card>
 
                             <v-card class="p-4 flex-1 ml-2" color="background-light-1" v-if="activeAccount">
-                                <v-card-title class="text-3xl font-bold mb-2 text-center">
-                                    {{ activeAccount.name }}
+                                <v-card-title class="text-3xl font-bold mb-2 flex mx-8">
+                                    <span class="underline w-full text-center ml-12"> {{ activeAccount.name }}</span>
+                                    <v-chip class="" :color="activeAccount.active ? 'green' : 'red'">
+                                        {{ activeAccount.active ? 'Active' : 'Not Active' }}
+                                    </v-chip>
                                 </v-card-title>
 
-                                <div v-for="(key) in Object.keys(activeAccount)" :key="key" class="flex">
-                                    <div class="mb-2"> <span class="font-bold"> {{ key }}</span>: {{
-                                        activeAccount[key]
-                                    }}</div>
+                                <div class="flex text-center">
+                                    <div class="mx-2 flex-1">
+                                        <h1 class="text-lg">Created Transactions</h1>
+                                        <span>lorem</span>
+                                    </div>
+                                    <v-divider vertical></v-divider>
+                                    <div class="mx-2 flex-1">
+                                        <h1 class="text-lg">Pending Transactions</h1>
+                                        <span>lorem</span>
+                                    </div>
+                                    <v-divider vertical></v-divider>
+                                    <div class="mx-2 flex-1">
+                                        <h1 class="text-lg">Paid Transactions</h1>
+                                        <span>lorem</span>
+
+                                    </div>
+                                </div>                               
+
+                                <div>
+                                    <div>
+                                        <div class="my-4"> <span class="font-bold">Point of Contact: </span>{{ activeAccount.point_of_contact }}</div>
+                                        <div class="my-4"> <span class="font-bold">Waterloo Id: </span>{{ activeAccount.waterloo_id }}</div>
+                                        <div class="my-4"> <span class="font-bold">Creator: </span>{{ activeAccount.creator }}</div>
+                                    </div>
+                                </div>
+                                <div class="flex justify-center mt-6">
+                                    <v-btn color="primary" variant="outlined"
+                                        @click="activeAccount ? switchTransaction(activeAccount.id) : null">
+                                        Open Transactions For {{ activeAccount.name }}
+                                    </v-btn>
                                 </div>
                             </v-card>
                         </div>
@@ -63,7 +91,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onBeforeMount } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useTheme } from 'vuetify';
 
 import AccountModal from '../components/AccountModal.vue';
@@ -71,7 +99,6 @@ import { useRouter } from 'vue-router';
 import NavBar from '../components/NavBar.vue';
 import { useAccountStore } from '../store/accounts';
 import { Account } from '../types';
-import { useProfileStore } from '../store/profile';
 
 
 export default defineComponent({
