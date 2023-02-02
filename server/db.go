@@ -49,6 +49,11 @@ func (db DB) CreateAccount(ctx context.Context, acc NewAccount) error {
 	return nil
 }
 
+func (db DB) GetAccount(ctx context.Context, id string) (Account, error) {
+	// @Alexander Tsarapkine
+	return Account{}, nil
+}
+
 func (db DB) ListAccounts(ctx context.Context) ([]Account, error) {
 	rows, err := db.QueryContext(ctx,
 		`SELECT * FROM accounts

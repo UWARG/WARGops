@@ -30,11 +30,11 @@ INSERT INTO transactions (
 
 --- list all accounts, list all active accounts (oldest first), then all expired accounts (most recently expired first)
 SELECT * FROM accounts
-WHERE expiry_date < DATE('now')
+WHERE expiry_date > DATE('now')
 ORDER BY allocation_date ASC
 UNION
 SELECT * FROM accounts
-WHERE expiry_date >= DATE('now')
+WHERE expiry_date <= DATE('now')
 ORDER BY expiry_date DESC;
 
 -- list all transactions for an account, exclude rejected
