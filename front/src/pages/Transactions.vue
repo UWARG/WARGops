@@ -64,12 +64,27 @@
                                     <th> {{ new Date(transaction.approval_date).toLocaleDateString() }}</th>
                                     <th> {{ new Date(transaction.creation_date).toLocaleDateString() }}</th>
                                     <th> {{ new Date(transaction.rejected_date).toLocaleDateString() }}</th>
-                                    <th v-if="transaction.status === 0" class="flex justify-around items-center">
-                                        <v-btn variant="tonal" color="green" size="x-small" icon=""
+                                    <th v-if="transaction.status === 0" class="flex items-center">
+                                        <v-btn variant="tonal" color="green" size="small" class="mr-2"
                                             @click="transactionStore.payTransaction(account_id, transaction.id)">Pay</v-btn>
-                                        <v-btn variant="tonal" color="red" size="x-small" icon=""
+                                        <v-btn variant="tonal" color="red" size="small" class="ml-2"
                                             @click="transactionStore.rejectTransaction(account_id, transaction.id)">Rej</v-btn>
+                                        <v-btn variant="tonal" color="grey" size="small" class="ml-2"
+                                            @click="transactionStore.holdTransaction(account_id, transaction.id)">Reset</v-btn>
                                     </th>
+                                    <th v-else-if="transaction.status === 1" class="flex items-center">
+                                        <v-btn variant="tonal" color="green" size="small" class="mr-2"
+                                            @click="transactionStore.payTransaction(account_id, transaction.id)">Pay</v-btn>
+                                        <v-btn variant="tonal" color="red" size="small" class="ml-2"
+                                            @click="transactionStore.rejectTransaction(account_id, transaction.id)">Rej</v-btn>
+                                        <v-btn variant="tonal" color="grey" size="small" class="ml-2"
+                                            @click="transactionStore.holdTransaction(account_id, transaction.id)">Reset</v-btn>
+                                    </th>
+                                    <th v-else-if="transaction.status === 2" class="flex items-center">
+                                        <v-btn variant="tonal" color="grey" size="small" class="ml-2"
+                                            @click="transactionStore.holdTransaction(account_id, transaction.id)">Reset</v-btn>
+                                    </th>
+                                    <th v-else></th>
                                 </tr>
                             </tbody>
                         </v-table>
@@ -81,7 +96,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onMounted, ref } from 'vue';
+import { defineComponent, onBeforeMount, ref } from 'vue';
 import NavBar from '../components/NavBar.vue';
 import { useRouter } from 'vue-router';
 import { useTransactionStore } from '../store/transactions';

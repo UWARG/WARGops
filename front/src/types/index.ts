@@ -44,19 +44,19 @@ export interface Transaction {
 }
 
 export interface Profile {
-    code: string,
-    access_token: string,
-    refresh_token: string,
-    expires_in: number,
-    token_type: string,
-    scope: string,
-    id_token: string,
-    user_id: string,
-    user_name: string,
-    user_email: string,
-    user_avatar: string,
-    user_discriminator: string,
-    user_public_flags: number,
-    user_flags: number,
-    user_locale: string,
+    accent_color: string,
+    avatar: string,
+    avatar_decoration: null,
+    banner: null,
+    banner_color: "#6b4f31",
+    discriminator: "3963",
+    display_name: null,
+    flags: 0,
+    id: string,
+    locale: "en-US",
+    mfa_enabled: false,
+    premium_type: 0,
+    public_flags: 0,
+    username: string;
+    role: "lead" | "bootcamper" | "dev";
 }

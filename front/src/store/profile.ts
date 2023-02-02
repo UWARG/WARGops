@@ -12,7 +12,8 @@ export const useProfileStore = defineStore('Profile👨', {
         },
         getProfileDefined(state): boolean {
             return state.profile !== undefined;
-        }
+        },
+
     },
     actions: {
         setCode(code: string) {
@@ -22,6 +23,7 @@ export const useProfileStore = defineStore('Profile👨', {
             this.profile = profile;
         },
         loadProfile(): Promise<void> {
+            console.log("Loading profile...");
             return axios.get('http://localhost:8080/user')
                 .then((res) => {
                     this.profile = res.data;
@@ -29,6 +31,14 @@ export const useProfileStore = defineStore('Profile👨', {
                 .catch((err) => {
                     console.log(err);
                 });
+        },
+        getGuilds() {
+            const url = new URL('http://localhost:8080/guilds/473584913497718824/roles');
+            axios.get(url.toString());
+        },
+        async checkProfile() {
+            console.log("You are logged in:", this.profile.username !== undefined);
+            return this.profile.username !== undefined;
         }
     }
 });

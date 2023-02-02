@@ -8,24 +8,18 @@
                 <v-btn :icon="theme.global.name.value === 'wargDark' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
                     @click="toggleTheme" />
                 <slot name="button"></slot>
-
-
-
                 <v-menu open-on-hover>
                     <template v-slot:activator="{ props }">
                         <v-btn icon v-bind="props">
                             <v-avatar class="mx-4">
-                                <v-img alt="Avatar" :src="profileStore.profile.AvatarURL" id="menu-activator" />
+                                <v-img alt="Avatar" :src="`https://cdn.discordapp.com/avatars/${profileStore.getProfile.id}/${profileStore.getProfile.avatar}.png?size=1024`" id="menu-activator" />
                             </v-avatar>
                         </v-btn>
                     </template>
                     <v-card width="250" class="text-center flex flex-col items-center">
                         <v-card-title>
-                            {{ profileStore.profile.Name }}
+                            {{ profileStore.profile.username }}
                         </v-card-title>
-                        <v-card-text>
-                            {{ profileStore.profile.Email }}
-                        </v-card-text>
                         <v-card-actions>
                             <v-btn color="red" variant="outlined" @click="profileStore.logout">Logout</v-btn>
                         </v-card-actions>

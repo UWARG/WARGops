@@ -71,9 +71,9 @@ func main() {
 		discord.New(
 			// TODO: move to env variables
 			"1069446618056761375",
-			"9-pHUrOkF4pJnPdxFwFQebgtI6mbf5gq",
+			"eoJeo_O2R3RaKsFFAL2T3M0Qox8t1YUc",
 			"http://localhost:8080/auth/callback?provider=discord",
-			"identify", "guilds.members.read",
+			"identify", "guilds", "guilds.members.read",
 		),
 	)
 
@@ -87,20 +87,35 @@ func main() {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		fmt.Println(user.RawData["username"], "has logged in")
-		fmt.Println("")
-		fmt.Printf("+%v", user)
-		fmt.Println("")
-		fmt.Println("")
-
+		fmt.Println("User: " + user.Name)
 		http.Redirect(w, r, "http://localhost:5173/", http.StatusMovedPermanently)
-		// Use the user data however you want.
-		// E.g. store in a database, set a session, etc.
 	})
 
 	r.Get("/user", func(w http.ResponseWriter, r *http.Request) {
-		json.NewDecoder(r.Body).Decode(&user)
-		respondwithJSON(w, http.StatusOK, user)
+		body := getFromDiscord("https://discord.com/api/users/@me", user.AccessToken, w)
+		var data map[string]interface{}
+		json.NewDecoder(body.Body).Decode(&data)
+		respondwithJSON(w, http.StatusOK, data)
+	})
+
+	r.Get("/logout", func(w http.ResponseWriter, r *http.Request) {
+		gothic.Logout(w, r)
+	})
+
+	r.Get("/guilds", func(w http.ResponseWriter, r *http.Request) {
+		body := getFromDiscord("https://discord.com/api/users/@me/guilds", user.AccessToken, w)
+		var data []map[string]interface{}
+		json.NewDecoder(body.Body).Decode(&data)
+		respondwithJSON(w, http.StatusOK, data)
+	})
+
+	r.Get("/guilds/{guildID}/roles", func(w http.ResponseWriter, r *http.Request) {
+		guildID := chi.URLParam(r, "guildID")
+		fmt.Println("ID: " + guildID)
+		data := getFromDiscord("https://discord.com/api/users/@me/guilds/"+guildID+"/member", user.AccessToken, w)
+		var members []map[string]interface{}
+		json.NewDecoder(data.Body).Decode(&members)
+		respondwithJSON(w, http.StatusOK, members)
 	})
 
 	server.Handler(service, server.WithRouter(r))
@@ -123,4 +138,22 @@ func respondwithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	w.Write(response)
+}
+
+func getFromDiscord(endpoint string, token string, w http.ResponseWriter) *http.Response {
+	//Create the request for the user endpoint
+	req, err := http.NewRequest("GET", endpoint, nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	//Send the request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	return resp
 }

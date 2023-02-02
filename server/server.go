@@ -31,7 +31,6 @@ func (f *Finances) ListAccounts(w http.ResponseWriter, r *http.Request) *Respons
 		}
 	}
 
-	fmt.Println("Accounts: ", accounts)
 	return ListAccountsJSON200Response(accounts)
 }
 
@@ -47,7 +46,6 @@ func (f *Finances) CreateAccount(w http.ResponseWriter, r *http.Request) *Respon
 			contentType: "application/json",
 		}
 	}
-	fmt.Printf("New Account: %+v\n", newAccount)
 	if err := f.db.CreateAccount(r.Context(), newAccount); err != nil {
 		fmt.Println("Error: ", err)
 		return &Response{
@@ -73,7 +71,6 @@ func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Re
 			contentType: "application/json",
 		}
 	}
-	fmt.Printf("New Transaction: %+v\n", nt)
 
 	if err := f.db.CreateTransaction(r.Context(), nt, "test"); err != nil {
 		fmt.Println("Error: ", err)
@@ -90,7 +87,6 @@ func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Re
 // Retrieve the active transactions for an account.
 // (GET /transactions/{account_id})
 func (f *Finances) ListTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
-	fmt.Println("Account ID: ", accountID)
 	transactions, err := f.db.ListTransactions(r.Context(), accountID)
 	if err != nil {
 		fmt.Println("Error: ", err)
@@ -100,7 +96,6 @@ func (f *Finances) ListTransactions(w http.ResponseWriter, r *http.Request, acco
 			contentType: "application/json",
 		}
 	}
-	fmt.Println("Transactions: ", transactions)
 	return ListTransactionsJSON200Response(transactions)
 }
 

@@ -1,10 +1,6 @@
 <template>
     <v-app class="p-4">
-        <nav-bar>
-            <template #button>
-
-            </template>
-        </nav-bar>
+        <nav-bar></nav-bar>
 
         <v-main>
             <div class="flex">
@@ -65,13 +61,19 @@
                                         <span>lorem</span>
 
                                     </div>
-                                </div>                               
+                                </div>
 
                                 <div>
                                     <div>
-                                        <div class="my-4"> <span class="font-bold">Point of Contact: </span>{{ activeAccount.point_of_contact }}</div>
-                                        <div class="my-4"> <span class="font-bold">Waterloo Id: </span>{{ activeAccount.waterloo_id }}</div>
-                                        <div class="my-4"> <span class="font-bold">Creator: </span>{{ activeAccount.creator }}</div>
+                                        <div class="my-4"> <span class="font-bold">Point of Contact: </span>{{
+                                            activeAccount.point_of_contact
+                                        }}</div>
+                                        <div class="my-4"> <span class="font-bold">Waterloo Id: </span>{{
+                                            activeAccount.waterloo_id
+                                        }}</div>
+                                        <div class="my-4"> <span class="font-bold">Creator: </span>{{
+                                            activeAccount.creator
+                                        }}</div>
                                     </div>
                                 </div>
                                 <div class="flex justify-center mt-6">
@@ -85,6 +87,12 @@
                     </v-card>
                 </div>
             </div>
+            <v-card class="mt-8" height="200" width="200" v-if="dev">
+                <div class="text-center"> Scratch Pad 📝</div>
+                <v-btn @click="profileStore.getGuilds">Hit Guild Route</v-btn>
+
+                
+            </v-card>
         </v-main>
     </v-app>
 
@@ -98,6 +106,7 @@ import AccountModal from '../components/AccountModal.vue';
 import { useRouter } from 'vue-router';
 import NavBar from '../components/NavBar.vue';
 import { useAccountStore } from '../store/accounts';
+import { useProfileStore } from '../store/profile';
 import { Account } from '../types';
 
 
@@ -105,6 +114,9 @@ export default defineComponent({
     components: { AccountModal, NavBar },
     setup() {
         const accountStore = useAccountStore();
+        const profileStore = useProfileStore();
+
+
         const theme = useTheme();
         const dialog = ref(false);
         const toggleTheme = () => theme.global.name.value = theme.global.current.value.dark ? 'wargLight' : 'wargDark';
@@ -116,11 +128,14 @@ export default defineComponent({
             router.push({ name: 'Transaction', params: { account_id } });
         };
 
-
         const filter = ref<string>('');
 
+
+        // @ts-ignore
+        const dev = import.meta.env.DEV
+        
         const activeAccount = ref<Account | undefined>();
-        return { dialog, toggleTheme, theme, accountStore, switchTransaction, activeAccount, filter };
+        return { dialog, toggleTheme, theme, accountStore, switchTransaction, activeAccount, filter, profileStore, dev };
     }
 });
 </script>

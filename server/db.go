@@ -273,7 +273,8 @@ func (db DB) PayTransaction(ctx context.Context, accountID string, transactionID
 	WHERE id = $1
 	  AND account_id = $2`,
 		transactionID,
-		accountID)
+		accountID,
+		"ref", "notes")
 	if err != nil {
 		return err
 	}
@@ -287,7 +288,7 @@ SET status = 0,
 WHERE id = $1
   AND account_id = $2`,
 		transactionID,
-		accountID)
+		accountID, "notes")
 	if err != nil {
 		return err
 	}

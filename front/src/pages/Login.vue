@@ -41,14 +41,11 @@ export default defineComponent({
         };
         const router = useRouter();
 
-        onMounted(async () => {
-            console.log("Loading Profile");
+        onBeforeMount(async () => {
             await useProfileStore().loadProfile();
-            if (useProfileStore().profile.Name) {
-                console.log("Profile Loaded");
+            if (useProfileStore().profile.username != "") {
                 router.push({ name: 'Home' });
             }
-
         });
 
         return {
