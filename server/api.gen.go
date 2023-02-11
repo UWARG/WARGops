@@ -71,6 +71,14 @@ type Account struct {
 	WaterlooID     string              `json:"waterloo_id"`
 }
 
+// EditTransaction defines model for EditTransaction.
+type EditTransaction struct {
+	Approver string `json:"approver"`
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Notes    string `json:"notes"`
+}
+
 // NewAccount defines model for NewAccount.
 type NewAccount struct {
 	Active         bool                `json:"active"`
@@ -89,6 +97,8 @@ type NewTransaction struct {
 	AccountID string            `json:"account_id"`
 	Amount    int               `json:"amount"`
 	ID        string            `json:"id"`
+	Name      string            `json:"name"`
+	Notes     string            `json:"notes"`
 	Status    TransactionStatus `json:"status"`
 	Type      TransactionType   `json:"type"`
 }
@@ -100,6 +110,7 @@ type Transaction struct {
 	ApprovalDate time.Time         `json:"approval_date"`
 	CreationDate time.Time         `json:"creation_date"`
 	ID           string            `json:"id"`
+	Name         string            `json:"name"`
 	Notes        string            `json:"notes"`
 	PaymentDate  time.Time         `json:"payment_date"`
 	RejectedDate time.Time         `json:"rejected_date"`
@@ -191,6 +202,18 @@ type CreateAccountJSONBody NewAccount
 // CreateTransactionJSONBody defines parameters for CreateTransaction.
 type CreateTransactionJSONBody NewTransaction
 
+// ApproveTransactionJSONBody defines parameters for ApproveTransaction.
+type ApproveTransactionJSONBody EditTransaction
+
+// HoldTransactionJSONBody defines parameters for HoldTransaction.
+type HoldTransactionJSONBody EditTransaction
+
+// PayTransactionJSONBody defines parameters for PayTransaction.
+type PayTransactionJSONBody EditTransaction
+
+// RejectTransactionJSONBody defines parameters for RejectTransaction.
+type RejectTransactionJSONBody EditTransaction
+
 // CreateAccountJSONRequestBody defines body for CreateAccount for application/json ContentType.
 type CreateAccountJSONRequestBody CreateAccountJSONBody
 
@@ -204,6 +227,38 @@ type CreateTransactionJSONRequestBody CreateTransactionJSONBody
 
 // Bind implements render.Binder.
 func (CreateTransactionJSONRequestBody) Bind(*http.Request) error {
+	return nil
+}
+
+// ApproveTransactionJSONRequestBody defines body for ApproveTransaction for application/json ContentType.
+type ApproveTransactionJSONRequestBody ApproveTransactionJSONBody
+
+// Bind implements render.Binder.
+func (ApproveTransactionJSONRequestBody) Bind(*http.Request) error {
+	return nil
+}
+
+// HoldTransactionJSONRequestBody defines body for HoldTransaction for application/json ContentType.
+type HoldTransactionJSONRequestBody HoldTransactionJSONBody
+
+// Bind implements render.Binder.
+func (HoldTransactionJSONRequestBody) Bind(*http.Request) error {
+	return nil
+}
+
+// PayTransactionJSONRequestBody defines body for PayTransaction for application/json ContentType.
+type PayTransactionJSONRequestBody PayTransactionJSONBody
+
+// Bind implements render.Binder.
+func (PayTransactionJSONRequestBody) Bind(*http.Request) error {
+	return nil
+}
+
+// RejectTransactionJSONRequestBody defines body for RejectTransaction for application/json ContentType.
+type RejectTransactionJSONRequestBody RejectTransactionJSONBody
+
+// Bind implements render.Binder.
+func (RejectTransactionJSONRequestBody) Bind(*http.Request) error {
 	return nil
 }
 
@@ -883,29 +938,30 @@ func WithErrorHandler(handler func(w http.ResponseWriter, r *http.Request, err e
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

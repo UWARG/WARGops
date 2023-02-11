@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	_ "modernc.org/sqlite"
@@ -96,6 +97,7 @@ func (db DB) CreateTransaction(ctx context.Context, t NewTransaction, creator st
 	_, err := db.ExecContext(ctx, `INSERT INTO transactions (
 		id,
         account_id,
+		name,
         creator,
         type,
         ref,
@@ -108,13 +110,14 @@ func (db DB) CreateTransaction(ctx context.Context, t NewTransaction, creator st
         rejected_date,
         notes
 	) VALUES (
-		$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
+		$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14
 	)`,
 		t.ID,
 		t.AccountID,
+		t.Name,
 		creator,
 		t.Type.value,
-		nil,
+		"",
 		t.Status.value,
 		t.Amount,
 		time.Now(),
@@ -122,7 +125,7 @@ func (db DB) CreateTransaction(ctx context.Context, t NewTransaction, creator st
 		time.Now(),
 		time.Now(),
 		time.Now(),
-		"",
+		t.Notes,
 	)
 	return err
 }
@@ -138,10 +141,12 @@ func (db DB) ListTransactions(ctx context.Context, accountID string) ([]Transact
 	var ref sql.NullString
 	var creator string
 	var approvedBy string
+
 	for rows.Next() {
 		var t Transaction
 		if err := rows.Scan(
 			&t.ID,
+			&t.Name,
 			&t.AccountID,
 			&creator,
 			&t.Type.value,
@@ -231,65 +236,77 @@ func (db DB) ListRejectedTransactions(ctx context.Context, accountID string) ([]
 	return transactions, nil
 }
 
-func (db DB) ApproveTransaction(ctx context.Context, accountID string, transactionID string, approver string) error {
+func (db DB) ApproveTransaction(ctx context.Context, accountID string, transactionID string, et EditTransaction) error {
 	_, err := db.ExecContext(ctx, `UPDATE transactions
 	SET status = 1,
 		approval_date = DATE('now'),
 		approved_by = $3,
-		-- notes = $4
-	WHERE id = $1
-	  AND account_id = $2;`,
-		transactionID,
-		accountID,
-		approver)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (db DB) RejectTransaction(ctx context.Context, accountID string, transactionID string, approver string) error {
-	_, err := db.ExecContext(ctx, `UPDATE transactions
-	SET status = 3,
-		rejected_date = DATE('now'),
-		notes = $3
-	WHERE id = $1
-	  AND account_id = $2`,
-		transactionID,
-		accountID,
-		approver)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (db DB) PayTransaction(ctx context.Context, accountID string, transactionID string) error {
-	_, err := db.ExecContext(ctx, `UPDATE transactions
-	SET status = 2,
-		payment_date = DATE('now'),
-		ref = $3,
 		notes = $4
 	WHERE id = $1
 	  AND account_id = $2`,
 		transactionID,
 		accountID,
-		"ref", "notes")
+		et.Approver,
+		et.Notes)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
+}
+
+func (db DB) RejectTransaction(ctx context.Context, accountID string, transactionID string, et EditTransaction) error {
+	_, err := db.ExecContext(ctx, `UPDATE transactions
+	SET status = 3,
+		rejected_date = DATE('now'),
+		approved_by = $3,
+		notes = $4
+		
+	WHERE id = $1
+	  AND account_id = $2`,
+		transactionID,
+		accountID,
+		et.Approver,
+		et.Notes)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (db DB) HoldTransaction(ctx context.Context, accountID string, transactionID string) error {
+func (db DB) PayTransaction(ctx context.Context, accountID string, transactionID string, et EditTransaction) error {
+	_, err := db.ExecContext(ctx, `UPDATE transactions
+	SET status = 2,
+		payment_date = DATE('now'),
+		ref = $5,
+		notes = $4,
+		approved_by = $3
+	WHERE id = $1
+	  AND account_id = $2`,
+		transactionID,
+		accountID,
+		et.Approver,
+		et.Notes,
+		"ref")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db DB) HoldTransaction(ctx context.Context, accountID string, transactionID string, et EditTransaction) error {
 	_, err := db.ExecContext(ctx, `UPDATE transactions
 SET status = 0,
-    notes = $3
+	approved_by = $3,
+    notes = $4
 WHERE id = $1
   AND account_id = $2`,
 		transactionID,
-		accountID, "notes")
+		accountID,
+		et.Approver,
+		et.Notes)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 	return nil

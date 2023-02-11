@@ -71,7 +71,7 @@ func main() {
 		discord.New(
 			// TODO: move to env variables
 			"1069446618056761375",
-			"eoJeo_O2R3RaKsFFAL2T3M0Qox8t1YUc",
+			"WlL3TmxtfbfkKtjX8TfnPaQJrNbZzkZh",
 			"http://localhost:8080/auth/callback?provider=discord",
 			"identify", "guilds", "guilds.members.read",
 		),
@@ -134,7 +134,6 @@ func main() {
 // respondwithJSON write json response format
 func respondwithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	response, _ := json.Marshal(payload)
-	fmt.Println(payload)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	w.Write(response)

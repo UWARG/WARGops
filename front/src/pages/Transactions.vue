@@ -11,7 +11,7 @@
                     <!-- Header -->
                     <div class="flex justify-between">
                         <v-card-title class="text-3xl font-bold mb-2">
-                            Transactions
+                            Transactions for {{ accountStore.getAccountById(account_id).name }}
                         </v-card-title>
                         <div class="flex justify-center items-center mr-4">
                             <v-dialog v-model="newTransactionModal" width="800">
@@ -46,6 +46,7 @@
                         <v-table>
                             <thead color="background-light-1">
                                 <tr>
+                                    <th>Name</th>
                                     <th>Amount</th>
                                     <th>Type</th>
                                     <th>Status</th>
@@ -58,39 +59,29 @@
                             <tbody v-if="transactionStore.transactions">
                                 <tr v-for="(transaction, index) in transactionStore.getFilteredTransactions(statusFilter, typeFilter)"
                                     :key="index">
+                                    <th> {{ transaction.name }}</th>
                                     <th> $ {{ transaction.amount }}</th>
                                     <th> <type-chip :type="transaction.type" /></th>
                                     <th> <status-chip :type="transaction.status" /></th>
                                     <th> {{ new Date(transaction.approval_date).toLocaleDateString() }}</th>
                                     <th> {{ new Date(transaction.creation_date).toLocaleDateString() }}</th>
                                     <th> {{ new Date(transaction.rejected_date).toLocaleDateString() }}</th>
-                                    <th v-if="transaction.status === 0" class="flex items-center">
-                                        <v-btn variant="tonal" color="green" size="small" class="mr-2"
-                                            @click="transactionStore.payTransaction(account_id, transaction.id)">Pay</v-btn>
-                                        <v-btn variant="tonal" color="red" size="small" class="ml-2"
-                                            @click="transactionStore.rejectTransaction(account_id, transaction.id)">Rej</v-btn>
-                                        <v-btn variant="tonal" color="grey" size="small" class="ml-2"
-                                            @click="transactionStore.holdTransaction(account_id, transaction.id)">Reset</v-btn>
+                                    <th class="flex items-center">
+                                        <v-btn icon="mdi-pencil" color="grey" variant="tonal" size="x-small"
+                                            @click="() => { activeId = transaction.id; dialog = true; }"></v-btn>
+
                                     </th>
-                                    <th v-else-if="transaction.status === 1" class="flex items-center">
-                                        <v-btn variant="tonal" color="green" size="small" class="mr-2"
-                                            @click="transactionStore.payTransaction(account_id, transaction.id)">Pay</v-btn>
-                                        <v-btn variant="tonal" color="red" size="small" class="ml-2"
-                                            @click="transactionStore.rejectTransaction(account_id, transaction.id)">Rej</v-btn>
-                                        <v-btn variant="tonal" color="grey" size="small" class="ml-2"
-                                            @click="transactionStore.holdTransaction(account_id, transaction.id)">Reset</v-btn>
-                                    </th>
-                                    <th v-else-if="transaction.status === 2" class="flex items-center">
-                                        <v-btn variant="tonal" color="grey" size="small" class="ml-2"
-                                            @click="transactionStore.holdTransaction(account_id, transaction.id)">Reset</v-btn>
-                                    </th>
-                                    <th v-else></th>
                                 </tr>
                             </tbody>
                         </v-table>
                     </div>
                 </v-card>
             </v-card>
+            <v-dialog v-model="dialog" width="800">
+                <edit-transaction-modal :accountId="account_id" :transactionId="activeId"
+                    @closeModal="dialog = false" />
+            </v-dialog>
+
         </v-main>
     </v-app>
 </template>
@@ -100,12 +91,15 @@ import { defineComponent, onBeforeMount, ref } from 'vue';
 import NavBar from '../components/NavBar.vue';
 import { useRouter } from 'vue-router';
 import { useTransactionStore } from '../store/transactions';
+import { useAccountStore } from '../store/accounts';
+
 import NewTranscationModal from '../components/NewTransactionModal.vue';
 import TypeChip from '../components/TypeChip.vue';
 import StatusChip from '../components/StatusChip.vue';
+import EditTransactionModal from '../components/EditTransactionModal.vue';
 
 export default defineComponent({
-    components: { NavBar, NewTranscationModal, TypeChip, StatusChip },
+    components: { NavBar, NewTranscationModal, TypeChip, StatusChip, EditTransactionModal },
     setup() {
         const router = useRouter();
         const backToHome = () => {
@@ -114,6 +108,7 @@ export default defineComponent({
 
         const { account_id } = router.currentRoute.value.params;
         const transactionStore = useTransactionStore();
+        const accountStore = useAccountStore();
 
         onBeforeMount(() => {
             transactionStore.loadTransactions(account_id as string);
@@ -124,7 +119,13 @@ export default defineComponent({
 
 
         const newTransactionModal = ref(false);
-        return { backToHome, newTransactionModal, account_id: account_id as string, transactionStore, statusFilter, typeFilter };
+
+
+        const activeId = ref("");
+
+
+        const dialog = ref(false);
+        return { activeId, backToHome, newTransactionModal, account_id: account_id as string, transactionStore, statusFilter, typeFilter, dialog, accountStore };
     }
 });
 </script>

@@ -13,19 +13,19 @@
                     v-model="accountInfo.name" />
             </div>
             <div class="flex mb-4">
-                <v-date-picker class="inline-block h-full flex-1 m-2" v-model="accountInfo.allocation_date" color="yellow" is-dark />
-                <v-date-picker class="inline-block h-full flex-1 m-2 " v-model="accountInfo.expiry_date" color="yellow" is-dark />
+                <div class="flex-1 mr-2">
+                    <v-text-field label="Source" class="w-full" variant="outlined" :rules="[rules.required]"
+                        v-model="accountInfo.source" />
+                    <v-text-field label="Point of Contact" variant="outlined" v-model="accountInfo.point_of_contact"
+                        :rules="[rules.required, rules.email]" />
+                    <v-switch color="primary" label="Active" class="w-36 ml-8" v-model="accountInfo.active"></v-switch>
+                </div>
+                <div class="flex-1 ml-2">
+                    <span class="text-gray-400">Expiry Date</span>
+                    <v-date-picker class="inline-block flex-1 w-full" v-model="accountInfo.expiry_date"
+                        color="yellow" is-dark />
+                </div>
             </div>
-            <div class="flex">
-                <v-text-field label="Source" class="w-full" variant="outlined" :rules="[rules.required]"
-                    v-model="accountInfo.source" />
-                <v-switch color="primary" label="Active" class="w-36 ml-8" v-model="accountInfo.active"></v-switch>
-            </div>
-            <v-text-field label="Creator" variant="outlined" v-model="accountInfo.creator" :rules="[rules.required,]" />
-            <v-text-field label="Point of Contact" variant="outlined" v-model="accountInfo.point_of_contact"
-                :rules="[rules.required, rules.email]" />
-
-
         </v-form>
     </v-card>
 </template>
@@ -35,6 +35,8 @@ import { defineComponent, reactive, ref } from 'vue';
 import axios from 'axios';
 import { rules } from "../helpers";
 import WargDatePicker from './DatePicker.vue';
+import { useProfileStore } from '../store/profile';
+import { useAccountStore } from '../store/accounts';
 
 
 export default defineComponent({
@@ -53,13 +55,13 @@ export default defineComponent({
             active: false,
             allocation_date: new Date().toISOString(),
             expiry_date: new Date().toISOString(),
-            creator: '',
+            creator: useProfileStore().profile.id,
             point_of_contact: '',
             //@ts-ignore
             id: crypto.randomUUID()
         });
         const submit = async () => {
-            await axios.post('http://localhost:8080/accounts', accountInfo);
+            await useAccountStore().createAccount(accountInfo);
             closeModal();
         };
         const openDatePicker = () => {

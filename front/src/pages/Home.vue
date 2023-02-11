@@ -1,100 +1,102 @@
 <template>
-    <v-app class="p-4">
-        <nav-bar></nav-bar>
 
-        <v-main>
-            <div class="flex">
-                <div class="flex-1">
-                    <v-card class="p-4">
-                        <div class="flex">
-                            <v-card class="p-4 flex-1 mr-2" color="background-light-1">
-                                <div class="flex justify-between">
-                                    <v-card-title class="text-3xl font-bold mb-2">
-                                        Accounts
-                                    </v-card-title>
-                                    <v-dialog v-model="dialog" width="800">
-                                        <template v-slot:activator="{ props }">
-                                            <v-btn v-bind="props" color="primary" variant="tonal"> Create New
-                                                Account</v-btn>
-                                        </template>
-                                        <account-modal @closeModal="dialog = false" />
-                                    </v-dialog>
-                                </div>
+    <warg-page>
+        <div class="flex">
+            <div class="flex-1">
+                <v-card class="p-4">
+                    <div class="flex">
+                        <v-card class="p-4 flex-1 mr-2" color="background-light-1">
+                            <div class="flex justify-between">
+                                <v-card-title class="text-3xl font-bold mb-2">
+                                    Accounts
+                                </v-card-title>
+                                <v-dialog v-model="dialog" width="800">
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn v-bind="props" color="primary" variant="tonal"> Create New
+                                            Account</v-btn>
+                                    </template>
+                                    <account-modal @closeModal="dialog = false" />
+                                </v-dialog>
+                            </div>
 
-                                <v-text-field density="compact" variant="solo" label="Search Accounts"
-                                    append-inner-icon="mdi-magnify" single-line hide-details v-model="filter" />
-                                <div>
-                                    <div class="cursor-pointer"
-                                        v-for="(account, index) in accountStore.getFilteredAccounts(filter)"
-                                        :key="account.id"
-                                        @click="activeAccount = accountStore.getAccountById(account.id)">
-                                        <div class="flex justify-between items-center">
-                                            <div class="my-4"> {{ account.name }}</div>
-                                        </div>
-                                        <v-divider v-if="index != accountStore.accounts.length - 1" />
+                            <v-text-field density="compact" variant="solo" label="Search Accounts"
+                                append-inner-icon="mdi-magnify" single-line hide-details v-model="filter" />
+                            <div>
+                                <div class="cursor-pointer"
+                                    v-for="(account, index) in accountStore.getFilteredAccounts(filter)"
+                                    :key="account.id" @click="activeAccount = accountStore.getAccountById(account.id)">
+                                    <div class="flex justify-between items-center">
+                                        <div class="my-4"> {{ account.name }}</div>
                                     </div>
+                                    <v-divider v-if="index != accountStore.accounts.length - 1" />
                                 </div>
+                            </div>
 
-                            </v-card>
+                        </v-card>
 
-                            <v-card class="p-4 flex-1 ml-2" color="background-light-1" v-if="activeAccount">
-                                <v-card-title class="text-3xl font-bold mb-2 flex mx-8">
-                                    <span class="underline w-full text-center ml-12"> {{ activeAccount.name }}</span>
+                        <v-card class="p-4 flex-1 ml-2" color="background-light-1" v-if="activeAccount">
+                            <v-card-title class="text-3xl font-bold mb-2 flex mx-8">
+                                <span class="underline w-full text-center ml-12"> {{ activeAccount.name }}</span>
+                                <div>
                                     <v-chip class="" :color="activeAccount.active ? 'green' : 'red'">
                                         {{ activeAccount.active ? 'Active' : 'Not Active' }}
                                     </v-chip>
-                                </v-card-title>
-
-                                <div class="flex text-center">
-                                    <div class="mx-2 flex-1">
-                                        <h1 class="text-lg">Created Transactions</h1>
-                                        <span>lorem</span>
-                                    </div>
-                                    <v-divider vertical></v-divider>
-                                    <div class="mx-2 flex-1">
-                                        <h1 class="text-lg">Pending Transactions</h1>
-                                        <span>lorem</span>
-                                    </div>
-                                    <v-divider vertical></v-divider>
-                                    <div class="mx-2 flex-1">
-                                        <h1 class="text-lg">Paid Transactions</h1>
-                                        <span>lorem</span>
-
-                                    </div>
                                 </div>
+                                
+                            </v-card-title>
 
+                            <div class="flex text-center">
+                                <div class="mx-2 flex-1">
+                                    <h1 class="text-lg">Created Transactions</h1>
+                                    <span>lorem</span>
+                                </div>
+                                <v-divider vertical></v-divider>
+                                <div class="mx-2 flex-1">
+                                    <h1 class="text-lg">Pending Transactions</h1>
+                                    <span>lorem</span>
+                                </div>
+                                <v-divider vertical></v-divider>
+                                <div class="mx-2 flex-1">
+                                    <h1 class="text-lg">Paid Transactions</h1>
+                                    <span>lorem</span>
+
+                                </div>
+                            </div>
+
+                            <div>
                                 <div>
-                                    <div>
-                                        <div class="my-4"> <span class="font-bold">Point of Contact: </span>{{
-                                            activeAccount.point_of_contact
-                                        }}</div>
-                                        <div class="my-4"> <span class="font-bold">Waterloo Id: </span>{{
-                                            activeAccount.waterloo_id
-                                        }}</div>
-                                        <div class="my-4"> <span class="font-bold">Creator: </span>{{
-                                            activeAccount.creator
-                                        }}</div>
-                                    </div>
+                                    <div class="my-4"> <span class="font-bold">Point of Contact: </span>{{
+                                        activeAccount.point_of_contact
+                                    }}</div>
+                                    <div class="my-4"> <span class="font-bold">Waterloo Id: </span>{{
+                                        activeAccount.waterloo_id
+                                    }}</div>
+                                    <div class="my-4"> <span class="font-bold">Creator: </span>{{
+                                        activeAccount.creator
+                                    }}</div>
                                 </div>
-                                <div class="flex justify-center mt-6">
-                                    <v-btn color="primary" variant="outlined"
-                                        @click="activeAccount ? switchTransaction(activeAccount.id) : null">
-                                        Open Transactions For {{ activeAccount.name }}
-                                    </v-btn>
-                                </div>
-                            </v-card>
-                        </div>
-                    </v-card>
-                </div>
+                            </div>
+                            <div class="flex justify-center mt-6">
+                                <v-btn color="primary" variant="outlined"
+                                    @click="activeAccount ? switchTransaction(activeAccount.id) : null">
+                                    Open Transactions For {{ activeAccount.name }}
+                                </v-btn>
+                            </div>
+                        </v-card>
+                    </div>
+                </v-card>
             </div>
-            <v-card class="mt-8" height="200" width="200" v-if="dev">
-                <div class="text-center"> Scratch Pad 📝</div>
-                <v-btn @click="profileStore.getGuilds">Hit Guild Route</v-btn>
+        </div>
+        <v-card class="mt-8" height="200" width="200" v-if="dev">
+            <div class="text-center"> Scratch Pad 📝</div>
+            <v-btn @click="getGuilds">Gets all the users guild</v-btn>
+            <v-btn @click="profileStore.getGuilds">Hit Guild Route</v-btn>
+            <v-btn @click="profileStore.toggleAlert"> Test Alert</v-btn>
 
-                
-            </v-card>
-        </v-main>
-    </v-app>
+
+        </v-card>
+    </warg-page>
+
 
 </template>
 
@@ -108,10 +110,12 @@ import NavBar from '../components/NavBar.vue';
 import { useAccountStore } from '../store/accounts';
 import { useProfileStore } from '../store/profile';
 import { Account } from '../types';
+import WargPage from '../components/WargPage.vue';
+import axios from 'axios';
 
 
 export default defineComponent({
-    components: { AccountModal, NavBar },
+    components: { AccountModal, NavBar, WargPage },
     setup() {
         const accountStore = useAccountStore();
         const profileStore = useProfileStore();
@@ -128,14 +132,20 @@ export default defineComponent({
             router.push({ name: 'Transaction', params: { account_id } });
         };
 
+        const getGuilds = () => {
+            axios.get('http://localhost:8080/guilds').then((res) => {
+                console.log(res);
+            });
+        };
+
         const filter = ref<string>('');
 
 
         // @ts-ignore
-        const dev = import.meta.env.DEV
-        
+        const dev = import.meta.env.DEV;
+
         const activeAccount = ref<Account | undefined>();
-        return { dialog, toggleTheme, theme, accountStore, switchTransaction, activeAccount, filter, profileStore, dev };
+        return { dialog, toggleTheme, theme, accountStore, switchTransaction, activeAccount, filter, profileStore, dev, getGuilds };
     }
 });
 </script>

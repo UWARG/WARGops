@@ -13,6 +13,7 @@ CREATE TABLE accounts (
 
 CREATE TABLE transactions (
 	id VARCHAR(64) NOT NULL PRIMARY KEY,
+	name VARCHAR(255) UNIQUE, -- todo: make this not null
 	account_id VARCHAR(64) NOT NULL REFERENCES accounts (id),
 	creator VARCHAR(32) NOT NULL,
 	type INTEGER NOT NULL,
@@ -26,4 +27,3 @@ CREATE TABLE transactions (
 	rejected_date TIMESTAMP,
 	notes TEXT
 );
-

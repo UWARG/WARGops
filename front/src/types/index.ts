@@ -10,12 +10,14 @@ export interface Account {
     waterloo_id: string;
 }
 
-export interface NewTransaction extends Transaction {
+export interface NewTransaction{
     id: string,
+    name: string,
     account_id: string,
     amount: number,
     type: number,
     status: number,
+    notes: string,
 }
 
 
@@ -33,6 +35,7 @@ export interface NewTransaction extends Transaction {
 
 export interface Transaction {
     id: string,
+    name: string,
     amount: number,
     approval_date: Date,
     creation_date: Date,

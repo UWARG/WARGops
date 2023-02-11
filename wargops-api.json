@@ -304,7 +304,16 @@
             "required": true
           }
         ],
-        "requestBody": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "$ref",
+                "$ref": "#/components/schemas/EditTransaction"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "content": {
@@ -355,7 +364,16 @@
             "required": true
           }
         ],
-        "requestBody": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "$ref",
+                "$ref": "#/components/schemas/EditTransaction"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "content": {
@@ -406,7 +424,16 @@
             "required": true
           }
         ],
-        "requestBody": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "$ref",
+                "$ref": "#/components/schemas/EditTransaction"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "content": {
@@ -457,7 +484,16 @@
             "required": true
           }
         ],
-        "requestBody": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "$ref",
+                "$ref": "#/components/schemas/EditTransaction"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "content": {
@@ -670,6 +706,9 @@
           "id": {
             "type": "string"
           },
+          "name": {
+            "type": "string"
+          },
           "account_id": {
             "type": "string"
           },
@@ -706,6 +745,7 @@
         },
         "required": [
           "account_id",
+          "name",
           "type",
           "status",
           "amount",
@@ -736,6 +776,12 @@
           },
           "amount": {
             "type": "integer"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
           }
         },
         "required": [
@@ -743,7 +789,32 @@
           "type",
           "status",
           "amount",
-          "id"
+          "id",
+          "notes",
+          "name"
+        ]
+      },
+      "EditTransaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "approver": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "notes",
+          "name",
+          "approver"
         ]
       }
     },

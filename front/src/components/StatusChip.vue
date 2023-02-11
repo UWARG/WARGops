@@ -1,18 +1,6 @@
 <template>
-    <v-chip color="green" class="ma-1" v-if="type == 0">
-        Created
-    </v-chip>
-    <v-chip color="yellow" class="ma-1" v-else-if="type == 1">
-        Pending
-    </v-chip>
-    <v-chip color="orange" class="ma-1" v-else-if="type == 2">
-        Paid
-    </v-chip>
-    <v-chip color="red" class="ma-1" v-else-if="type == 3">
-        Rejected
-    </v-chip>
-    <v-chip color="grey" class="ma-1" v-else>
-        Unknown
+    <v-chip :color="color[type]" :size="size" class="ma-1">
+        {{ text[type] }}
     </v-chip>
 </template>
 
@@ -24,10 +12,30 @@ export default defineComponent({
         type: {
             type: Number,
             required: true
+        },
+        size: {
+            type: String,
+            required: false,
+            default: 'default'
         }
     },
     setup() {
-        return {};
+        const color = [
+            'green',
+            'orange',
+            'blue',
+            'red',
+            'grey'
+        ];
+        const text = [
+            'Created',
+            'Pending',
+            'Paid',
+            'Rejected',
+            'Unknown'
+        ];
+
+        return { color, text };
     }
 });
 </script>

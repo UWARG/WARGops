@@ -4,7 +4,8 @@ import axios from 'axios';
 
 export const useProfileStore = defineStore('Profile👨', {
     state: () => ({
-        profile: {} as Profile
+        profile: {} as Profile,
+        alert: { alert: false }
     }),
     getters: {
         getProfile(state) {
@@ -13,9 +14,19 @@ export const useProfileStore = defineStore('Profile👨', {
         getProfileDefined(state): boolean {
             return state.profile !== undefined;
         },
+        getAlert(state): any {
+            return state.alert;
+        }
 
     },
     actions: {
+        toggleAlert() {
+            this.alert.alert = !this.alert.alert;
+            setTimeout(() => {
+                this.alert.alert = !this.alert.alert;
+            }, 3000);
+        },
+
         setCode(code: string) {
             this.profile.code = code;
         },
@@ -33,8 +44,13 @@ export const useProfileStore = defineStore('Profile👨', {
                 });
         },
         getGuilds() {
-            const url = new URL('http://localhost:8080/guilds/473584913497718824/roles');
-            axios.get(url.toString());
+            const url = new URL('http://localhost:8080/guilds/776618956638388305/roles');
+            axios.get(url.toString()).then((res) => {
+                console.log(res.data);
+            }).catch((err) => { 
+                console.log(err);
+            });
+            
         },
         async checkProfile() {
             console.log("You are logged in:", this.profile.username !== undefined);

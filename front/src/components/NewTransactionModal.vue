@@ -6,9 +6,13 @@
             <v-btn :disabled="!valid" color="green" @click="submit">Submit</v-btn>
         </v-toolbar>
         <v-form class="p-4" v-model="valid">
+            <div class="flex">
+                <v-text-field class="mr-2" label="Name" variant="outlined" v-model="newTransaction.name"
+                    :rules="[rules.required]"></v-text-field>
+                <v-text-field class="ml-2" label="Amount" variant="outlined" v-model="newTransaction.amount"
+                    :rules="[rules.required, rules.money]"> <span class="mr-2">$</span> </v-text-field>
+            </div>
 
-            <v-text-field class="mr-2" label="Amount" variant="outlined" v-model="newTransaction.amount"
-                :rules="[rules.required, rules.money]"> <span class="mr-2">$</span> </v-text-field>
             <div class="flex">
                 <v-select label="Type" class="mx-2" v-model="newTransaction.type"
                     :items="[{ title: 'Deposit', value: 0 }, { title: 'Rembursment', value: 1 }, { title: 'Procurement', value: 2 }]"
@@ -25,14 +29,19 @@
                         <status-chip :type="item.value" />
                     </template>
                 </v-select>
+
+                
             </div>
+            <v-textarea label="Notes" variant="outlined" v-model="newTransaction.notes" auto-grow>
+                    
+            </v-textarea>
         </v-form>
     </v-card>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
-import { Transaction } from '../types';
+import { Transaction, NewTransaction } from '../types';
 import { rules } from '../helpers';
 import axios from 'axios';
 import StatusChip from './StatusChip.vue';
@@ -70,10 +79,12 @@ export default defineComponent({
 
         const valid = ref(false);
 
-        const newTransaction = reactive({
+        const newTransaction = reactive<NewTransaction>({
             //@ts-ignore
             id: crypto.randomUUID(),
+            name: '',
             amount: 0,
+            notes: '',
             type: 0,
             account_id: props.accountId,
             status: 0,

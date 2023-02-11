@@ -138,8 +138,20 @@ func (f *Finances) TransactionRef(w http.ResponseWriter, r *http.Request, accoun
 // Approve a transaction.
 // (POST /transactions/{account_id}/{transaction_id}:approve)
 func (f *Finances) ApproveTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
-	err := f.db.ApproveTransaction(r.Context(), accountID, transactionID, "test")
+	editTransaction := EditTransaction{}
+	if err := json.NewDecoder(r.Body).Decode(&editTransaction); err != nil {
+		fmt.Println("Error: ", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return &Response{
+			body:        "Invalid JSON",
+			Code:        400,
+			contentType: "application/json",
+		}
+	}
+	fmt.Println("Notes: ", editTransaction.Notes)
+	err := f.db.ApproveTransaction(r.Context(), accountID, transactionID, editTransaction)
 	if err != nil {
+		fmt.Println("Error: ", err)
 		return &Response{
 			body:        err,
 			Code:        500,
@@ -153,7 +165,18 @@ func (f *Finances) ApproveTransaction(w http.ResponseWriter, r *http.Request, ac
 // Hold back a transaction, and reset it to pending
 // (POST /transactions/{account_id}/{transaction_id}:hold)
 func (f *Finances) HoldTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
-	err := f.db.HoldTransaction(r.Context(), accountID, transactionID)
+	editTransaction := EditTransaction{}
+	if err := json.NewDecoder(r.Body).Decode(&editTransaction); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return &Response{
+			body:        err,
+			Code:        400,
+			contentType: "application/json",
+		}
+	}
+	fmt.Println("Notes: ", editTransaction.Notes)
+
+	err := f.db.HoldTransaction(r.Context(), accountID, transactionID, editTransaction)
 	if err != nil {
 		return &Response{
 			body:        err,
@@ -167,7 +190,18 @@ func (f *Finances) HoldTransaction(w http.ResponseWriter, r *http.Request, accou
 // Mark a transaction as paid.
 // (POST /transactions/{account_id}/{transaction_id}:pay)
 func (f *Finances) PayTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
-	err := f.db.PayTransaction(r.Context(), accountID, transactionID)
+	editTransaction := EditTransaction{}
+	if err := json.NewDecoder(r.Body).Decode(&editTransaction); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return &Response{
+			body:        "Invalid JSON",
+			Code:        400,
+			contentType: "application/json",
+		}
+	}
+	fmt.Println("Notes: ", editTransaction.Notes)
+
+	err := f.db.PayTransaction(r.Context(), accountID, transactionID, editTransaction)
 	if err != nil {
 		return &Response{
 			body:        err,
@@ -181,7 +215,18 @@ func (f *Finances) PayTransaction(w http.ResponseWriter, r *http.Request, accoun
 // Reject a transaction.
 // (POST /transactions/{account_id}/{transaction_id}:reject)
 func (f *Finances) RejectTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
-	err := f.db.RejectTransaction(r.Context(), accountID, transactionID, "test")
+	editTransaction := EditTransaction{}
+	if err := json.NewDecoder(r.Body).Decode(&editTransaction); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return &Response{
+			body:        "Invalid JSON",
+			Code:        400,
+			contentType: "application/json",
+		}
+	}
+	fmt.Println("Notes: ", editTransaction.Notes)
+
+	err := f.db.RejectTransaction(r.Context(), accountID, transactionID, editTransaction)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return &Response{
