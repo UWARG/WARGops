@@ -112,6 +112,48 @@
         ]
       }
     },
+    "/account/{account_id}": {
+      "get": {
+        "summary": "Retrieve a specific account based off an account id.",
+        "description": "",
+        "operationId": "get_account",
+        "tags": [
+          "accounts"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": "$ref",
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "user": []
+          }
+        ]
+      }
+    },
     "/transactions": {
       "post": {
         "summary": "Create a new transaction.",
