@@ -6,77 +6,64 @@
             </template>
         </nav-bar>
         <v-main>
-            <v-card class="p-4">
-                <v-card color="background-light-1" class="p-4">
-                    <!-- Header -->
-                    <div class="flex justify-between">
-                        <v-card-title class="text-3xl font-bold mb-2">
-                            Transactions for {{ accountStore.getAccountById(account_id).name }}
-                        </v-card-title>
-                        <div class="flex justify-center items-center mr-4">
-                            <v-dialog v-model="newTransactionModal" width="800">
-                                <template v-slot:activator="{ props }">
-                                    <v-btn v-bind="props" color="primary" variant="tonal">New Transaction</v-btn>
-                                </template>
 
-                                <NewTranscationModal @closeModal="newTransactionModal = false"
-                                    :accountId="account_id" />
-                            </v-dialog>
-                        </div>
-                    </div>
-                    <!-- Search -->
-                    <div class="flex my-4">
-                        <v-select label="Type: All" class="mx-2" v-model="typeFilter"
-                            :items="[{ title: 'Deposit', value: 0 }, { title: 'Rembursment', value: 1 }, { title: 'Procurement', value: 2 }]"
-                            multiple variant="outlined">
-                            <template v-slot:selection="{ item }">
-                                <type-chip :type="item.value" />
-                            </template>
-                        </v-select>
-                        <v-select label="Status: All" class="mx-2" v-model="statusFilter"
-                            :items="[{ title: 'Created', value: 0 }, { title: 'Pending', value: 1 }, { title: 'Paid', value: 2 }, { title: 'Rejected', value: 3 }]"
-                            multiple variant="outlined">
-                            <template v-slot:selection="{ item }">
-                                <status-chip :type="item.value" />
-                            </template>
-                        </v-select>
-                    </div>
-                    <!-- Transactions -->
-                    <div>
-                        <v-table>
-                            <thead color="background-light-1">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Amount</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                    <th>Approval Date</th>
-                                    <th>Creation Date</th>
-                                    <th>Rejected Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody v-if="transactionStore.transactions">
-                                <tr v-for="(transaction, index) in transactionStore.getFilteredTransactions(statusFilter, typeFilter)"
-                                    :key="index">
-                                    <th> {{ transaction.name }}</th>
-                                    <th> $ {{ transaction.amount }}</th>
-                                    <th> <type-chip :type="transaction.type" /></th>
-                                    <th> <status-chip :type="transaction.status" /></th>
-                                    <th> {{ new Date(transaction.approval_date).toLocaleDateString() }}</th>
-                                    <th> {{ new Date(transaction.creation_date).toLocaleDateString() }}</th>
-                                    <th> {{ new Date(transaction.rejected_date).toLocaleDateString() }}</th>
-                                    <th class="flex items-center">
-                                        <v-btn icon="mdi-pencil" color="grey" variant="tonal" size="x-small"
-                                            @click="() => { activeId = transaction.id; dialog = true; }"></v-btn>
+            <!-- Header -->
+            <div class="flex justify-between">
+                <v-card-title class="text-3xl font-bold mb-2">
+                    Transactions for {{ accountStore.getAccountById(account_id).name }}
+                </v-card-title>
+                <div class="flex justify-center items-center mr-4">
+                    <v-dialog v-model="newTransactionModal" width="800">
+                        <template v-slot:activator="{ props }">
+                            <v-btn v-bind="props" color="primary" variant="tonal">New Transaction</v-btn>
+                        </template>
 
-                                    </th>
-                                </tr>
-                            </tbody>
-                        </v-table>
-                    </div>
-                </v-card>
-            </v-card>
+                        <NewTranscationModal @closeModal="newTransactionModal = false" :accountId="account_id" />
+                    </v-dialog>
+                </div>
+            </div>
+            <!-- Search -->
+            <div class="flex my-4 items-start">
+                <!-- <v-select label="Type: All" class="mx-2" v-model="typeFilter"
+                    :items="[{ title: 'Deposit', value: 0 }, { title: 'Rembursment', value: 1 }, { title: 'Procurement', value: 2 }]"
+                    multiple variant="outlined">
+                    <template v-slot:selection="{ item }">
+                        <type-chip :type="item.value" />
+                    </template>
+                </v-select>
+                <v-select label="Status: All" class="mx-2" v-model="statusFilter"
+                    :items="[{ title: 'Created', value: 0 }, { title: 'Pending', value: 1 }, { title: 'Paid', value: 2 }, { title: 'Rejected', value: 3 }]"
+                    multiple variant="outlined">
+                    <template v-slot:selection="{ item }">
+                        <status-chip :type="item.value" />
+                    </template>
+                </v-select> -->
+            </div>
+            <!-- Transactions -->
+            <v-data-table :items="transactionStore.getFilteredTransactions(statusFilter, typeFilter)"
+                :headers="headers">
+                <template #item.type="{ item }">
+                    <type-chip :type="item.props.title.type" />
+                </template>
+                <template #item.status="{ item }">
+                    <status-chip :type="item.props.title.status" />
+                </template>
+                <template #item.approval_date="{ item }">
+                    {{ new Date(item.props.title.approval_date).toLocaleDateString() }}
+                </template>
+                <template #item.creation_date="{ item }">
+                    {{ new Date(item.props.title.creation_date).toLocaleDateString() }}
+                </template>
+                
+                <template #item.rejected_date="{ item }">
+                    {{ new Date(item.props.title.rejected_date).toLocaleDateString() }}
+                </template>
+                <template #item.actions="{ item }">
+                    <v-btn icon="mdi-pencil" color="grey" variant="tonal" size="x-small"
+                        @click="() => { activeId = item.props.title.id; dialog = true; }"></v-btn>
+                </template>
+            </v-data-table>
+
             <v-dialog v-model="dialog" width="800">
                 <edit-transaction-modal :accountId="account_id" :transactionId="activeId"
                     @closeModal="dialog = false" />
@@ -122,10 +109,25 @@ export default defineComponent({
 
 
         const activeId = ref("");
-
+        const amountSort = ref(0);
 
         const dialog = ref(false);
-        return { activeId, backToHome, newTransactionModal, account_id: account_id as string, transactionStore, statusFilter, typeFilter, dialog, accountStore };
+
+        const headers = [
+            { title: 'Name', align: 'start', sortable: false, key: 'name' },
+            { title: 'Amount ($)', align: 'center', key: 'amount' },
+            { title: 'Type', align: 'center', key: 'type' },
+            { title: 'Status', align: 'center', key: 'status' },
+            { title: 'Approval Date', align: 'center', key: 'approval_date' },
+            { title: 'Creation Date', align: 'center', key: 'creation_date' },
+            { title: 'Rejected Date', align: 'center', key: 'rejected_date' },
+            { title: 'Actions', align: 'end', key: 'actions' },
+        ];
+
+        return {
+            activeId, backToHome, newTransactionModal, account_id: account_id as string, transactionStore, statusFilter, typeFilter, dialog, accountStore, amountSort,
+            headers
+        };
     }
 });
 </script>

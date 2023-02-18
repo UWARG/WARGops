@@ -62,7 +62,6 @@ func (f *Finances) CreateAccount(w http.ResponseWriter, r *http.Request) *Respon
 // (POST /transactions)
 func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Response {
 	var nt NewTransaction
-
 	if err := json.NewDecoder(r.Body).Decode(&nt); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return &Response{
@@ -71,7 +70,6 @@ func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Re
 			contentType: "application/json",
 		}
 	}
-
 	if err := f.db.CreateTransaction(r.Context(), nt, "test"); err != nil {
 		fmt.Println("Error: ", err)
 		return &Response{
@@ -80,7 +78,6 @@ func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Re
 			contentType: "application/json",
 		}
 	}
-
 	return nil
 }
 

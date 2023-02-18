@@ -16,14 +16,17 @@ import '@mdi/font/css/materialdesignicons.css';
 import './style.css';
 import { createPinia } from 'pinia';
 
+import { VDataTable } from 'vuetify/labs/VDataTable'
+
 const wargDark = {
   dark: true,
   colors: {
-    background: "#3a3a3a",
+    background: "#2d2d2d",
     'background-dark-1': "#2a2a2a",
     'background-light-1': "#525252",
     primary: "#FFEB3B",
     discord: "#5865F2",
+    "warg-blue": "#081b2e",
 
   },
 };
@@ -37,7 +40,11 @@ const wargLight = {
 };
 
 const vuetify = createVuetify({
-  components,
+  components:{
+    VDataTable,
+    ...components,
+  },
+    
   directives,
   theme: {
     defaultTheme: 'wargDark',

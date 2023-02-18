@@ -1,10 +1,15 @@
 import * as VueRouter from 'vue-router';
 import { useProfileStore } from '../store/profile';
+import Home from '../pages/NewHome.vue';
+import Login from '../pages/Login.vue';
+import Transactions from '../pages/Transactions.vue';
+import NotFound from '../pages/NotFound.vue';
 
 export const routes = [
-    { path: '/', name: "Home", component: () => import('../pages/Home.vue'), meta: { requiresAuth: true } },
-    { path: '/login', name: "Login", component: () => import('../pages/Login.vue'), },
-    { path: '/trasanactions/:account_id', name: "Transaction", component: () => import('../pages/Transactions.vue'), meta: { requiresAuth: true } },
+    { path: '/', name: "Home", component: Home, meta: { requiresAuth: true } },
+    { path: '/login', name: "Login", component: Login, },
+    { path: '/trasanactions/:account_id', name: "Transaction", component: Transactions, meta: { requiresAuth: true } },
+    { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
 ];
 
 

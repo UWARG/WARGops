@@ -7,14 +7,14 @@
         </v-toolbar>
         <v-form class="p-4" v-model="valid">
             <div class="flex">
-                <v-text-field class="mr-2" label="Name" variant="outlined" v-model="newTransaction.name"
+                <v-text-field class="mr-2 flex-1" label="Name" variant="outlined" v-model="newTransaction.name"
                     :rules="[rules.required]"></v-text-field>
-                <v-text-field class="ml-2" label="Amount" variant="outlined" v-model="newTransaction.amount"
+                <v-text-field class="ml-2 flex-1" label="Amount" variant="outlined" v-model="newTransaction.amount"
                     :rules="[rules.required, rules.money]"> <span class="mr-2">$</span> </v-text-field>
             </div>
 
             <div class="flex">
-                <v-select label="Type" class="mx-2" v-model="newTransaction.type"
+                <v-select label="Type" class="mr-2 flex-1" v-model="newTransaction.type"
                     :items="[{ title: 'Deposit', value: 0 }, { title: 'Rembursment', value: 1 }, { title: 'Procurement', value: 2 }]"
                     variant="outlined">
                     <template v-slot:selection="{ item }">
@@ -22,7 +22,7 @@
                     </template>
                 </v-select>
 
-                <v-select label="Status" class="mx-2" v-model="newTransaction.status"
+                <v-select label="Status" class="ml-2 flex-1" v-model="newTransaction.status"
                     :items="[{ title: 'Created', value: 0 }, { title: 'Pending', value: 1 }, { title: 'Paid', value: 2 }, { title: 'Rejected', value: 3 }]"
                     variant="outlined">
                     <template v-slot:selection="{ item }">

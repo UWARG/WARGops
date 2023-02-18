@@ -55,6 +55,16 @@ export const useProfileStore = defineStore('Profile👨', {
         async checkProfile() {
             console.log("You are logged in:", this.profile.username !== undefined);
             return this.profile.username !== undefined;
+        }, 
+        logout() {
+            console.log("Logging out...")
+            this.profile = {} as Profile;
+            const url = new URL('http://localhost:8080/logout');
+            axios.get(url.toString()).then((res) => {
+                console.log(res.data);
+            }).catch((err) => {
+                console.log(err);
+            });
         }
     }
 });

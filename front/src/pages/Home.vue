@@ -27,6 +27,16 @@
                                     :key="account.id" @click="activeAccount = accountStore.getAccountById(account.id)">
                                     <div class="flex justify-between items-center">
                                         <div class="my-4"> {{ account.name }}</div>
+                                        <div>
+                                            <v-btn variant="tonal" size="small" @click="openNewTransaction">
+                                                New Transaction
+                                                <v-icon icon="mdi-plus" class="ml-1" />
+                                            </v-btn>
+                                            <v-btn variant="tonal" size="small" class="ml-2">
+                                                View All Transactions
+                                                <v-icon icon="mdi-book-open-variant" class="ml-1" />
+                                            </v-btn>
+                                        </div>
                                     </div>
                                     <v-divider v-if="index != accountStore.accounts.length - 1" />
                                 </div>
@@ -34,7 +44,7 @@
 
                         </v-card>
 
-                        <v-card class="p-4 flex-1 ml-2" color="background-light-1" v-if="activeAccount">
+                        <v-card class="p-4 flex-1 ml-2 " color="background-light-1" v-if="activeAccount">
                             <v-card-title class="text-3xl font-bold mb-2 flex mx-8">
                                 <span class="underline w-full text-center ml-12"> {{ activeAccount.name }}</span>
                                 <div>
@@ -42,7 +52,7 @@
                                         {{ activeAccount.active ? 'Active' : 'Not Active' }}
                                     </v-chip>
                                 </div>
-                                
+
                             </v-card-title>
 
                             <div class="flex text-center">
@@ -83,18 +93,19 @@
                                 </v-btn>
                             </div>
                         </v-card>
+                        <v-card v-else class="flex-1 ml-2" color="background-light-1">
+
+                        </v-card>
                     </div>
                 </v-card>
+
             </div>
         </div>
-        <v-card class="mt-8" height="200" width="200" v-if="dev">
-            <div class="text-center"> Scratch Pad 📝</div>
-            <v-btn @click="getGuilds">Gets all the users guild</v-btn>
-            <v-btn @click="profileStore.getGuilds">Hit Guild Route</v-btn>
-            <v-btn @click="profileStore.toggleAlert"> Test Alert</v-btn>
 
+        <v-dialog v-model="newTransactionModal" width="800">
+            <NewTransactionModal :account-id="activeAccount?.id" @closeModal="newTransactionModal = false" />
+        </v-dialog>
 
-        </v-card>
     </warg-page>
 
 
@@ -112,10 +123,10 @@ import { useProfileStore } from '../store/profile';
 import { Account } from '../types';
 import WargPage from '../components/WargPage.vue';
 import axios from 'axios';
-
+import NewTransactionModal from '../components/NewTransactionModal.vue';
 
 export default defineComponent({
-    components: { AccountModal, NavBar, WargPage },
+    components: { AccountModal, NavBar, WargPage, NewTransactionModal },
     setup() {
         const accountStore = useAccountStore();
         const profileStore = useProfileStore();
@@ -126,16 +137,16 @@ export default defineComponent({
         const toggleTheme = () => theme.global.name.value = theme.global.current.value.dark ? 'wargLight' : 'wargDark';
 
         const router = useRouter();
+        const newTransactionModal = ref(false);
 
         const switchTransaction = (account_id: string) => {
             console.log(account_id);
             router.push({ name: 'Transaction', params: { account_id } });
         };
 
-        const getGuilds = () => {
-            axios.get('http://localhost:8080/guilds').then((res) => {
-                console.log(res);
-            });
+        const openNewTransaction = () => {
+            console.log('open new transaction');
+            newTransactionModal.value = true;
         };
 
         const filter = ref<string>('');
@@ -145,7 +156,7 @@ export default defineComponent({
         const dev = import.meta.env.DEV;
 
         const activeAccount = ref<Account | undefined>();
-        return { dialog, toggleTheme, theme, accountStore, switchTransaction, activeAccount, filter, profileStore, dev, getGuilds };
+        return { dialog, toggleTheme, theme, accountStore, switchTransaction, activeAccount, filter, profileStore, dev, newTransactionModal, openNewTransaction };
     }
 });
 </script>

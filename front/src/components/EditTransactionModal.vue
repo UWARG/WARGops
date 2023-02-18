@@ -34,6 +34,9 @@
                     </tbody>
                 </v-table>
 
+
+
+
                 <div class="w-36 inline">
                     <v-textarea label="Notes" class="mt-4" v-model="transaction.notes"></v-textarea>
                     <div class="flex justify-center" v-if="transaction.status == 0">

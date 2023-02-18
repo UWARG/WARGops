@@ -99,6 +99,7 @@ func main() {
 	})
 
 	r.Get("/logout", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Logging out")
 		gothic.Logout(w, r)
 	})
 
@@ -116,6 +117,12 @@ func main() {
 		var members []map[string]interface{}
 		json.NewDecoder(data.Body).Decode(&members)
 		respondwithJSON(w, http.StatusOK, members)
+	})
+
+	r.Get("/logout", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Logging out")
+		user = goth.User{}
+		gothic.Logout(w, r)
 	})
 
 	server.Handler(service, server.WithRouter(r))

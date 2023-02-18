@@ -93,3 +93,17 @@ SET status = 0,
     notes = $3
 WHERE id = $1
   AND account_id = $2;
+
+
+-- Allocated Funds
+SELECT SUM(amount) AS total_amount
+FROM transactions
+WHERE account_id = $1
+AND type = 0
+AND status = 2;
+
+-- Account Balance
+SELECT SUM(amount) AS total_amount
+FROM transactions
+WHERE account_id = $1
+AND status = 2;
