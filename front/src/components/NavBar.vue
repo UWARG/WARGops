@@ -1,18 +1,18 @@
 <template>
     <v-app-bar color="warg-blue">
         <div class="w-full flex flex-row justify-between">
-            <img src="../assets/warg-logo.svg" class="w-1/12 text-white ml-8" />
+            <img src="../assets/warg-logo.svg" class="w-1/12 cursor-pointer text-white ml-8" @click="toHome" />
             <div class="flex items-center justify-center">
-                <router-link to="/" class="mx-2">WARG</router-link>
+                <p @click="toWarg" class="mx-2 cursor-pointer">WARG</p>
                 |
-                <router-link to="/dashboard" class="mx-2">DashBoard</router-link>
+                <router-link to="/" class="mx-2">Dashboard</router-link>
                 |
                 <router-link to="/about" class="mx-2">About</router-link>
                 |
-                <router-link to="/join" class="mx-2">Join</router-link>
+                <p @click="toJoin" class="mx-2 cursor-pointer">Join</p>
             </div>
             <div class="flex items-center ">
-                <v-menu open-on-hover>
+                <v-menu open-on-hover :close-on-content-click="false">
                     <template v-slot:activator="{ props }">
                         <v-btn icon v-bind="props">
                             <v-avatar class="mx-4">
@@ -22,13 +22,12 @@
                             </v-avatar>
                         </v-btn>
                     </template>
-                    <v-card width="250" class="text-center flex flex-col items-center">
-                        <v-card-title>
-                            {{ profileStore.profile.username }}
-                        </v-card-title>
-                        <v-card-actions>
-                            <v-btn color="red" variant="outlined" @click="logout">Logout</v-btn>
-                        </v-card-actions>
+                    <v-card class="flex items-center py-2 px-4">
+                        <div class="inline mr-4">
+                            <p>Logged in as </p>
+                            <p class="font-bold">{{ profileStore.profile.username }}</p>
+                        </div>
+                        <v-btn color="red" variant="text" @click="logout">Logout</v-btn>
                     </v-card>
                 </v-menu>
 
@@ -61,11 +60,21 @@ export default defineComponent({
             router.push('/login');
         };
 
-        return { toggleTheme, theme, profileStore, logout };
+        const toHome = () => {
+            router.push({ name: 'Home' });
+        };
+
+        const toWarg = () => {
+            window.location.href = 'https://www.uwarg.com/';
+        };
+
+        const toJoin = () => {
+            window.location.href = 'https://discord.com/invite/rqMEV3m3hh';
+        };
+
+        return { toggleTheme, theme, profileStore, logout, toWarg, toJoin, toHome };
     }
 });
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

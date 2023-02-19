@@ -43,13 +43,11 @@
                                     </div>
                                 </div>
                                 <div class="flex flex-col justify-center ml-4">
-                                    <v-btn variant="tonal" @click="openNewTransaction"
-                                        class="my-2 bg-gray-900 text-blue-200">
+                                    <v-btn @click="openNewTransaction" class="my-2 " color="warg-blue">
                                         New Transaction
                                         <v-icon icon="mdi-plus" class="ml-1" />
                                     </v-btn>
-                                    <v-btn variant="tonal" class="my-2 bg-blue-200 text-gray-900"
-                                        @click="switchTransaction(account.id)">
+                                    <v-btn class="my-2" color="warg-blue-light" @click="switchTransaction(account.id)">
                                         View All Transactions
                                         <v-icon icon="mdi-book-open-variant" class="ml-1" />
                                     </v-btn>
@@ -59,11 +57,13 @@
                     </v-expansion-panel>
                 </v-expansion-panels>
             </div>
+
+            <v-btn @click="getRoles">Test Roles</v-btn>
         </div>
         <v-dialog v-model="newTransactionModal" width="800">
             <NewTransactionModal :account-id="activeAccount.id" @closeModal="newTransactionModal = false" />
         </v-dialog>
-        
+
     </warg-page>
 </template>
 
@@ -72,10 +72,12 @@ import { defineComponent, ref } from 'vue';
 import NavBar from '../components/NavBar.vue';
 import WargPage from '../components/WargPage.vue';
 import { useAccountStore } from '../store/accounts';
+import { useProfileStore } from '../store/profile';
 import AccountModal from '../components/AccountModal.vue';
 import NewTransactionModal from '../components/NewTransactionModal.vue';
 import { useRouter } from 'vue-router';
 import { Account } from '../types';
+import axios from 'axios';
 
 
 export default defineComponent({
@@ -103,11 +105,15 @@ export default defineComponent({
         };
         const activeAccount = ref<Account>({} as Account);
 
-        return { accountStore, dialog, filter, switchTransaction, openNewTransaction, newTransactionModal, activeAccount };
+        const getRoles = () => {
+            axios.get(`http://localhost:8080/roles/${useProfileStore().profile.id}`).then(res => {
+                console.log(res.data);
+            })
+        };
+
+        return { accountStore, dialog, filter, switchTransaction, openNewTransaction, newTransactionModal, activeAccount, getRoles };
     }
 });
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

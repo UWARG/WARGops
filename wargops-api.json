@@ -563,6 +563,43 @@
           }
         ]
       }
+    },
+    "/roles/{user_id}": {
+      "get": {
+        "summary": "Auth Route For Getting the user Id",
+        "description": "",
+        "operationId": "",
+        "tags": [
+          "auth"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "description": "",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "$ref",
+                    "$ref": "#/components/schemas/Transaction"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

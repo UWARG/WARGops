@@ -27,6 +27,7 @@ const wargDark = {
     primary: "#FFEB3B",
     discord: "#5865F2",
     "warg-blue": "#081b2e",
+    "warg-blue-light": "#9ccaf8",
 
   },
 };

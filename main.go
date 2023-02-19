@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -11,15 +12,29 @@ import (
 	"github.com/UWARG/WARGops/bot"
 	"github.com/UWARG/WARGops/bot/commands"
 	"github.com/UWARG/WARGops/server"
+	"github.com/bwmarrin/discordgo"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
+	"github.com/gorilla/sessions"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/discord"
 )
 
+type Config struct {
+	// Discord
+	DiscordBotToken     string `json:"discord_bot_token"`
+	DiscordClientID     string `json:"discord_client_id"`
+	DiscordClientSecret string `json:"discord_client_secret"`
+	DiscordRedirectURL  string `json:"discord_redirect_url"`
+}
+
+var config Config
+
 func main() {
+	ReadConfig()
 	var user goth.User
+
 	port := flag.Int("port", 8080, "Port for test HTTP server")
 	flag.StringVar(&commands.LeadRoleID, "leads", "820466330456162354", "team lead role")
 	flag.StringVar(&commands.WorkspaceID, "workspace", "71624493506711", "asana workspace ID")
@@ -49,7 +64,14 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Could not open database: %v", err)
 		os.Exit(1)
 	}
-	service := server.NewFinances(db)
+
+	discordBot, err := discordgo.New("Bot " + config.DiscordBotToken)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Could not connect to Bot: %v", err)
+		os.Exit(1)
+	}
+
+	service := server.NewFinances(db, discordBot)
 
 	// This is how you set up a basic chi router
 	r := chi.NewRouter()
@@ -70,12 +92,24 @@ func main() {
 	goth.UseProviders(
 		discord.New(
 			// TODO: move to env variables
-			"1069446618056761375",
-			"WlL3TmxtfbfkKtjX8TfnPaQJrNbZzkZh",
-			"http://localhost:8080/auth/callback?provider=discord",
-			"identify", "guilds", "guilds.members.read",
+			config.DiscordClientID,
+			config.DiscordClientSecret,
+			config.DiscordRedirectURL,
+			"identify",
 		),
 	)
+
+	key := "test"        // Replace with your SESSION_SECRET or similar
+	maxAge := 86400 * 30 // 30 days
+	isProd := false      // Set to true when serving over https
+
+	store := sessions.NewCookieStore([]byte(key))
+	store.MaxAge(maxAge)
+	store.Options.Path = "/"
+	store.Options.HttpOnly = true // HttpOnly should always be enabled
+	store.Options.Secure = isProd
+
+	gothic.Store = store // Set the store as the session store
 
 	r.Get("/auth", func(w http.ResponseWriter, r *http.Request) {
 		gothic.BeginAuthHandler(w, r)
@@ -87,7 +121,7 @@ func main() {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		fmt.Println("User: " + user.Name)
+
 		http.Redirect(w, r, "http://localhost:5173/", http.StatusMovedPermanently)
 	})
 
@@ -96,27 +130,6 @@ func main() {
 		var data map[string]interface{}
 		json.NewDecoder(body.Body).Decode(&data)
 		respondwithJSON(w, http.StatusOK, data)
-	})
-
-	r.Get("/logout", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Logging out")
-		gothic.Logout(w, r)
-	})
-
-	r.Get("/guilds", func(w http.ResponseWriter, r *http.Request) {
-		body := getFromDiscord("https://discord.com/api/users/@me/guilds", user.AccessToken, w)
-		var data []map[string]interface{}
-		json.NewDecoder(body.Body).Decode(&data)
-		respondwithJSON(w, http.StatusOK, data)
-	})
-
-	r.Get("/guilds/{guildID}/roles", func(w http.ResponseWriter, r *http.Request) {
-		guildID := chi.URLParam(r, "guildID")
-		fmt.Println("ID: " + guildID)
-		data := getFromDiscord("https://discord.com/api/users/@me/guilds/"+guildID+"/member", user.AccessToken, w)
-		var members []map[string]interface{}
-		json.NewDecoder(data.Body).Decode(&members)
-		respondwithJSON(w, http.StatusOK, members)
 	})
 
 	r.Get("/logout", func(w http.ResponseWriter, r *http.Request) {
@@ -162,4 +175,17 @@ func getFromDiscord(endpoint string, token string, w http.ResponseWriter) *http.
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	return resp
+}
+
+func ReadConfig() {
+	jsonFile, err := os.Open("config.json")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer jsonFile.Close()
+
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+
+	json.Unmarshal(byteValue, &config)
+
 }

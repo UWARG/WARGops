@@ -4,15 +4,19 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 type Finances struct {
-	db DB
+	db  DB
+	bot *discordgo.Session
 }
 
-func NewFinances(db DB) *Finances {
+func NewFinances(db DB, bot *discordgo.Session) *Finances {
 	return &Finances{
-		db: db,
+		db:  db,
+		bot: bot,
 	}
 }
 
@@ -233,4 +237,24 @@ func (f *Finances) RejectTransaction(w http.ResponseWriter, r *http.Request, acc
 		}
 	}
 	return nil
+}
+
+// Get the roles of a user.
+// (GET /roles/{user_id})
+func (f *Finances) GetRolesUserID(w http.ResponseWriter, r *http.Request, userID string) *Response {
+
+	// Set up a new Discord Go API client
+
+	// Retrieve the user's roles using the Discord Go API client
+	member, err := f.bot.GuildMember("1076601817502339112", "473584913497718824")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt.Printf("Roles: %+v", member.Roles)
+
+	return &Response{
+		body:        member.Roles,
+		Code:        200,
+		contentType: "application/json",
+	}
 }

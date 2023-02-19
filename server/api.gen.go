@@ -323,6 +323,16 @@ func CreateAccountJSON200Response(body Account) *Response {
 	}
 }
 
+// GetRolesUserIDJSON200Response is a constructor method for a GetRolesUserID response.
+// A *Response is returned with the configured status code and content type from the spec.
+func GetRolesUserIDJSON200Response(body []Transaction) *Response {
+	return &Response{
+		body:        body,
+		Code:        200,
+		contentType: "application/json",
+	}
+}
+
 // CreateTransactionJSON200Response is a constructor method for a CreateTransaction response.
 // A *Response is returned with the configured status code and content type from the spec.
 func CreateTransactionJSON200Response(body Transaction) *Response {
@@ -411,6 +421,9 @@ type ServerInterface interface {
 	// Create a new account.
 	// (POST /accounts)
 	CreateAccount(w http.ResponseWriter, r *http.Request) *Response
+	// Auth Route For Getting the user Id
+	// (GET /roles/{user_id})
+	GetRolesUserID(w http.ResponseWriter, r *http.Request, userID string) *Response
 	// Create a new transaction.
 	// (POST /transactions)
 	CreateTransaction(w http.ResponseWriter, r *http.Request) *Response
@@ -475,6 +488,32 @@ func (siw *ServerInterfaceWrapper) CreateAccount(w http.ResponseWriter, r *http.
 
 	var handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		resp := siw.Handler.CreateAccount(w, r)
+		if resp != nil {
+			if resp.body != nil {
+				render.Render(w, r, resp)
+			} else {
+				w.WriteHeader(resp.Code)
+			}
+		}
+	})
+
+	handler(w, r.WithContext(ctx))
+}
+
+// GetRolesUserID operation middleware
+func (siw *ServerInterfaceWrapper) GetRolesUserID(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	// ------------- Path parameter "user_id" -------------
+	var userID string
+
+	if err := runtime.BindStyledParameter("simple", false, "user_id", chi.URLParam(r, "user_id"), &userID); err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{err, "user_id"})
+		return
+	}
+
+	var handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		resp := siw.Handler.GetRolesUserID(w, r, userID)
 		if resp != nil {
 			if resp.body != nil {
 				render.Render(w, r, resp)
@@ -891,6 +930,7 @@ func Handler(si ServerInterface, opts ...ServerOption) http.Handler {
 	r.Route(options.BaseURL, func(r chi.Router) {
 		r.Get("/accounts", wrapper.ListAccounts)
 		r.Post("/accounts", wrapper.CreateAccount)
+		r.Get("/roles/{user_id}", wrapper.GetRolesUserID)
 		r.Post("/transactions", wrapper.CreateTransaction)
 		r.Get("/transactions/{account_id}", wrapper.ListTransactions)
 		r.Get("/transactions/{account_id}/all", wrapper.ListAllTransactions)
@@ -938,30 +978,31 @@ func WithErrorHandler(handler func(w http.ResponseWriter, r *http.Request, err e
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
