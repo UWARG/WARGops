@@ -52,37 +52,34 @@ func (db DB) CreateAccount(ctx context.Context, acc NewAccount) error {
 
 // @Alexander Tsarapkine
 func (db DB) GetAccount(ctx context.Context, id string) (Account, error) {
-
-	rows, err := db.QueryContext(ctx,
+	var acc Account
+	if err := db.QueryRowContext(ctx,
 		`SELECT * FROM accounts
-		WHERE id = $1`, id)
+        WHERE id = $1`, id).Scan(
+		&acc.ID,
+		&acc.WaterlooID,
+		&acc.Name,
+		&acc.Source,
+		&acc.AllocationDate,
+		&acc.ExpiryDate,
+		&acc.Active,
+		&acc.Creator,
+		&acc.PointOfContact,
+		&acc.CreationDate,
+	); err != nil {
+		return Account{}, err
+	}
 
+	tx, err := db.ListTransactions(ctx, id)
 	if err != nil {
 		return Account{}, err
 	}
 
-	var account Account
-
-	for rows.Next() {
-		var acc Account
-		if err := rows.Scan(
-			&acc.ID,
-			&acc.WaterlooID,
-			&acc.Name,
-			&acc.Source,
-			&acc.AllocationDate,
-			&acc.ExpiryDate,
-			&acc.Active,
-			&acc.Creator,
-			&acc.PointOfContact,
-			&acc.CreationDate,
-		); err != nil {
-			return Account{}, err
-		}
-		account = acc
+	for _, t := range tx {
+		t = t
 	}
 
-	return account, nil
+	return acc, nil
 }
 
 func (db DB) ListAccounts(ctx context.Context) ([]Account, error) {

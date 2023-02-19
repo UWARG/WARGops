@@ -112,7 +112,7 @@
         ]
       }
     },
-    "/account/{account_id}": {
+    "/accounts/{account_id}": {
       "get": {
         "summary": "Retrieve a specific account based off an account id.",
         "description": "",
@@ -137,11 +137,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "type": "$ref",
-                    "$ref": "#/components/schemas/Account"
-                  }
+					"type": "$ref",
+					"$ref": "#/components/schemas/Account"
                 }
               }
             }

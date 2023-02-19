@@ -25,6 +25,23 @@ func NewFinances(db DB, bot *discordgo.Session) *Server {
 
 var _ ServerInterface = (*Server)(nil)
 
+// Get a specific account
+// (GET /accounts/{account_id}
+func (f *Finances) GetAccount(w http.ResponseWriter, r *http.Request, accountID string) *Response {
+	account, err := f.db.GetAccount(r.Context(), accountID)
+	fmt.Println("account, err", account, err)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return &Response{
+			body:        err,
+			Code:        500,
+			contentType: "application/json",
+		}
+	}
+
+	return GetAccountJSON200Response(account)
+}
+
 // Retrieve the list of available accounts.
 // (GET /accounts)
 func (f *Server) ListAccounts(w http.ResponseWriter, r *http.Request) *Response {
