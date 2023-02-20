@@ -104,12 +104,10 @@ export default defineComponent({
 
     const submit = () => {
       newTransaction.amount = Number(newTransaction.amount);
-      axios
-        .post("http://localhost:8080/api/transactions", newTransaction)
-        .then((res) => {
-          context.emit("closeModal");
-          useTransactionStore().loadTransactions(props.accountId);
-        });
+      axios.post("/api/transactions", newTransaction).then((res) => {
+        context.emit("closeModal");
+        useTransactionStore().loadTransactions(props.accountId);
+      });
     };
 
     const valid = ref(false);

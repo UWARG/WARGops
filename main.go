@@ -101,10 +101,13 @@ func run() error {
 	gothic.Store = store
 
 	r.Route("/api", func(r chi.Router) {
-		server.Handler(service, server.WithRouter(r))
+		server.Handler(service, server.WithMiddlewares(map[string]func(http.Handler) http.Handler{
+			"auth":      service.HasAuth,
+			"authLeads": service.HasAuth,
+		}), server.WithRouter(r))
 		r.Get("/auth", service.Authenticate)
 		r.Get("/auth/callback", service.Callback)
-		r.Get("/info", service.Info)
+		r.With(service.HasAuth).Get("/info", service.Info)
 		r.Get("/logout", service.Logout)
 	})
 

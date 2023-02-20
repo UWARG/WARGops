@@ -41,9 +41,7 @@ export const useTransactionStore = defineStore("Transactions", {
   },
   actions: {
     async loadTransactions(accountId: string) {
-      const response = await axios.get(
-        `http://localhost:8080/api/transactions/${accountId}`
-      );
+      const response = await axios.get(`/api/transactions/${accountId}`);
       const transactions = await response.data;
       this.transactions = transactions;
     },
@@ -54,15 +52,12 @@ export const useTransactionStore = defineStore("Transactions", {
       updateType: string
     ) {
       axios
-        .post(
-          `http://localhost:8080/transactions/${account_id}/${transaction.id}:${updateType}`,
-          {
-            notes: transaction.notes,
-            name: transaction.name,
-            id: transaction.id,
-            approver: useProfileStore().profile.id,
-          }
-        )
+        .post(`/transactions/${account_id}/${transaction.id}:${updateType}`, {
+          notes: transaction.notes,
+          name: transaction.name,
+          id: transaction.id,
+          approver: useProfileStore().profile.id,
+        })
         .then((response) => {
           this.loadTransactions(account_id);
         });

@@ -28,15 +28,12 @@ export const useAccountStore = defineStore("Accounts", {
   },
   actions: {
     async loadAccounts() {
-      const response = await fetch("http://localhost:8080/api/accounts");
+      const response = await fetch("/api/accounts");
       const accounts = await response.json();
       this.accounts = accounts;
     },
     async createAccount(account: any) {
-      const response = await axios.post(
-        "http://localhost:8080/api/accounts",
-        account
-      );
+      const response = await axios.post("/api/accounts", account);
       this.loadAccounts();
     },
   },

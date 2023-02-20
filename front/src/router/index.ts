@@ -22,23 +22,27 @@ const router = VueRouter.createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth) {
-    if (useProfileStore().profile.username) {
-      console.log(
-        "You are logged in as: %c" + useProfileStore().profile.username,
-        "color:blue;"
-      );
-      next();
-    } else {
-      next({ name: "Login" });
-    }
-  } else if (to.name === "Login" && useProfileStore().profile.username) {
-    next({ name: "Home" });
-  } else {
+router.beforeEach((to, _, next) => {
+  if (!to.meta.requiresAuth) {
     next();
+    return;
   }
+
+  if (to.name === "Login" && useProfileStore().getLoggedIn) {
+    next({ name: "Home" });
+    return;
+  }
+
+  if (!useProfileStore().getLoggedIn) {
+    next({ name: "Login" });
+    return;
+  }
+
+  console.log(
+    "You are logged in as: %c" + useProfileStore().profile.username,
+    "color:blue;"
+  );
+  next();
 });
 
 export default router;
-

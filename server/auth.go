@@ -2,7 +2,6 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/markbates/goth"
@@ -50,25 +49,25 @@ func (s Server) Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s Server) Info(w http.ResponseWriter, r *http.Request) {
-	store, err := s.users.Get(r, "auth")
+	user, ok := r.Context().Value(UserKey).(goth.User)
+	if !ok {
+		http.Error(w, "could not find user", http.StatusBadRequest)
+	}
+
+	member, err := s.bot.GuildMember(Config.DiscordGuildID, user.UserID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "could not find roles: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	fmt.Println(s.users)
+	user.AccessToken = ""
+	user.RefreshToken = ""
+	user.Name = member.User.String()
+	user.RawData["roles"] = member.Roles
+	user.NickName = member.Nick
 
-	raw, ok := store.Values["data"]
-	if !ok {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	fmt.Println(raw)
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", "\t")
 
-	user, ok := raw.(goth.User)
-	if !ok {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	json.NewEncoder(w).Encode(user)
+	enc.Encode(user)
 }

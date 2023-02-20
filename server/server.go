@@ -258,22 +258,3 @@ func (f *Server) RejectTransaction(w http.ResponseWriter, r *http.Request, accou
 	}
 	return nil
 }
-
-// Get the roles of a user.
-// (GET /roles/{user_id})
-func (f *Server) GetRolesUserID(w http.ResponseWriter, r *http.Request, userID string) *Response {
-	// Set up a new Discord Go API client
-
-	// Retrieve the user's roles using the Discord Go API client
-	member, err := f.bot.GuildMember("1076601817502339112", "473584913497718824")
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	fmt.Printf("Roles: %+v", member.Roles)
-
-	return &Response{
-		body:        member.Roles,
-		Code:        200,
-		contentType: "application/json",
-	}
-}

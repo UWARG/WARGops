@@ -76,6 +76,7 @@
         ]
       },
       "post": {
+		"x-go-middlewares": ["authLeads"],
         "summary": "Create a new account.",
         "description": "",
         "operationId": "create_account",
@@ -153,6 +154,7 @@
     },
     "/transactions": {
       "post": {
+		"x-go-middlewares": ["auth", "authLeads"],
         "summary": "Create a new transaction.",
         "description": "",
         "operationId": "create_transaction",
@@ -317,6 +319,7 @@
     },
     "/transactions/{account_id}/{transaction_id}:approve": {
       "post": {
+		"x-go-middlewares": ["authLeads"],
         "summary": "Approve a transaction.",
         "description": "",
         "operationId": "approve_transaction",
@@ -377,6 +380,7 @@
     },
     "/transactions/{account_id}/{transaction_id}:hold": {
       "post": {
+		"x-go-middlewares": ["authLeads"],
         "summary": "Hold back a transaction, and reset it to pending",
         "description": "",
         "operationId": "hold_transaction",
@@ -437,6 +441,7 @@
     },
     "/transactions/{account_id}/{transaction_id}:pay": {
       "post": {
+		"x-go-middlewares": ["auth", "authLeads"],
         "summary": "Mark a transaction as paid.",
         "description": "",
         "operationId": "pay_transaction",
@@ -497,6 +502,7 @@
     },
     "/transactions/{account_id}/{transaction_id}:reject": {
       "post": {
+		"x-go-middlewares": ["authLeads"],
         "summary": "Reject a transaction.",
         "description": "",
         "operationId": "reject_transaction",
@@ -601,43 +607,6 @@
             "team lead": []
           }
         ]
-      }
-    },
-    "/roles/{user_id}": {
-      "get": {
-        "summary": "Auth Route For Getting the user Id",
-        "description": "",
-        "operationId": "",
-        "tags": [
-          "auth"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "user_id",
-            "description": "",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "requestBody": {},
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "$ref",
-                    "$ref": "#/components/schemas/Transaction"
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     }
   },

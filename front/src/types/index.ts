@@ -46,6 +46,7 @@ export interface Transaction {
 }
 
 export interface Profile {
+  Name: string;
   accent_color: string;
   avatar: string;
   avatar_decoration: null;

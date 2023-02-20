@@ -18,9 +18,9 @@ export const useProfileStore = defineStore("Profile👨", {
       return state.alert;
     },
     getLoggedIn(state): boolean {
-        return state.profile.Name !== undefined && state.profile.Name !== "";
-    }
-
+      console.log(state.profile.Name);
+      return state.profile.Name !== undefined && state.profile.Name !== "";
+    },
   },
   actions: {
     toggleAlert() {
@@ -39,7 +39,7 @@ export const useProfileStore = defineStore("Profile👨", {
     loadProfile(): Promise<void> {
       console.log("Loading profile...");
       return axios
-        .get("http://localhost:8080/api/info")
+        .get("/api/info")
         .then((res) => {
           this.profile = res.data;
         })
@@ -48,9 +48,7 @@ export const useProfileStore = defineStore("Profile👨", {
         });
     },
     getGuilds() {
-      const url = new URL(
-        "http://localhost:8080/api/guilds/776618956638388305/roles"
-      );
+      const url = new URL("/api/guilds/776618956638388305/roles");
       axios
         .get(url.toString())
         .then((res) => {
@@ -63,7 +61,7 @@ export const useProfileStore = defineStore("Profile👨", {
     logout() {
       console.log("Logging out...");
       this.profile = {} as Profile;
-      const url = new URL("http://localhost:8080/api/logout");
+      const url = new URL("/api/logout");
       axios
         .get(url.toString())
         .then((res) => {

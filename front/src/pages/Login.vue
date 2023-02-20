@@ -33,7 +33,7 @@ export default defineComponent({
   setup() {
     //TODO: MAKE Environment Variable
     const toDiscord = () => {
-      window.location.href = "http://localhost:8080/api/auth?provider=discord";
+      window.location.href = "/api/auth?provider=discord";
     };
     const router = useRouter();
 
