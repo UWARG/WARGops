@@ -86,19 +86,13 @@ func (db DB) GetAccount(ctx context.Context, id string) (Account, error) {
 			switch t.Type {
 			case TypeDeposit:
 				acc.Allocated += t.Amount
-			case TypeReimbursement:
-				acc.Balance -= t.Amount
-				acc.Used += t.Amount
-			case TypeProcurement:
+			case TypeReimbursement, TypeProcurement:
 				acc.Balance -= t.Amount
 				acc.Used += t.Amount
 			}
 		case StatusPending:
 			switch t.Type {
-			case TypeReimbursement:
-				acc.Balance -= t.Amount
-				acc.Pending += t.Amount
-			case TypeProcurement:
+			case TypeReimbursement, TypeProcurement:
 				acc.Balance -= t.Amount
 				acc.Pending += t.Amount
 			}
