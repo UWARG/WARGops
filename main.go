@@ -73,7 +73,8 @@ func run() error {
 	r := chi.NewRouter()
 
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"https://ops.uwarg.com", "http://localhost:5173", "http://ops.uwarg.com"},
+		// AllowedOrigins:   []string{"https://ops.uwarg.com", "http://localhost:5173/*", "http://ops.uwarg.com"},
+		AllowedOrigins:   []string{"http://*", "https://*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},

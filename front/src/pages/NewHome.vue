@@ -111,16 +111,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import NavBar from "../components/NavBar.vue";
-import WargPage from "../components/WargPage.vue";
-import { useAccountStore } from "../store/accounts";
-import { useProfileStore } from "../store/profile";
-import AccountModal from "../components/AccountModal.vue";
-import NewTransactionModal from "../components/NewTransactionModal.vue";
-import { useRouter } from "vue-router";
-import { Account } from "../types";
-import axios from "axios";
+import { defineComponent, ref, onMounted } from 'vue';
+import NavBar from '../components/NavBar.vue';
+import WargPage from '../components/WargPage.vue';
+import { useAccountStore } from '../store/accounts';
+import { useProfileStore } from '../store/profile';
+import AccountModal from '../components/AccountModal.vue';
+import NewTransactionModal from '../components/NewTransactionModal.vue';
+import { useRouter } from 'vue-router';
+import { Account } from '../types';
+import axios from 'axios';
+
 
 export default defineComponent({
   name: "NewHome",
@@ -147,25 +148,19 @@ export default defineComponent({
     };
     const activeAccount = ref<Account>({} as Account);
 
-    const getRoles = () => {
-      axios
-        .get(`http://localhost:8080/api/roles/${useProfileStore().profile.id}`)
-        .then((res) => {
-          console.log(res.data);
-        });
-    };
+        const getRoles = () => {
+            axios.get(`http://localhost:8080/roles/${useProfileStore().profile.id}`).then(res => {
+                console.log(res.data);
+            });
+        };
 
-    return {
-      accountStore,
-      dialog,
-      filter,
-      switchTransaction,
-      openNewTransaction,
-      newTransactionModal,
-      activeAccount,
-      getRoles,
-    };
-  },
+
+        onMounted(() => {
+            accountStore.loadAccounts();
+        });
+
+        return { accountStore, dialog, filter, switchTransaction, openNewTransaction, newTransactionModal, activeAccount, getRoles };
+    }
 });
 </script>
 

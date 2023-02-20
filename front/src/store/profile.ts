@@ -17,6 +17,10 @@ export const useProfileStore = defineStore("Profile👨", {
     getAlert(state): any {
       return state.alert;
     },
+    getLoggedIn(state): boolean {
+        return state.profile.Name !== undefined && state.profile.Name !== "";
+    }
+
   },
   actions: {
     toggleAlert() {
@@ -35,7 +39,7 @@ export const useProfileStore = defineStore("Profile👨", {
     loadProfile(): Promise<void> {
       console.log("Loading profile...");
       return axios
-        .get("http://localhost:8080/api/user")
+        .get("http://localhost:8080/api/info")
         .then((res) => {
           this.profile = res.data;
         })
@@ -55,10 +59,6 @@ export const useProfileStore = defineStore("Profile👨", {
         .catch((err) => {
           console.log(err);
         });
-    },
-    async checkProfile() {
-      console.log("You are logged in:", this.profile.username !== undefined);
-      return this.profile.username !== undefined;
     },
     logout() {
       console.log("Logging out...");

@@ -10,12 +10,6 @@ import { useAccountStore } from "./store/accounts";
 
 export default defineComponent({
   setup() {
-    const accountStore = useAccountStore();
-
-    onMounted(() => {
-      accountStore.loadAccounts();
-    });
-
     return {};
   },
 });
