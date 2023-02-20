@@ -99,11 +99,18 @@ func run() error {
 	store.Options.Secure = false
 	gothic.Store = store
 
-	server.Handler(service, server.WithRouter(r))
-	r.Get("/auth", service.Authenticate)
-	r.Get("/auth/callback", service.Callback)
-	r.Get("/info", service.Info)
-	r.Get("/logout", service.Logout)
+	r.Route("/api", func(r chi.Router) {
+		server.Handler(service, server.WithRouter(r))
+		r.Get("/auth", service.Authenticate)
+		r.Get("/auth/callback", service.Callback)
+		r.Get("/info", service.Info)
+		r.Get("/logout", service.Logout)
+	})
+
+	r.Handle("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("/home/h/code/WARGops/front/dist/assets"))))
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "./front/dist/index.html")
+	})
 
 	s := &http.Server{
 		Handler: r,

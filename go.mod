@@ -10,6 +10,7 @@ require (
 	github.com/getkin/kin-openapi v0.113.0
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-chi/render v1.0.2
+	github.com/gorilla/sessions v1.1.1
 	github.com/lithammer/fuzzysearch v1.1.5
 	github.com/markbates/goth v1.76.0
 	modernc.org/sqlite v1.20.3
@@ -21,7 +22,6 @@ require (
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
-	github.com/gorilla/sessions v1.1.1 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
