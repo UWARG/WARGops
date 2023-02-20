@@ -6,25 +6,28 @@ import (
 	"net/http"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/gorilla/sessions"
 )
 
-type Finances struct {
-	db  DB
-	bot *discordgo.Session
+type Server struct {
+	db    DB
+	bot   *discordgo.Session
+	users sessions.CookieStore
 }
 
-func NewFinances(db DB, bot *discordgo.Session) *Finances {
-	return &Finances{
-		db:  db,
-		bot: bot,
+func NewFinances(db DB, bot *discordgo.Session) *Server {
+	return &Server{
+		db:    db,
+		bot:   bot,
+		users: *sessions.NewCookieStore([]byte("changeme")),
 	}
 }
 
-var _ ServerInterface = (*Finances)(nil)
+var _ ServerInterface = (*Server)(nil)
 
 // Retrieve the list of available accounts.
 // (GET /accounts)
-func (f *Finances) ListAccounts(w http.ResponseWriter, r *http.Request) *Response {
+func (f *Server) ListAccounts(w http.ResponseWriter, r *http.Request) *Response {
 	accounts, err := f.db.ListAccounts(r.Context())
 	if err != nil {
 		fmt.Println("Error: ", err)
@@ -40,7 +43,7 @@ func (f *Finances) ListAccounts(w http.ResponseWriter, r *http.Request) *Respons
 
 // Create a new account.
 // (POST /accounts)
-func (f *Finances) CreateAccount(w http.ResponseWriter, r *http.Request) *Response {
+func (f *Server) CreateAccount(w http.ResponseWriter, r *http.Request) *Response {
 	newAccount := NewAccount{}
 	if err := json.NewDecoder(r.Body).Decode(&newAccount); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -64,7 +67,7 @@ func (f *Finances) CreateAccount(w http.ResponseWriter, r *http.Request) *Respon
 
 // Create a new transaction.
 // (POST /transactions)
-func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Response {
+func (f *Server) CreateTransaction(w http.ResponseWriter, r *http.Request) *Response {
 	var nt NewTransaction
 	if err := json.NewDecoder(r.Body).Decode(&nt); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -87,7 +90,7 @@ func (f *Finances) CreateTransaction(w http.ResponseWriter, r *http.Request) *Re
 
 // Retrieve the active transactions for an account.
 // (GET /transactions/{account_id})
-func (f *Finances) ListTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
+func (f *Server) ListTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
 	transactions, err := f.db.ListTransactions(r.Context(), accountID)
 	if err != nil {
 		fmt.Println("Error: ", err)
@@ -102,7 +105,7 @@ func (f *Finances) ListTransactions(w http.ResponseWriter, r *http.Request, acco
 
 // Retrieve all transactions, including those that are currently a request and not approved.
 // (GET /transactions/{account_id}/all)
-func (f *Finances) ListAllTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
+func (f *Server) ListAllTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
 	transactions, err := f.db.ListAllTransactions(r.Context(), accountID)
 	if err != nil {
 		return &Response{
@@ -117,7 +120,7 @@ func (f *Finances) ListAllTransactions(w http.ResponseWriter, r *http.Request, a
 
 // Retrieve all rejected transactions for an account.
 // (GET /transactions/{account_id}/rejected)
-func (f *Finances) ListRejectedTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
+func (f *Server) ListRejectedTransactions(w http.ResponseWriter, r *http.Request, accountID string) *Response {
 	transactions, err := f.db.ListRejectedTransactions(r.Context(), accountID)
 	if err != nil {
 		return &Response{
@@ -132,13 +135,13 @@ func (f *Finances) ListRejectedTransactions(w http.ResponseWriter, r *http.Reque
 
 // Get transaction documents
 // (GET /transactions/{account_id}/{transaction_id}/ref)
-func (f *Finances) TransactionRef(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
+func (f *Server) TransactionRef(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
 	return nil
 }
 
 // Approve a transaction.
 // (POST /transactions/{account_id}/{transaction_id}:approve)
-func (f *Finances) ApproveTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
+func (f *Server) ApproveTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
 	editTransaction := EditTransaction{}
 	if err := json.NewDecoder(r.Body).Decode(&editTransaction); err != nil {
 		fmt.Println("Error: ", err)
@@ -165,7 +168,7 @@ func (f *Finances) ApproveTransaction(w http.ResponseWriter, r *http.Request, ac
 
 // Hold back a transaction, and reset it to pending
 // (POST /transactions/{account_id}/{transaction_id}:hold)
-func (f *Finances) HoldTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
+func (f *Server) HoldTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
 	editTransaction := EditTransaction{}
 	if err := json.NewDecoder(r.Body).Decode(&editTransaction); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -190,7 +193,7 @@ func (f *Finances) HoldTransaction(w http.ResponseWriter, r *http.Request, accou
 
 // Mark a transaction as paid.
 // (POST /transactions/{account_id}/{transaction_id}:pay)
-func (f *Finances) PayTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
+func (f *Server) PayTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
 	editTransaction := EditTransaction{}
 	if err := json.NewDecoder(r.Body).Decode(&editTransaction); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -215,7 +218,7 @@ func (f *Finances) PayTransaction(w http.ResponseWriter, r *http.Request, accoun
 
 // Reject a transaction.
 // (POST /transactions/{account_id}/{transaction_id}:reject)
-func (f *Finances) RejectTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
+func (f *Server) RejectTransaction(w http.ResponseWriter, r *http.Request, accountID string, transactionID string) *Response {
 	editTransaction := EditTransaction{}
 	if err := json.NewDecoder(r.Body).Decode(&editTransaction); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -241,8 +244,7 @@ func (f *Finances) RejectTransaction(w http.ResponseWriter, r *http.Request, acc
 
 // Get the roles of a user.
 // (GET /roles/{user_id})
-func (f *Finances) GetRolesUserID(w http.ResponseWriter, r *http.Request, userID string) *Response {
-
+func (f *Server) GetRolesUserID(w http.ResponseWriter, r *http.Request, userID string) *Response {
 	// Set up a new Discord Go API client
 
 	// Retrieve the user's roles using the Discord Go API client
