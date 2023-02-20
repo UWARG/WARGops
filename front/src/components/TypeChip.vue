@@ -1,39 +1,28 @@
 <template>
-    <v-chip :color="color[type]" class="ma-1">
-        {{ text[type] }}
-    </v-chip>
+  <v-chip :color="color[type]" class="ma-1">
+    {{ text[type] }}
+  </v-chip>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
 export default defineComponent({
-    props: {
-        type: {
-            type: Number,
-            required: true
-        }
+  props: {
+    type: {
+      type: Number,
+      required: true,
     },
-    setup() {
-        const text = [
-            'Deposit',
-            'Rembursment',
-            'Procurement',
-            'Unknown'
-        ];
+  },
+  setup() {
+    const text = ["Deposit", "Rembursment", "Procurement", "Unknown"];
 
-        const color = [
-            'pink',
-            'blue',
-            'purple',
-            'grey'
-        ];
+    const color = ["pink", "blue", "purple", "grey"];
 
-        return { text, color };
-    }
+    return { text, color };
+  },
 });
 </script>
 
-<style scoped>
+<style scoped></style>
 
-</style>

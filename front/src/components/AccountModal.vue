@@ -1,92 +1,120 @@
 <template>
-    <v-card>
-        <v-toolbar color="">
-            <v-toolbar-title color="primary" class="text-3xl font-bold"> Create New Account</v-toolbar-title>
-            <v-btn :disabled="false" color="red" @click="closeModal">Cancel</v-btn>
-            <v-btn :disabled="!valid" color="green" @click="submit">Submit</v-btn>
-        </v-toolbar>
-        <v-form v-model="valid" :lazy-validation="false" ref="form" class="p-4">
-            <div class="flex">
-                <v-text-field class="mr-2" label="Waterloo ID" variant="outlined" v-model="accountInfo.waterloo_id"
-                    :rules="[rules.required]" />
-                <v-text-field class="ml-2" label="Name" variant="outlined" :rules="[rules.required]"
-                    v-model="accountInfo.name" />
-            </div>
-            <div class="flex mb-4">
-                <div class="flex-1 mr-2">
-                    <v-text-field label="Source" class="w-full" variant="outlined" :rules="[rules.required]"
-                        v-model="accountInfo.source" />
-                    <v-text-field label="Point of Contact" variant="outlined" v-model="accountInfo.point_of_contact"
-                        :rules="[rules.required, rules.email]" />
-                    <v-switch color="primary" label="Active" class="w-36 ml-8" v-model="accountInfo.active"></v-switch>
-                </div>
-                <div class="flex-1 ml-2">
-                    <span class="text-gray-400">Expiry Date</span>
-                    <v-date-picker class="inline-block flex-1 w-full" v-model="accountInfo.expiry_date"
-                        color="yellow" is-dark />
-                </div>
-            </div>
-        </v-form>
-    </v-card>
+  <v-card>
+    <v-toolbar color="">
+      <v-toolbar-title color="primary" class="text-3xl font-bold">
+        Create New Account</v-toolbar-title
+      >
+      <v-btn :disabled="false" color="red" @click="closeModal">Cancel</v-btn>
+      <v-btn :disabled="!valid" color="green" @click="submit">Submit</v-btn>
+    </v-toolbar>
+    <v-form v-model="valid" :lazy-validation="false" ref="form" class="p-4">
+      <div class="flex">
+        <v-text-field
+          class="mr-2"
+          label="Waterloo ID"
+          variant="outlined"
+          v-model="accountInfo.waterloo_id"
+          :rules="[rules.required]"
+        />
+        <v-text-field
+          class="ml-2"
+          label="Name"
+          variant="outlined"
+          :rules="[rules.required]"
+          v-model="accountInfo.name"
+        />
+      </div>
+      <div class="flex mb-4">
+        <div class="flex-1 mr-2">
+          <v-text-field
+            label="Source"
+            class="w-full"
+            variant="outlined"
+            :rules="[rules.required]"
+            v-model="accountInfo.source"
+          />
+          <v-text-field
+            label="Point of Contact"
+            variant="outlined"
+            v-model="accountInfo.point_of_contact"
+            :rules="[rules.required, rules.email]"
+          />
+          <v-switch
+            color="primary"
+            label="Active"
+            class="w-36 ml-8"
+            v-model="accountInfo.active"
+          ></v-switch>
+        </div>
+        <div class="flex-1 ml-2">
+          <span class="text-gray-400">Expiry Date</span>
+          <v-date-picker
+            class="inline-block flex-1 w-full"
+            v-model="accountInfo.expiry_date"
+            color="yellow"
+            is-dark
+          />
+        </div>
+      </div>
+    </v-form>
+  </v-card>
 </template>
-        
-<script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
-import axios from 'axios';
-import { rules } from "../helpers";
-import WargDatePicker from './DatePicker.vue';
-import { useProfileStore } from '../store/profile';
-import { useAccountStore } from '../store/accounts';
 
+<script lang="ts">
+import { defineComponent, reactive, ref } from "vue";
+import axios from "axios";
+import { rules } from "../helpers";
+import WargDatePicker from "./DatePicker.vue";
+import { useProfileStore } from "../store/profile";
+import { useAccountStore } from "../store/accounts";
 
 export default defineComponent({
-    name: 'AccountModal',
-    components: { WargDatePicker },
-    setup(props, context) {
-        const closeModal = () => {
-            context.emit('closeModal');
-        };
+  name: "AccountModal",
+  components: { WargDatePicker },
+  setup(props, context) {
+    const closeModal = () => {
+      context.emit("closeModal");
+    };
 
-        const valid = ref(false);
-        const accountInfo = reactive({
-            waterloo_id: '',
-            name: '',
-            source: '',
-            active: false,
-            allocation_date: new Date().toISOString(),
-            expiry_date: new Date().toISOString(),
-            creator: useProfileStore().profile.id,
-            point_of_contact: '',
-            //@ts-ignore
-            id: crypto.randomUUID()
-        });
-        const submit = async () => {
-            await useAccountStore().createAccount(accountInfo);
-            closeModal();
-        };
-        const openDatePicker = () => {
-            console.log('open date picker');
-        };
+    const valid = ref(false);
+    const accountInfo = reactive({
+      waterloo_id: "",
+      name: "",
+      source: "",
+      active: false,
+      allocation_date: new Date().toISOString(),
+      expiry_date: new Date().toISOString(),
+      creator: useProfileStore().profile.id,
+      point_of_contact: "",
+      //@ts-ignore
+      id: crypto.randomUUID(),
+    });
+    const submit = async () => {
+      await useAccountStore().createAccount(accountInfo);
+      closeModal();
+    };
+    const openDatePicker = () => {
+      console.log("open date picker");
+    };
 
-        const date = ref(new Date());
+    const date = ref(new Date());
 
-        return {
-            closeModal,
-            submit,
-            accountInfo,
-            valid,
-            rules,
-            date,
-
-        };
-    }
+    return {
+      closeModal,
+      submit,
+      accountInfo,
+      valid,
+      rules,
+      date,
+    };
+  },
 });
-
 </script>
 
 <style lang="scss" scoped>
 .vc-container {
-    background-color: #2a2a2a;
-    border-color: #2a2a2a;
+  background-color: #2a2a2a;
+  border-color: #2a2a2a;
 }
 </style>
+

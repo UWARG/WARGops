@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent, onMounted } from "vue";
 import { useAccountStore } from "./store/accounts";
 
 export default defineComponent({
@@ -17,8 +17,9 @@ export default defineComponent({
     });
 
     return {};
-  }
+  },
 });
 </script>
 
 <style scoped></style>
+

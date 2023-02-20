@@ -1,80 +1,89 @@
 <template>
-    <v-app-bar color="warg-blue">
-        <div class="w-full flex flex-row justify-between">
-            <img src="../assets/warg-logo.svg" class="w-1/12 cursor-pointer text-white ml-8" @click="toHome" />
-            <div class="flex items-center justify-center">
-                <p @click="toWarg" class="mx-2 cursor-pointer">WARG</p>
-                |
-                <router-link to="/" class="mx-2">Dashboard</router-link>
-                |
-                <router-link to="/about" class="mx-2">About</router-link>
-                |
-                <p @click="toJoin" class="mx-2 cursor-pointer">Join</p>
+  <v-app-bar color="warg-blue">
+    <div class="w-full flex flex-row justify-between">
+      <img
+        src="../assets/warg-logo.svg"
+        class="w-1/12 cursor-pointer text-white ml-8"
+        @click="toHome"
+      />
+      <div class="flex items-center justify-center">
+        <p @click="toWarg" class="mx-2 cursor-pointer">WARG</p>
+        |
+        <router-link to="/" class="mx-2">Dashboard</router-link>
+        |
+        <router-link to="/about" class="mx-2">About</router-link>
+        |
+        <p @click="toJoin" class="mx-2 cursor-pointer">Join</p>
+      </div>
+      <div class="flex items-center">
+        <v-menu open-on-hover :close-on-content-click="false">
+          <template v-slot:activator="{ props }">
+            <v-btn icon v-bind="props">
+              <v-avatar class="mx-4">
+                <v-img
+                  alt="Avatar"
+                  :src="`https://cdn.discordapp.com/avatars/${profileStore.getProfile.id}/${profileStore.getProfile.avatar}.png?size=1024`"
+                  id="menu-activator"
+                />
+              </v-avatar>
+            </v-btn>
+          </template>
+          <v-card class="flex items-center py-2 px-4">
+            <div class="inline mr-4">
+              <p>Logged in as</p>
+              <p class="font-bold">{{ profileStore.profile.username }}</p>
             </div>
-            <div class="flex items-center ">
-                <v-menu open-on-hover :close-on-content-click="false">
-                    <template v-slot:activator="{ props }">
-                        <v-btn icon v-bind="props">
-                            <v-avatar class="mx-4">
-                                <v-img alt="Avatar"
-                                    :src="`https://cdn.discordapp.com/avatars/${profileStore.getProfile.id}/${profileStore.getProfile.avatar}.png?size=1024`"
-                                    id="menu-activator" />
-                            </v-avatar>
-                        </v-btn>
-                    </template>
-                    <v-card class="flex items-center py-2 px-4">
-                        <div class="inline mr-4">
-                            <p>Logged in as </p>
-                            <p class="font-bold">{{ profileStore.profile.username }}</p>
-                        </div>
-                        <v-btn color="red" variant="text" @click="logout">Logout</v-btn>
-                    </v-card>
-                </v-menu>
-
-            </div>
-        </div>
-    </v-app-bar>
+            <v-btn color="red" variant="text" @click="logout">Logout</v-btn>
+          </v-card>
+        </v-menu>
+      </div>
+    </div>
+  </v-app-bar>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { useTheme } from 'vuetify';
-import { useProfileStore } from '../store/profile';
-import { useRouter } from 'vue-router';
+import { defineComponent } from "vue";
+import { useTheme } from "vuetify";
+import { useProfileStore } from "../store/profile";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
-    name: 'NavBar',
-    props: {
-        profile: {
-            type: Boolean,
-            default: true
-        }
+  name: "NavBar",
+  props: {
+    profile: {
+      type: Boolean,
+      default: true,
     },
-    setup() {
-        const theme = useTheme();
-        const toggleTheme = () => theme.global.name.value = theme.global.current.value.dark ? 'wargLight' : 'wargDark';
-        const profileStore = useProfileStore();
-        const router = useRouter();
-        const logout = () => {
-            profileStore.logout();
-            router.push('/login');
-        };
+  },
+  setup() {
+    const theme = useTheme();
+    const toggleTheme = () =>
+      (theme.global.name.value = theme.global.current.value.dark
+        ? "wargLight"
+        : "wargDark");
+    const profileStore = useProfileStore();
+    const router = useRouter();
+    const logout = () => {
+      profileStore.logout();
+      router.push("/login");
+    };
 
-        const toHome = () => {
-            router.push({ name: 'Home' });
-        };
+    const toHome = () => {
+      router.push({ name: "Home" });
+    };
 
-        const toWarg = () => {
-            window.location.href = 'https://www.uwarg.com/';
-        };
+    const toWarg = () => {
+      window.location.href = "https://www.uwarg.com/";
+    };
 
-        const toJoin = () => {
-            window.location.href = 'https://discord.com/invite/rqMEV3m3hh';
-        };
+    const toJoin = () => {
+      window.location.href = "https://discord.com/invite/rqMEV3m3hh";
+    };
 
-        return { toggleTheme, theme, profileStore, logout, toWarg, toJoin, toHome };
-    }
+    return { toggleTheme, theme, profileStore, logout, toWarg, toJoin, toHome };
+  },
 });
 </script>
 
 <style scoped></style>
+
