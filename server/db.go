@@ -75,9 +75,37 @@ func (db DB) GetAccount(ctx context.Context, id string) (Account, error) {
 		return Account{}, err
 	}
 
+	acc.Allocated = 0
+	acc.Balance = 0
+	acc.Used = 0
+	acc.Pending = 0
+
 	for _, t := range tx {
-		t = t
+		switch t.Status {
+		case StatusPaid:
+			switch t.Type {
+			case TypeDeposit:
+				acc.Allocated += t.Amount
+			case TypeReimbursement:
+				acc.Balance -= t.Amount
+				acc.Used += t.Amount
+			case TypeProcurement:
+				acc.Balance -= t.Amount
+				acc.Used += t.Amount
+			}
+		case StatusPending:
+			switch t.Type {
+			case TypeReimbursement:
+				acc.Balance -= t.Amount
+				acc.Pending += t.Amount
+			case TypeProcurement:
+				acc.Balance -= t.Amount
+				acc.Pending += t.Amount
+			}
+		}
 	}
+
+	acc.Balance += acc.Allocated
 
 	return acc, nil
 }
