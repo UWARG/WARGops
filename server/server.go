@@ -27,7 +27,7 @@ var _ ServerInterface = (*Server)(nil)
 
 // Get a specific account
 // (GET /accounts/{account_id}
-func (f *Finances) GetAccount(w http.ResponseWriter, r *http.Request, accountID string) *Response {
+func (f *Server) GetAccount(w http.ResponseWriter, r *http.Request, accountID string) *Response {
 	account, err := f.db.GetAccount(r.Context(), accountID)
 	fmt.Println("account, err", account, err)
 	if err != nil {
