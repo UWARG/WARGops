@@ -1,7 +1,7 @@
 <template>
   <v-app class="p-4" :scrollable="false">
-    <nav-bar v-if="shownav"></nav-bar>
-    <v-main>
+    <nav-bar v-if="shownav" ></nav-bar>
+    <v-main :scrollable="false" class="">
       <slot></slot>
     </v-main>
   </v-app>

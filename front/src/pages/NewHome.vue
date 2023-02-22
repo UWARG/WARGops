@@ -4,43 +4,23 @@
       <div class="w-[70vw]">
         <div class="flex">
           <h3 class="text-4xl font-bold mr-16">Funding Accounts</h3>
-          <v-text-field
-            density="compact"
-            variant="solo"
-            label="Search Accounts"
-            class="w-80"
-            append-inner-icon="mdi-magnify"
-            single-line
-            hide-details
-            v-model="filter"
-          />
+          <v-text-field density="compact" variant="solo" label="Search Accounts" class="w-80"
+            append-inner-icon="mdi-magnify" single-line hide-details v-model="filter" />
         </div>
         <v-dialog v-model="dialog" width="800">
           <template v-slot:activator="{ props }">
-            <v-btn
-              v-bind="props"
-              color="primary"
-              size="large"
-              variant="tonal"
-              class="my-4"
-            >
+            <v-btn v-bind="props" color="primary" size="large" variant="tonal" class="my-4" v-if="profileStore.getIsLead">
               Create New Account
             </v-btn>
           </template>
           <account-modal @closeModal="dialog = false" />
         </v-dialog>
         <v-expansion-panels class="my-4">
-          <v-expansion-panel
-            v-for="(account, index) in accountStore.getFilteredAccounts(filter)"
-            :key="index"
-            class=""
-          >
+          <v-expansion-panel v-for="(account, index) in accountStore.getFilteredAccounts(filter)" :key="index" class="">
             <v-expansion-panel-title>
               <div class="flex w-full items-center">
                 {{ account.name }}
-                <v-chip variant="tonal" color="green" class="ml-auto mr-4"
-                  >$ 676</v-chip
-                >
+                <v-chip variant="tonal" color="green" class="ml-auto mr-4">$ 676</v-chip>
               </div>
             </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -60,8 +40,7 @@
                       {{ account.creator }}
                     </p>
                     <p>
-                      <span class="font-bold">Created On: </span
-                      >{{ account.allocation_date }}
+                      <span class="font-bold">Created On: </span>{{ account.allocation_date }}
                     </p>
                   </div>
                   <div class="flex flex-col ml-2">
@@ -76,19 +55,11 @@
                   </div>
                 </div>
                 <div class="flex flex-col justify-center ml-4">
-                  <v-btn
-                    @click="openNewTransaction"
-                    class="my-2"
-                    color="warg-blue"
-                  >
+                  <v-btn @click="openNewTransaction" class="my-2" color="warg-blue-light" variant="tonal">
                     New Transaction
                     <v-icon icon="mdi-plus" class="ml-1" />
                   </v-btn>
-                  <v-btn
-                    class="my-2"
-                    color="warg-blue-light"
-                    @click="switchTransaction(account.id)"
-                  >
+                  <v-btn class="my-2" color="warg-blue-light2" variant="tonal" @click="switchTransaction(account.id)">
                     View All Transactions
                     <v-icon icon="mdi-book-open-variant" class="ml-1" />
                   </v-btn>
@@ -98,14 +69,9 @@
           </v-expansion-panel>
         </v-expansion-panels>
       </div>
-
-      <v-btn @click="getRoles">Test Roles</v-btn>
     </div>
     <v-dialog v-model="newTransactionModal" width="800">
-      <NewTransactionModal
-        :account-id="activeAccount.id"
-        @closeModal="newTransactionModal = false"
-      />
+      <NewTransactionModal :account-id="activeAccount.id" @closeModal="newTransactionModal = false" />
     </v-dialog>
   </warg-page>
 </template>
@@ -132,6 +98,7 @@ export default defineComponent({
   },
   setup() {
     const accountStore = useAccountStore();
+    const profileStore = useProfileStore();
     const dialog = ref(false);
     const filter = ref();
     const newTransactionModal = ref(false);
@@ -147,14 +114,6 @@ export default defineComponent({
     };
     const activeAccount = ref<Account>({} as Account);
 
-    const getRoles = () => {
-      axios
-        .get(`http://localhost:8080/roles/${useProfileStore().profile.id}`)
-        .then((res) => {
-          console.log(res.data);
-        });
-    };
-
     onMounted(() => {
       accountStore.loadAccounts();
     });
@@ -167,7 +126,7 @@ export default defineComponent({
       openNewTransaction,
       newTransactionModal,
       activeAccount,
-      getRoles,
+      profileStore,
     };
   },
 });

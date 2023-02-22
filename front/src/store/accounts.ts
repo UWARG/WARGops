@@ -13,18 +13,18 @@ export const useAccountStore = defineStore("Accounts", {
     },
     getAccountById:
       (state) =>
-      (id: string): Account => {
-        return state.accounts.find((account) => account.id === id) as Account;
-      },
+        (id: string): Account => {
+          return state.accounts.find((account) => account.id === id) as Account;
+        },
     getFilteredAccounts:
       (state) =>
-      (filter: string): Account[] => {
-        return filter
-          ? state.accounts.filter((account) =>
+        (filter: string): Account[] => {
+          return filter
+            ? state.accounts.filter((account) =>
               account.name.toLowerCase().includes(filter.toLowerCase())
             )
-          : state.accounts;
-      },
+            : state.accounts;
+        },
   },
   actions: {
     async loadAccounts() {

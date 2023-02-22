@@ -10,15 +10,10 @@
           <div class="flex justify-center items-center mr-4">
             <v-dialog v-model="newTransactionModal" width="800">
               <template v-slot:activator="{ props }">
-                <v-btn v-bind="props" color="primary" variant="tonal"
-                  >New Transaction</v-btn
-                >
+                <v-btn v-bind="props" color="primary" variant="tonal">New Transaction</v-btn>
               </template>
 
-              <NewTranscationModal
-                @closeModal="newTransactionModal = false"
-                :accountId="account_id"
-              />
+              <NewTranscationModal @closeModal="newTransactionModal = false" :accountId="account_id" />
             </v-dialog>
           </div>
         </div>
@@ -40,12 +35,9 @@
                                         </v-select> -->
         </div>
         <!-- Transactions -->
-        <v-data-table
-          :items="
-            transactionStore.getFilteredTransactions(statusFilter, typeFilter)
-          "
-          :headers="headers"
-        >
+        <v-data-table :items="
+          transactionStore.getFilteredTransactions(statusFilter, typeFilter)
+        " :headers="headers">
           <template #item.type="{ item }">
             <type-chip :type="item.props.title.type" />
           </template>
@@ -63,28 +55,18 @@
             {{ new Date(item.props.title.rejected_date).toLocaleDateString() }}
           </template>
           <template #item.actions="{ item }">
-            <v-btn
-              icon="mdi-pencil"
-              color="grey"
-              variant="tonal"
-              size="x-small"
-              @click="
-                () => {
-                  activeId = item.props.title.id;
-                  dialog = true;
-                }
-              "
-            ></v-btn>
+            <v-btn icon="mdi-pencil" color="grey" variant="tonal" size="x-small" @click="
+              () => {
+                activeId = item.props.title.id;
+                dialog = true;
+              }
+            "></v-btn>
           </template>
         </v-data-table>
       </div>
     </div>
     <v-dialog v-model="dialog" width="800">
-      <edit-transaction-modal
-        :accountId="account_id"
-        :transactionId="activeId"
-        @closeModal="dialog = false"
-      />
+      <edit-transaction-modal :accountId="account_id" :transactionId="activeId" @closeModal="dialog = false" />
     </v-dialog>
   </warg-page>
 </template>
@@ -95,12 +77,14 @@ import NavBar from "../components/NavBar.vue";
 import { useRouter } from "vue-router";
 import { useTransactionStore } from "../store/transactions";
 import { useAccountStore } from "../store/accounts";
+import { useProfileStore } from "../store/profile";
 
 import NewTranscationModal from "../components/NewTransactionModal.vue";
 import TypeChip from "../components/TypeChip.vue";
 import StatusChip from "../components/StatusChip.vue";
 import EditTransactionModal from "../components/EditTransactionModal.vue";
 import WargPage from "../components/WargPage.vue";
+import { onMounted } from "vue";
 
 export default defineComponent({
   components: {
@@ -120,6 +104,7 @@ export default defineComponent({
     const { account_id } = router.currentRoute.value.params;
     const transactionStore = useTransactionStore();
     const accountStore = useAccountStore();
+    const profileStore = useProfileStore();
 
     onBeforeMount(() => {
       transactionStore.loadTransactions(account_id as string);
@@ -143,8 +128,13 @@ export default defineComponent({
       { title: "Approval Date", align: "center", key: "approval_date" },
       { title: "Creation Date", align: "center", key: "creation_date" },
       { title: "Rejected Date", align: "center", key: "rejected_date" },
-      { title: "", align: "end", key: "actions" },
     ];
+
+    onMounted(() => {
+      if (profileStore.getIsLead) {
+        headers.push({ title: "Actions", align: "center", key: "actions" });
+      }
+    });
 
     return {
       activeId,
@@ -158,6 +148,7 @@ export default defineComponent({
       accountStore,
       amountSort,
       headers,
+      profileStore,
     };
   },
 });

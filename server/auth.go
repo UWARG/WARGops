@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/markbates/goth"
@@ -33,6 +34,7 @@ func (s Server) Callback(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s Server) Logout(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Logging out")
 	// Logout from the provider
 	gothic.Logout(w, r)
 

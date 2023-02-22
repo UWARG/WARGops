@@ -40,10 +40,17 @@ export const useTransactionStore = defineStore("Transactions", {
       },
   },
   actions: {
+
     async loadTransactions(accountId: string) {
+      this.transactions = [];
       const response = await axios.get(`/api/transactions/${accountId}`);
       const transactions = await response.data;
-      this.transactions = transactions;
+      if (transactions != null) {
+        this.transactions = transactions;
+      }
+      else{
+        this.transactions = [];
+      }
     },
 
     updateTransaction(

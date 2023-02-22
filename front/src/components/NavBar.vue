@@ -1,11 +1,7 @@
 <template>
   <v-app-bar color="warg-blue">
     <div class="w-full flex flex-row justify-between">
-      <img
-        src="../assets/warg-logo.svg"
-        class="w-1/12 cursor-pointer text-white ml-8"
-        @click="toHome"
-      />
+      <img src="../assets/warg-logo.svg" class="w-1/12 cursor-pointer ml-8" @click="toHome" />
       <div class="flex items-center justify-center">
         <p @click="toWarg" class="mx-2 cursor-pointer">WARG</p>
         |
@@ -20,20 +16,22 @@
           <template v-slot:activator="{ props }">
             <v-btn icon v-bind="props">
               <v-avatar class="mx-4">
-                <v-img
-                  alt="Avatar"
-                  :src="`https://cdn.discordapp.com/avatars/${profileStore.getProfile.id}/${profileStore.getProfile.avatar}.png?size=1024`"
-                  id="menu-activator"
-                />
+                <v-img alt="Avatar" :src="profileStore.profile.AvatarURL" id="menu-activator" />
               </v-avatar>
             </v-btn>
           </template>
-          <v-card class="flex items-center py-2 px-4">
-            <div class="inline mr-4">
-              <p>Logged in as</p>
-              <p class="font-bold">{{ profileStore.profile.username }}</p>
+          <v-card class="items-center py-2 px-4">
+            <div class="flex">
+              <div class="inline mr-4">
+                <p>Logged in as</p>
+                <p class="font-bold">{{ profileStore.profile.Name }}</p>
+              </div>
+              <v-btn color="red" variant="text" @click="logout">Logout</v-btn>
             </div>
-            <v-btn color="red" variant="text" @click="logout">Logout</v-btn>
+            <div>
+              Permissions: {{ profileStore.getIsLead ? "Lead" : "Member" }}
+            </div>
+
           </v-card>
         </v-menu>
       </div>
@@ -58,14 +56,16 @@ export default defineComponent({
   setup() {
     const theme = useTheme();
     const toggleTheme = () =>
-      (theme.global.name.value = theme.global.current.value.dark
-        ? "wargLight"
-        : "wargDark");
+    (theme.global.name.value = theme.global.current.value.dark
+      ? "wargLight"
+      : "wargDark");
     const profileStore = useProfileStore();
     const router = useRouter();
     const logout = () => {
-      profileStore.logout();
-      router.push("/login");
+      profileStore.logout().then(() => {
+        router.push({ name: "Login" });
+      });
+
     };
 
     const toHome = () => {

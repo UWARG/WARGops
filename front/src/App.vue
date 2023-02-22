@@ -5,8 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
-import { useAccountStore } from "./store/accounts";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   setup() {
@@ -15,5 +14,9 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style lang="scss">
+.v-application .primary--text {
+  color: red !important;
+}
+</style>
 

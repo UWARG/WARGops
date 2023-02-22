@@ -1,3 +1,4 @@
+import { Profile } from '@/types';
 export interface Account {
   name: "WEEF";
   id: string;
@@ -20,17 +21,6 @@ export interface NewTransaction {
   notes: string;
 }
 
-// Implement:
-// AccountID    string            `json:"account_id"`
-// 	Amount       int               `json:"amount"`
-// 	ApprovalDate time.Time         `json:"approval_date"`
-// 	CreationDate time.Time         `json:"creation_date"`
-// 	ID           string            `json:"id"`
-// 	Notes        string            `json:"notes"`
-// 	PaymentDate  time.Time         `json:"payment_date"`
-// 	RejectedDate time.Time         `json:"rejected_date"`
-// 	Status       TransactionStatus `json:"status"`
-// 	Type         TransactionType   `json:"type"`
 
 export interface Transaction {
   id: string;
@@ -46,21 +36,37 @@ export interface Transaction {
 }
 
 export interface Profile {
+  RawData: {
+    accent_color: number;
+    avatar: string;
+    avatar_decoration: any;
+    banner: any;
+    banner_color: string;
+    discriminator: string;
+    display_name: any;
+    flags: number;
+    id: string;
+    locale: string;
+    mfa_enabled: boolean;
+    premium_type: number;
+    public_flags: number;
+    roles: string[];
+    username: string;
+  };
+  Provider: string;
+  Email: string;
   Name: string;
-  accent_color: string;
-  avatar: string;
-  avatar_decoration: null;
-  banner: null;
-  banner_color: "#6b4f31";
-  discriminator: string | "3963";
-  display_name: null;
-  flags: 0;
-  id: string;
-  code: string;
-  locale: "en-US";
-  mfa_enabled: false;
-  premium_type: 0;
-  public_flags: 0;
-  username: string;
-  role: "lead" | "bootcamper" | "dev";
+  FirstName: string;
+  LastName: string;
+  NickName: string;
+  Description: string;
+  UserID: string;
+  AvatarURL: string;
+  Location: string;
+  AccessToken: string;
+  AccessTokenSecret: string;
+  RefreshToken: string;
+  ExpiresAt: string;
+  IDToken: string;
 }
+
