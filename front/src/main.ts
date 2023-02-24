@@ -14,7 +14,6 @@ import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import "@mdi/font/css/materialdesignicons.css";
 import "./style.css";
-import "./scss/main.scss"
 import { createPinia } from "pinia";
 
 import { VDataTable } from "vuetify/labs/VDataTable";
@@ -43,7 +42,10 @@ const vuetify = createVuetify({
 
   directives,
   theme: {
-    defaultTheme: "wargDark",
+    themes: {
+      light: wargDark,
+      dark: wargDark,
+    }
   },
 });
 
