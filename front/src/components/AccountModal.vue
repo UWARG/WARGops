@@ -62,7 +62,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from "vue";
-import axios from "axios";
 import { rules } from "../helpers";
 import WargDatePicker from "./DatePicker.vue";
 import { useProfileStore } from "../store/profile";
@@ -84,7 +83,7 @@ export default defineComponent({
       active: false,
       allocation_date: new Date().toISOString(),
       expiry_date: new Date().toISOString(),
-      creator: useProfileStore().profile.id,
+      creator: useProfileStore().profile.UserID,
       point_of_contact: "",
       //@ts-ignore
       id: crypto.randomUUID(),
@@ -92,9 +91,6 @@ export default defineComponent({
     const submit = async () => {
       await useAccountStore().createAccount(accountInfo);
       closeModal();
-    };
-    const openDatePicker = () => {
-      console.log("open date picker");
     };
 
     const date = ref(new Date());

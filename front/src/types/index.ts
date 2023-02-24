@@ -1,4 +1,3 @@
-import { Profile } from '@/types';
 export interface Account {
   name: "WEEF";
   id: string;

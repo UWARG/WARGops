@@ -7,6 +7,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/gorilla/sessions"
+	"github.com/markbates/goth"
 )
 
 type Server struct {
@@ -84,7 +85,7 @@ func (f *Server) CreateAccount(w http.ResponseWriter, r *http.Request) *Response
 
 // Create a new transaction.
 // (POST /transactions)
-func (f *Server) CreateTransaction(w http.ResponseWriter, r *http.Request) *Response {
+func (s *Server) CreateTransaction(w http.ResponseWriter, r *http.Request) *Response {
 	var nt NewTransaction
 	if err := json.NewDecoder(r.Body).Decode(&nt); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -94,7 +95,13 @@ func (f *Server) CreateTransaction(w http.ResponseWriter, r *http.Request) *Resp
 			contentType: "application/json",
 		}
 	}
-	if err := f.db.CreateTransaction(r.Context(), nt, "test"); err != nil {
+
+	user, ok := r.Context().Value(UserKey).(goth.User)
+	if !ok {
+		http.Error(w, "could not find user", http.StatusBadRequest)
+	}
+
+	if err := s.db.CreateTransaction(r.Context(), nt, user.UserID); err != nil {
 		fmt.Println("Error: ", err)
 		return &Response{
 			body:        err,

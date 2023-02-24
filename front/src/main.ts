@@ -23,8 +23,6 @@ const wargDark = {
   dark: true,
   colors: {
     primary: "#FFEB3B",
-    // surface: "#454545",
-    // text: "#2a3",    
     background: "#2d2d2d",
     "background-dark-1": "#2a2a2a",
     "background-light-1": "#525252",
@@ -32,21 +30,11 @@ const wargDark = {
     "warg-blue": "#081b2e",
     "warg-blue-light": "#9ccaf8",
     "warg-blue-light2": "#5aacfe",
-
     "warg-accent": "#FCE2D3",
 
   },
   
 };
-
-const wargLight = {
-  dark: false,
-  colors: {
-    background: "#f4f4f4",
-    primary: "#FFEB3B",
-  },
-};
-
 const vuetify = createVuetify({
   components: {
     VDataTable,
@@ -56,10 +44,6 @@ const vuetify = createVuetify({
   directives,
   theme: {
     defaultTheme: "wargDark",
-    themes: {
-      wargLight: wargLight,
-      wargDark: wargDark,
-    },  
   },
 });
 

@@ -86,7 +86,6 @@ import AccountModal from "../components/AccountModal.vue";
 import NewTransactionModal from "../components/NewTransactionModal.vue";
 import { useRouter } from "vue-router";
 import { Account } from "../types";
-import axios from "axios";
 
 export default defineComponent({
   name: "NewHome",

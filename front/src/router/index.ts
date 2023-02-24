@@ -23,23 +23,25 @@ const router = VueRouter.createRouter({
 });
 
 router.beforeEach((to, _, next) => {
+  // If the route does not require authentication, continue
   if (!to.meta.requiresAuth) {
     next();
     return;
   }
 
+  // If the user is not logged in, redirect to login
   if (to.name === "Login" && useProfileStore().getLoggedIn) {
     next({ name: "Home" });
     return;
   }
 
+  // If the user is logged in, continue
   if (!useProfileStore().getLoggedIn) {
     next({ name: "Login" });
     return;
   }
-
   console.log(
-    "You are logged in as: %c" + useProfileStore().profile.username,
+    "You are logged in as: %c" + useProfileStore().profile.NickName,
     "color:blue;"
   );
   next();
