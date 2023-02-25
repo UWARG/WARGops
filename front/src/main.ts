@@ -21,15 +21,18 @@ import { VDataTable } from "vuetify/labs/VDataTable";
 const wargDark = {
   dark: true,
   colors: {
-    primary: "#FFEB3B",
+    primary: "#FCE2D3",
     background: "#2d2d2d",
+    secondary: "#FCE2D3",
+    warning: "#ffea00",
     "background-dark-1": "#2a2a2a",
     "background-light-1": "#525252",
-    discord: "#5865F2",
+    "discord": "#5865F2",
     "warg-blue": "#081b2e",
     "warg-blue-light": "#9ccaf8",
     "warg-blue-light2": "#5aacfe",
     "warg-accent": "#FCE2D3",
+    
 
   },
   

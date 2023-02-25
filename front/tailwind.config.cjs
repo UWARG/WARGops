@@ -10,7 +10,7 @@ module.exports = {
         "primary": "#3b82f6",
         "warg-blue": "#081b2e",
         "warg-gray": "#f9fafb",
-        "warg-accent": "#ff5e00",
+        "warg-accent": "#FCE2D3",
       },
     },
   },

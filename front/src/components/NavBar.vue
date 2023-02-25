@@ -3,13 +3,13 @@
     <div class="w-full flex flex-row justify-between">
       <img src="../assets/warg-logo.svg" class="w-1/12 cursor-pointer ml-8" @click="toHome" />
       <div class="flex items-center justify-center">
-        <p @click="toWarg" class="mx-2 cursor-pointer">WARG</p>
+        <p @click="toWarg" class="mr-8 cursor-pointer">WARG</p>
         |
-        <router-link to="/" class="mx-2">Dashboard</router-link>
+        <router-link to="/" class="mx-8">Dashboard</router-link>
         |
-        <router-link to="/about" class="mx-2">About</router-link>
+        <router-link to="/about" class="mx-8">About</router-link>
         |
-        <p @click="toJoin" class="mx-2 cursor-pointer">Join</p>
+        <p @click="toJoin" class="mx-8 cursor-pointer">Join</p>
       </div>
       <div class="flex items-center">
         <v-menu open-on-hover :close-on-content-click="false">

@@ -8,6 +8,11 @@ export interface Account {
   creator: string;
   point_of_contact: string; // must be email
   waterloo_id: string;
+  notes: string;
+  allocated: number;
+  balance: number;
+  pending: number;
+  used: number;
 }
 
 export interface NewTransaction {

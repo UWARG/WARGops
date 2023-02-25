@@ -1,4 +1,5 @@
 import { useProfileStore } from "./profile";
+import { useAccountStore } from "./accounts";
 import { defineStore } from "pinia";
 import { Transaction } from "@/types";
 import axios from "axios";
@@ -74,7 +75,10 @@ export const useTransactionStore = defineStore("Transactions", {
     // Creates a new transaction
     createTransaction(transaction: any,) {
       return axios
-        .post("/api/transactions", transaction);
+        .post("/api/transactions", transaction).then(
+          ()=>{
+            useAccountStore().getAccountInfo(transaction.account_id)
+          });
     },
   },
 });

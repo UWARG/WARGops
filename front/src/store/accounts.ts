@@ -37,5 +37,17 @@ export const useAccountStore = defineStore("Accounts", {
       const response = await axios.post("/api/accounts", account);
       this.loadAccounts();
     },
+
+    //Gets more information about the account
+    async getAccountInfo(accountId: string) {
+      const response = await axios.get(`/api/accounts/${accountId}`);
+      const account = await response.data;
+      this.accounts = this.accounts.map((acc) => {
+        if (acc.id === accountId) {
+          return account;
+        }
+        return acc;
+      });
+    },
   },
 });

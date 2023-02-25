@@ -9,18 +9,21 @@
         </div>
         <v-dialog v-model="dialog" width="800">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" color="primary" size="large" variant="tonal" class="my-4" v-if="profileStore.getIsLead">
+            <v-btn v-bind="props" color="secondary" size="large" variant="tonal" class="my-4"
+              v-if="profileStore.getIsLead">
               Create New Account
             </v-btn>
           </template>
           <account-modal @closeModal="dialog = false" />
         </v-dialog>
         <v-expansion-panels class="my-4">
-          <v-expansion-panel v-for="(account, index) in accountStore.getFilteredAccounts(filter)" :key="index" class="">
+          <v-expansion-panel v-for="(account, index) in accountStore.getFilteredAccounts(filter)" :key="index"
+            @click="handleExpansionClicked(account)">
             <v-expansion-panel-title>
               <div class="flex w-full items-center">
                 {{ account.name }}
-                <v-chip variant="tonal" color="green" class="ml-auto mr-4">$ 676</v-chip>
+                <v-chip variant="tonal" v-if="account.balance" :color="account.balance >= 0 ? 'success' : 'error'" class="ml-auto mr-4"> {{ account.balance >= 0 ? '': '-'  }}${{
+                  account.balance.toString().replace('-', '') }}</v-chip>
               </div>
             </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -33,7 +36,7 @@
                     </p>
                     <p>
                       <span class="font-bold">Account Id:</span>
-                      {{ account.id }}
+                      {{ account.waterloo_id }}
                     </p>
                     <p>
                       <span class="font-bold">Account Creator:</span>
@@ -45,21 +48,22 @@
                   </div>
                   <div class="flex flex-col ml-2">
                     <p>
-                      <span class="font-bold">Allocated Funds: </span> Lorem
+                      <span class="font-bold">Allocated Funds: </span> {{ account.allocated }}
                     </p>
-                    <p><span class="font-bold">Account Balance:</span> Lorem</p>
-                    <p><span class="font-bold">Pending Balance:</span> Lorem</p>
+                    <p><span class="font-bold">Account Balance:</span> {{ account.balance }}</p>
+                    <p><span class="font-bold">Pending Balance:</span> {{ account.pending }}</p>
                     <p>
-                      <span class="font-bold">Total Transactions: </span>Lorem
+                      <span class="font-bold">Total Transactions: </span>{{ account.used }}
                     </p>
                   </div>
                 </div>
                 <div class="flex flex-col justify-center ml-4">
-                  <v-btn @click="openNewTransaction" class="my-2" color="warg-blue-light" variant="tonal">
+                  <v-btn @click="openNewTransaction" class="my-2 bg-warg-accent text-warg-grey" variant="tonal">
                     New Transaction
                     <v-icon icon="mdi-plus" class="ml-1" />
                   </v-btn>
-                  <v-btn class="my-2" color="warg-blue-light2" variant="tonal" @click="switchTransaction(account.id)">
+                  <v-btn class="my-2 bg-warg-grey text-warg-accent" variant="tonal"
+                    @click="switchTransaction(account.id)">
                     View All Transactions
                     <v-icon icon="mdi-book-open-variant" class="ml-1" />
                   </v-btn>
@@ -117,6 +121,11 @@ export default defineComponent({
       accountStore.loadAccounts();
     });
 
+    const handleExpansionClicked = (account: Account) => {
+      activeAccount.value = account;
+      accountStore.getAccountInfo(account.id);
+    };
+
     return {
       accountStore,
       dialog,
@@ -126,6 +135,7 @@ export default defineComponent({
       newTransactionModal,
       activeAccount,
       profileStore,
+      handleExpansionClicked
     };
   },
 });

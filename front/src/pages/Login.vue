@@ -21,7 +21,6 @@ import NavBar from '../components/NavBar.vue';
 import { useProfileStore } from '../store/profile';
 import { useRouter } from 'vue-router';
 import WargPage from '../components/WargPage.vue';
-import { useAccountStore } from '../store/accounts';
 
 
 export default defineComponent({

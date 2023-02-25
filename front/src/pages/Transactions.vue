@@ -38,23 +38,23 @@
         <v-data-table :items="
           transactionStore.getFilteredTransactions(statusFilter, typeFilter)
         " :headers="headers">
-          <template #item.type="{ item }">
+          <template #[`item.type`]="{ item }">
             <type-chip :type="item.props.title.type" />
           </template>
-          <template #item.status="{ item }">
+          <template #[`item.status`]="{ item }">
             <status-chip :type="item.props.title.status" />
           </template>
-          <template #item.approval_date="{ item }">
+          <template #[`item.approval_date`]="{ item }">
             {{ new Date(item.props.title.approval_date).toLocaleDateString() }}
           </template>
-          <template #item.creation_date="{ item }">
+          <template #[`item.creation_date`]="{ item }">
             {{ new Date(item.props.title.creation_date).toLocaleDateString() }}
           </template>
 
-          <template #item.rejected_date="{ item }">
+          <template #[`item.rejected_date`]="{ item }">
             {{ new Date(item.props.title.rejected_date).toLocaleDateString() }}
           </template>
-          <template #item.actions="{ item }">
+          <template #[`item.actions`]="{ item }">
             <v-btn icon="mdi-pencil" color="grey" variant="tonal" size="x-small" @click="
               () => {
                 activeId = item.props.title.id;
@@ -130,8 +130,9 @@ export default defineComponent({
       { title: "Rejected Date", align: "center", key: "rejected_date" },
     ];
 
-    onMounted(() => {
+    onBeforeMount(() => {
       if (profileStore.getIsLead) {
+
         headers.push({ title: "Actions", align: "center", key: "actions" });
       }
     });
