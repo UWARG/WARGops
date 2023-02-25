@@ -61,7 +61,7 @@ export const useTransactionStore = defineStore("Transactions", {
       updateType: string
     ) {
       axios
-        .post(`/transactions/${account_id}/${transaction.id}:${updateType}`, {
+        .post(`/api/transactions/${account_id}/${transaction.id}:${updateType}`, {
           notes: transaction.notes,
           name: transaction.name,
           id: transaction.id,

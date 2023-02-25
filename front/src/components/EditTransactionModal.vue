@@ -58,7 +58,7 @@
             >
           </div>
           <div class="flex justify-center" v-else-if="transaction.status == 1">
-            <v-btn @click="payTransaction" color="orange" variant="tonal"
+            <v-btn @click="payTransaction" color="blue" variant="tonal"
               >Mark As Paid</v-btn
             >
             <v-divider vertical class="mx-4"></v-divider>

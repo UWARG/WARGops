@@ -27,7 +27,7 @@
           </template>
         </v-select>
 
-        <!-- <v-select label="Status" class="ml-2 flex-1" v-model="newTransaction.status" :items="[
+        <v-select label="Status" class="ml-2 flex-1" v-model="newTransaction.status" :items="[
           { title: 'Created', value: 0 },
           { title: 'Pending', value: 1 },
           { title: 'Paid', value: 2 },
@@ -36,7 +36,7 @@
           <template v-slot:selection="{ item }">
             <status-chip :type="item.value" />
           </template>
-        </v-select> -->
+        </v-select>
       </div>
       <v-textarea label="Notes" variant="outlined" v-model="newTransaction.notes" auto-grow>
       </v-textarea>

@@ -30,7 +30,7 @@ var _ ServerInterface = (*Server)(nil)
 // (GET /accounts/{account_id}
 func (f *Server) GetAccount(w http.ResponseWriter, r *http.Request, accountID string) *Response {
 	account, err := f.db.GetAccount(r.Context(), accountID)
-	fmt.Println("account, err", account, err)
+	// fmt.Println("account, err", account, err)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return &Response{
