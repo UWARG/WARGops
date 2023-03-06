@@ -8,7 +8,8 @@
                 <img src="../assets/discord_logo.svg" width="23" height="23" class="mr-2 -ml-2" />
                 Login with Discord
             </v-btn>
-            <p class="my-2">Alternativly <span class="text-yellow-600"> Continue as Guest</span></p>
+            <p class="my-2">Alternativly <span class="text-yellow-600 cursor-pointer" @click="signInAsGuest"> Continue as
+                    Guest</span></p>
         </div>
         <img src="../assets/wave-bottom.svg" class="absolute -bottom-[20vh] right-0 w-[120vw] z-0" />
         <img src="../assets/wave-top.svg" class="absolute -bottom-[20vh] right-0 w-[120vw] z-0" />
@@ -24,28 +25,37 @@ import WargPage from '../components/WargPage.vue';
 
 
 export default defineComponent({
-  name: "Login",
-  components: {
-    NavBar,
-    WargPage,
-  },
-  setup() {
-    //TODO: MAKE Environment Variable
-    const toDiscord = () => {
-      window.location.href = "/api/auth?provider=discord";
-    };
-    const router = useRouter();
+    name: "Login",
+    components: {
+        NavBar,
+        WargPage,
+    },
+    setup() {
+        //TODO: MAKE Environment Variable
+        const toDiscord = () => {
+            window.location.href = "/api/auth?provider=discord";
+        };
+        const router = useRouter();
+        const profileStore = useProfileStore();
 
         onBeforeMount(async () => {
-            await useProfileStore().loadProfile();
-            if (useProfileStore().getLoggedIn) {
+            await profileStore.loadProfile();
+            if (profileStore.getLoggedIn) {
                 router.push({ name: 'Home' });
             }
         });
 
+        const signInAsGuest = () => {
+            profileStore.signInAsGuest().then(() => {
+                router.push({ name: 'Home' });
+            });
+        };
+
 
         return {
             toDiscord,
+            profileStore,
+            signInAsGuest
         };
     }
 });

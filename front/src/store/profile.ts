@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import { Profile } from "../types";
 import axios from "axios";
+import { useRouter } from 'vue-router';
+
 
 export const useProfileStore = defineStore("Profile", {
   state: () => ({
@@ -14,7 +16,10 @@ export const useProfileStore = defineStore("Profile", {
     },
     // Getter for if user is a lead
     getIsLead(state): boolean {
-      return state.profile.RawData.roles.find((role: string) => role === "1076602113590841467") !== undefined;
+      if (this.getLoggedIn) {
+        return state.profile.RawData.roles.find((role: string) => role === import.meta.env.VITE_LEAD_ROLE) !== undefined;
+      }
+      return false;
     }
   },
   actions: {
@@ -44,5 +49,16 @@ export const useProfileStore = defineStore("Profile", {
           console.log(err);
         });
     },
+
+    async signInAsGuest(): Promise<void> {
+      console.log("Signing in as guest...");
+      return axios
+        .get("/api/guest")
+        .then((res) => {
+          this.profile = res.data;
+        })
+        .catch((err) => {
+        });
+    }
   },
 });

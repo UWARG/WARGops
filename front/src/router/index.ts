@@ -28,6 +28,9 @@ router.beforeEach((to, _, next) => {
     next();
     return;
   }
+  
+  console.log(useProfileStore().getLoggedIn);
+
 
   // If the user is not logged in, redirect to login
   if (to.name === "Login" && useProfileStore().getLoggedIn) {
