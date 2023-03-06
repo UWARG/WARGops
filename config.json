@@ -1,0 +1,10 @@
+{
+    "frontend_uri": "http://localhost:5173/",
+    "discord_guild_id": "1076601817502339112",
+    "discord_bot_token": "MTA3NjYzOTkxNjI5NDkzNDUyOA.Gyq3BK.D5D2K99m1Tqv4IP2deAbBNtChL_X1f43OFyK58",
+    "discord_client_id": "1076639916294934528",
+    "discord_client_secret": "rO2IcCN_0gGBlYdMQbCBhgtv2oWyk9yL",
+    "discord_redirect_uri": "http://localhost:5173/api/auth/callback?provider=discord",
+    "lead_role_id": "1076602113590841467",
+    "secret": "!u4D2epP$v!Yxqvvw7^2^^iErC#6*TJu*yNfrN4%HE*cb&TLim^rFhd9%Hy^BDfs"
+}
