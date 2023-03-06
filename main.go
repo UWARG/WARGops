@@ -105,10 +105,12 @@ func run() error {
 			"auth":      service.HasAuth,
 			"authLeads": service.HasAuth,
 		}), server.WithRouter(r))
+		r.Get("/guest", service.SignInAsGuest)
 		r.Get("/auth", service.Authenticate)
 		r.Get("/auth/callback", service.Callback)
 		r.With(service.HasAuth).Get("/info", service.Info)
 		r.Get("/logout", service.Logout)
+
 	})
 
 	r.Handle("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("/home/h/code/WARGops/front/dist/assets"))))

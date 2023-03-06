@@ -33,6 +33,28 @@ func (s Server) Callback(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
+func (s Server) SignInAsGuest(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Signing in as guest")
+	user := goth.User{
+		UserID:    "guest",
+		Name:      "Guest",
+		AvatarURL: "https://cdn.discordapp.com/embed/avatars/0.png",
+		RawData: map[string]interface{}{
+			"roles": []string{"guest"},
+		},
+	}
+
+	store, err := s.users.Get(r, "auth")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	store.Save(r, w)
+	store.Values["data"] = user
+	store.Save(r, w)
+	json.NewEncoder(w).Encode(user)
+}
+
 func (s Server) Logout(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Logging out")
 	// Logout from the provider
@@ -58,6 +80,12 @@ func (s Server) Info(w http.ResponseWriter, r *http.Request) {
 
 	member, err := s.bot.GuildMember(Config.DiscordGuildID, user.UserID)
 	if err != nil {
+		if user.UserID == "guest" {
+			enc := json.NewEncoder(w)
+			enc.SetIndent("", "\t")
+			enc.Encode(user)
+			return
+		}
 		http.Error(w, "could not find roles: "+err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -70,6 +98,5 @@ func (s Server) Info(w http.ResponseWriter, r *http.Request) {
 
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "\t")
-
 	enc.Encode(user)
 }
