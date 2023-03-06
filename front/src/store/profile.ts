@@ -20,7 +20,10 @@ export const useProfileStore = defineStore("Profile", {
         return state.profile.RawData.roles.find((role: string) => role === import.meta.env.VITE_LEAD_ROLE) !== undefined;
       }
       return false;
-    }
+    },
+    getIsGuest(state): boolean {
+      return state.profile.Name === "Guest";
+    },
   },
   actions: {
     // Loads the profile of the logged in user based on the cookie

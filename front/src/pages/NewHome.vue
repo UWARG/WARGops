@@ -22,7 +22,7 @@
             <v-expansion-panel-title>
               <div class="flex w-full items-center">
                 {{ account.name }}
-                <v-chip variant="tonal" v-if="account.balance" :color="account.balance >= 0 ? 'success' : 'error'" class="ml-auto mr-4"> {{ account.balance >= 0 ? '': '-'  }}${{
+                <v-chip variant="tonal" :color="account.balance >= 0 ? 'success' : 'error'" class="ml-auto mr-4"> {{ account.balance >= 0 ? '': '-'  }}${{
                   account.balance.toString().replace('-', '') }}</v-chip>
               </div>
             </v-expansion-panel-title>
@@ -58,7 +58,7 @@
                   </div>
                 </div>
                 <div class="flex flex-col justify-center ml-4">
-                  <v-btn @click="openNewTransaction" class="my-2 bg-warg-accent text-warg-grey" variant="tonal">
+                  <v-btn @click="openNewTransaction" v-if="!profileStore.getIsGuest" class="my-2 bg-warg-accent text-warg-grey" variant="tonal">
                     New Transaction
                     <v-icon icon="mdi-plus" class="ml-1" />
                   </v-btn>
