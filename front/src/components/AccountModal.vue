@@ -18,26 +18,26 @@
         />
         <v-text-field
           class="ml-2"
-          label="Name"
+          label="Point of Contact"
           variant="outlined"
-          :rules="[rules.required]"
-          v-model="accountInfo.name"
+          v-model="accountInfo.point_of_contact"
+          :rules="[rules.required, rules.email]"
         />
       </div>
       <div class="flex mb-4">
         <div class="flex-1 mr-2">
+          <v-text-field
+            label="Name"
+            variant="outlined"
+            :rules="[rules.required]"
+            v-model="accountInfo.name"
+          />
           <v-text-field
             label="Source"
             class="w-full"
             variant="outlined"
             :rules="[rules.required]"
             v-model="accountInfo.source"
-          />
-          <v-text-field
-            label="Point of Contact"
-            variant="outlined"
-            v-model="accountInfo.point_of_contact"
-            :rules="[rules.required, rules.email]"
           />
           <v-switch
             color="primary"
@@ -80,7 +80,7 @@ export default defineComponent({
       waterloo_id: "",
       name: "",
       source: "",
-      active: false,
+      active: true,
       allocation_date: new Date().toISOString(),
       expiry_date: new Date().toISOString(),
       creator: useProfileStore().profile.UserID,
@@ -113,4 +113,3 @@ export default defineComponent({
   border-color: #2a2a2a;
 }
 </style>
-

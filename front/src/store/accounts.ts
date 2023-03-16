@@ -11,19 +11,19 @@ export const useAccountStore = defineStore("Accounts", {
     // Returns the account with the given id
     getAccountById:
       (state) =>
-        (id: string): Account => {
-          return state.accounts.find((account) => account.id === id) as Account;
-        },
+      (id: string): Account => {
+        return state.accounts.find((account) => account.id === id) as Account;
+      },
     // Based on search filter, returns the filtered accounts
     getFilteredAccounts:
       (state) =>
-        (filter: string): Account[] => {
-          return filter
-            ? state.accounts.filter((account) =>
+      (filter: string): Account[] => {
+        return filter
+          ? state.accounts.filter((account) =>
               account.name.toLowerCase().includes(filter.toLowerCase())
             )
-            : state.accounts;
-        },
+          : state.accounts;
+      },
   },
   actions: {
     // Loads all the accounts
@@ -44,6 +44,7 @@ export const useAccountStore = defineStore("Accounts", {
       const account = await response.data;
       this.accounts = this.accounts.map((acc) => {
         if (acc.id === accountId) {
+          account.external = true;
           return account;
         }
         return acc;

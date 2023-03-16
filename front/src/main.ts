@@ -23,19 +23,16 @@ const wargDark = {
   colors: {
     primary: "#FCE2D3",
     background: "#2d2d2d",
-    secondary: "#FCE2D3",
+    secondary: "#e8fafc",
     warning: "#ffea00",
     "background-dark-1": "#2a2a2a",
     "background-light-1": "#525252",
-    "discord": "#5865F2",
+    discord: "#5865F2",
     "warg-blue": "#081b2e",
     "warg-blue-light": "#9ccaf8",
     "warg-blue-light2": "#5aacfe",
-    "warg-accent": "#FCE2D3",
-    
-
+    "warg-accent": "#e8fafc",
   },
-  
 };
 const vuetify = createVuetify({
   components: {
@@ -48,7 +45,7 @@ const vuetify = createVuetify({
     themes: {
       light: wargDark,
       dark: wargDark,
-    }
+    },
   },
 });
 

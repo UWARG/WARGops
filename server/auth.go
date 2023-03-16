@@ -78,6 +78,9 @@ func (s Server) Info(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "could not find user", http.StatusBadRequest)
 	}
 
+	user.AccessToken = ""
+	user.RefreshToken = ""
+
 	member, err := s.bot.GuildMember(Config.DiscordGuildID, user.UserID)
 	if err != nil {
 		if user.UserID == "guest" {
@@ -86,7 +89,11 @@ func (s Server) Info(w http.ResponseWriter, r *http.Request) {
 			enc.Encode(user)
 			return
 		}
-		http.Error(w, "could not find roles: "+err.Error(), http.StatusBadRequest)
+		user.RawData["roles"] = []string{}
+		user.NickName = user.Name
+		enc := json.NewEncoder(w)
+		enc.SetIndent("", "\t")
+		enc.Encode(user)
 		return
 	}
 

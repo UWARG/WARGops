@@ -13,6 +13,8 @@ export interface Account {
   balance: number;
   pending: number;
   used: number;
+
+  external: false;
 }
 
 export interface NewTransaction {
@@ -24,7 +26,6 @@ export interface NewTransaction {
   status: number;
   notes: string;
 }
-
 
 export interface Transaction {
   id: string;
@@ -73,4 +74,3 @@ export interface Profile {
   ExpiresAt: string;
   IDToken: string;
 }
-

@@ -1,22 +1,32 @@
 <template>
   <v-app-bar color="warg-blue">
-    <div class="w-full flex flex-row justify-between">
-      <img src="../assets/warg-logo.svg" class="w-1/12 cursor-pointer ml-8" @click="toHome" />
-      <div class="flex items-center justify-center">
-        <p @click="toWarg" class="mr-8 cursor-pointer">WARG</p>
-        |
-        <router-link to="/" class="mx-8">Dashboard</router-link>
-        |
-        <router-link to="/about" class="mx-8">About</router-link>
-        |
-        <p @click="toJoin" class="mx-8 cursor-pointer">Join</p>
+    <div class="w-full flex flex-row items-center justify-between px-4">
+      <div class="flex-1">
+        <img
+          src="../assets/warg-logo.svg"
+          class="h-8 cursor-pointer"
+          @click="toHome"
+        />
       </div>
-      <div class="flex items-center">
+      <div class="flex items-center justify-center gap-8">
+        <p @click="toWarg" class="cursor-pointer">WARG</p>
+        |
+        <router-link to="/">Dashboard</router-link>
+        |
+        <router-link to="/about">About</router-link>
+        |
+        <p @click="toJoin">Join</p>
+      </div>
+      <div class="flex items-center flex-1 justify-end">
         <v-menu open-on-hover :close-on-content-click="false">
           <template v-slot:activator="{ props }">
             <v-btn icon v-bind="props">
               <v-avatar class="mx-4">
-                <v-img alt="Avatar" :src="profileStore.profile.AvatarURL" id="menu-activator" />
+                <v-img
+                  alt="Avatar"
+                  :src="profileStore.profile.AvatarURL"
+                  id="menu-activator"
+                />
               </v-avatar>
             </v-btn>
           </template>
@@ -29,9 +39,15 @@
               <v-btn color="red" variant="text" @click="logout">Logout</v-btn>
             </div>
             <div>
-              Permissions: {{ profileStore.getIsLead ? "Lead" : "Member" }}
+              Permissions:
+              {{
+                profileStore.getIsGuest
+                  ? "Guest"
+                  : profileStore.getIsLead
+                  ? "Lead"
+                  : "Member"
+              }}
             </div>
-
           </v-card>
         </v-menu>
       </div>
@@ -56,16 +72,15 @@ export default defineComponent({
   setup() {
     const theme = useTheme();
     const toggleTheme = () =>
-    (theme.global.name.value = theme.global.current.value.dark
-      ? "wargLight"
-      : "wargDark");
+      (theme.global.name.value = theme.global.current.value.dark
+        ? "wargLight"
+        : "wargDark");
     const profileStore = useProfileStore();
     const router = useRouter();
     const logout = () => {
       profileStore.logout().then(() => {
         router.push({ name: "Login" });
       });
-
     };
 
     const toHome = () => {
@@ -86,4 +101,3 @@ export default defineComponent({
 </script>
 
 <style scoped></style>
-
