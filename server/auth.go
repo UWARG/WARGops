@@ -89,20 +89,13 @@ func (s Server) Info(w http.ResponseWriter, r *http.Request) {
 			enc.Encode(user)
 			return
 		}
+
 		user.RawData["roles"] = []string{}
 		user.NickName = user.Name
-		enc := json.NewEncoder(w)
-		enc.SetIndent("", "\t")
-		enc.Encode(user)
-		return
+	} else {
+		user.RawData["roles"] = member.Roles
+		user.NickName = member.Nick
 	}
-
-	user.AccessToken = ""
-	user.RefreshToken = ""
-	user.Name = member.User.String()
-	user.RawData["roles"] = member.Roles
-	user.NickName = member.Nick
-
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "\t")
 	enc.Encode(user)
