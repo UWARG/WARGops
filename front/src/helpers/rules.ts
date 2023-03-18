@@ -1,3 +1,4 @@
+
 export const rules = {
   required: (value: string) => !!value || "Required.",
   waterlooId: (value: string) => {

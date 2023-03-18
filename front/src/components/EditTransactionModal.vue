@@ -1,11 +1,9 @@
 <template>
   <v-card>
     <v-toolbar color="">
-      <v-toolbar-title color="primary" class="text-3xl font-bold"
-        >Edit {{ transaction.name }} (
+      <v-toolbar-title color="primary" class="text-3xl font-bold">Edit {{ transaction.name }} (
         <span class="text-green-700">${{ transaction.amount }}</span>
-        )</v-toolbar-title
-      >
+        )</v-toolbar-title>
       <v-btn :disabled="false" color="red" @click="closeModal">Close</v-btn>
     </v-toolbar>
 
@@ -26,7 +24,7 @@
           <tbody v-if="transactionStore.transactions">
             <tr>
               <th>{{ transaction.name }}</th>
-              <th>$ {{ transaction.amount }}</th>
+              <th>$ {{ intToMoney(transaction.amount) }}</th>
               <th><type-chip :type="transaction.type" /></th>
               <th><status-chip :type="transaction.status" /></th>
               <th>
@@ -43,33 +41,19 @@
         </v-table>
 
         <div class="w-36 inline">
-          <v-textarea
-            label="Notes"
-            class="mt-4"
-            v-model="transaction.notes"
-          ></v-textarea>
+          <v-textarea label="Notes" class="mt-4" v-model="transaction.notes"></v-textarea>
           <div class="flex justify-center" v-if="transaction.status == 0">
-            <v-btn @click="approveTransaction" color="green" variant="tonal"
-              >Approve</v-btn
-            >
+            <v-btn @click="approveTransaction" color="green" variant="tonal">Approve</v-btn>
             <v-divider vertical class="mx-4"></v-divider>
-            <v-btn @click="rejectTransaction" color="red" variant="tonal"
-              >Decline</v-btn
-            >
+            <v-btn @click="rejectTransaction" color="red" variant="tonal">Decline</v-btn>
           </div>
           <div class="flex justify-center" v-else-if="transaction.status == 1">
-            <v-btn @click="payTransaction" color="blue" variant="tonal"
-              >Mark As Paid</v-btn
-            >
+            <v-btn @click="payTransaction" color="blue" variant="tonal">Mark As Paid</v-btn>
             <v-divider vertical class="mx-4"></v-divider>
-            <v-btn @click="holdTransaction" color="grey" variant="tonal"
-              >Reset</v-btn
-            >
+            <v-btn @click="holdTransaction" color="grey" variant="tonal">Reset</v-btn>
           </div>
           <div class="flex justify-center" v-else-if="transaction.status == 2">
-            <v-btn @click="holdTransaction" color="grey" variant="tonal"
-              >Reset</v-btn
-            >
+            <v-btn @click="holdTransaction" color="grey" variant="tonal">Reset</v-btn>
           </div>
         </div>
       </v-card>
@@ -83,6 +67,7 @@ import { useTransactionStore } from "../store/transactions";
 import { useProfileStore } from "../store/profile";
 import StatusChip from "./StatusChip.vue";
 import TypeChip from "./TypeChip.vue";
+import { intToMoney } from "../helpers";
 
 
 export default defineComponent({
@@ -164,6 +149,7 @@ export default defineComponent({
       rejectTransaction,
       payTransaction,
       holdTransaction,
+      intToMoney
     };
   },
 });
