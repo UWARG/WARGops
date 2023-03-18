@@ -3,14 +3,15 @@
     <div class="flex justify-center items-start mt-16 w-full h-screen">
       <div class="w-[70vw]">
         <!-- Header -->
-        <div class="flex justify-between">
+        <div class="flex justify-between" v-if="accountStore.activeAccoutId">
           <v-card-title class="text-3xl font-bold mb-2">
             Transactions for {{ accountStore.getAccountById(account_id).name }}
           </v-card-title>
           <div class="flex justify-center items-center mr-4">
             <v-dialog v-model="newTransactionModal" width="800">
               <template v-slot:activator="{ props }">
-                <v-btn v-bind="props" color="primary" variant="tonal" v-if="!profileStore.getIsGuest">New Transaction</v-btn>
+                <v-btn v-bind="props" color="primary" variant="tonal" v-if="!profileStore.getIsGuest">New
+                  Transaction</v-btn>
               </template>
 
               <NewTranscationModal @closeModal="newTransactionModal = false" :accountId="account_id" />
@@ -106,8 +107,8 @@ export default defineComponent({
     const accountStore = useAccountStore();
     const profileStore = useProfileStore();
 
-    onBeforeMount(() => {
-      transactionStore.loadTransactions(account_id as string);
+    onBeforeMount(async () => {
+      await transactionStore.loadTransactions(account_id as string);
     });
 
     const statusFilter = ref([]);

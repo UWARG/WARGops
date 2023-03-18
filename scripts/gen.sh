@@ -21,7 +21,7 @@ if [[ "$REGEN" = "1" ]]; then
 	if [[ -f $FILE ]]; then
 		(set -x; rm $FILE)
 	fi
-	(set -x; sqlite3 $FILE < $SRC/sql/schema.sql)
-	(set -x; sqlite3 $FILE < $SRC/sql/seed.sql)
+	(set -x; sqlite3 $FILE < ../sql/schema.sql)
+	(set -x; sqlite3 $FILE < ../sql/seed.sql)
 fi
 

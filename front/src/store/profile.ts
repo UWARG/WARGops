@@ -81,7 +81,7 @@ export const useProfileStore = defineStore("Profile", {
           this.profile = data;
           localStorage.setItem("profile", JSON.stringify(data));
         })
-        .catch((err) => {});
+        .catch((err) => { });
     },
   },
 });

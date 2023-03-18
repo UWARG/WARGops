@@ -11,7 +11,12 @@ export const rules = {
     return emailRegex.test(value) || "Invalid e-mail.";
   },
   money: (value: string) => {
-    const moneyRegex = /^\d+(\.\d{1,2})?$/;
-    return moneyRegex.test(value) || "Invalid money.";
+    const moneyRegex1 = /^(\d{1,3})(,\d{1,3})*(\.\d{1,})?$/;
+    const moneyRegex2 = /^(\d{1,3})(,\d{1,3})*$/;
+    const moneyRegex3 = /^\d+(\.\d{1,2})?$/;
+    if (moneyRegex1.test(value) || moneyRegex2.test(value) || moneyRegex3.test(value))
+      return true;
+    else
+      return "Invalid money format. (e.g. 1,000.00 or 1,000 )";
   },
 };
