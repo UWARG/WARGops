@@ -20,25 +20,15 @@
         </div>
         <!-- Search -->
         <div class="flex my-4 items-start">
-          <!-- <v-select label="Type: All" class="mx-2" v-model="typeFilter"
-                                            :items="[{ title: 'Deposit', value: 0 }, { title: 'Rembursment', value: 1 }, { title: 'Procurement', value: 2 }]"
-                                            multiple variant="outlined">
-                                            <template v-slot:selection="{ item }">
-                                                <type-chip :type="item.value" />
-                                            </template>
-                                        </v-select>
-                                        <v-select label="Status: All" class="mx-2" v-model="statusFilter"
-                                            :items="[{ title: 'Created', value: 0 }, { title: 'Pending', value: 1 }, { title: 'Paid', value: 2 }, { title: 'Rejected', value: 3 }]"
-                                            multiple variant="outlined">
-                                            <template v-slot:selection="{ item }">
-                                                <status-chip :type="item.value" />
-                                            </template>
-                                        </v-select> -->
+
         </div>
         <!-- Transactions -->
         <v-data-table :items="
           transactionStore.getFilteredTransactions(statusFilter, typeFilter)
         " :headers="headers">
+          <template #[`item.amount`]="{ item }">
+            {{ intToMoney(item.props.title.amount) }}
+          </template>
           <template #[`item.type`]="{ item }">
             <type-chip :type="item.props.title.type" />
           </template>
@@ -86,6 +76,9 @@ import StatusChip from "../components/StatusChip.vue";
 import EditTransactionModal from "../components/EditTransactionModal.vue";
 import WargPage from "../components/WargPage.vue";
 import { onMounted } from "vue";
+
+import { moneyToInt, intToMoney } from "../helpers";
+
 
 export default defineComponent({
   components: {
@@ -151,6 +144,7 @@ export default defineComponent({
       amountSort,
       headers,
       profileStore,
+      intToMoney
     };
   },
 });
