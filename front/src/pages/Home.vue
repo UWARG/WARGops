@@ -26,8 +26,8 @@
                 {{ account.name }}
                 <v-chip v-if="account.external" variant="tonal" :color="account.balance >= 0 ? 'success' : 'error'"
                   class="ml-auto mr-4">
-                  {{ account.balance >= 0 ? "" : "-" }}${{
-                    account.balance.toString().replace("-", "")
+                  {{ account.balance >= 0 ? "" : "-" }}{{
+                    bal(account, account.balance)
                   }}</v-chip>
               </div>
             </v-expansion-panel-title>
