@@ -51,7 +51,7 @@ import { rules } from "../helpers";
 import StatusChip from "./StatusChip.vue";
 import TypeChip from "./TypeChip.vue";
 import { useTransactionStore } from "../store/transactions";
-import { moneyToInt, intToMoney } from "../helpers";
+import { moneyToInt } from "../helpers";
 
 export default defineComponent({
   name: "NewTransactionModal",

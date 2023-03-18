@@ -1,6 +1,6 @@
 import * as VueRouter from "vue-router";
 import { useProfileStore } from "../store/profile";
-import Home from "../pages/NewHome.vue";
+import Home from "../pages/Home.vue";
 import Login from "../pages/Login.vue";
 import Transactions from "../pages/Transactions.vue";
 import NotFound from "../pages/NotFound.vue";

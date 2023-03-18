@@ -6,51 +6,29 @@
           <h3 class="text-4xl font-bold mr-16 text-secondary">
             Funding Accounts
           </h3>
-          <v-text-field
-            density="compact"
-            variant="solo"
-            label="Search Accounts"
-            class="w-80"
-            append-inner-icon="mdi-magnify"
-            single-line
-            hide-details
-            v-model="filter"
-          />
+          <v-text-field density="compact" variant="solo" label="Search Accounts" class="w-80"
+            append-inner-icon="mdi-magnify" single-line hide-details v-model="filter" />
         </div>
         <v-dialog v-model="dialog" width="800">
           <template v-slot:activator="{ props }">
-            <v-btn
-              v-bind="props"
-              color="secondary"
-              size="large"
-              variant="tonal"
-              class="my-4"
-              v-if="profileStore.getIsLead"
-            >
+            <v-btn v-bind="props" color="secondary" size="large" variant="tonal" class="my-4"
+              v-if="profileStore.getIsLead">
               Create New Account
             </v-btn>
           </template>
           <account-modal @closeModal="dialog = false" />
         </v-dialog>
         <v-expansion-panels class="my-4">
-          <v-expansion-panel
-            v-for="(account, index) in accountStore.getFilteredAccounts(filter)"
-            :key="index"
-            @click="handleExpansionClicked(account)"
-          >
+          <v-expansion-panel v-for="(account, index) in accountStore.getFilteredAccounts(filter)" :key="index"
+            @click="handleExpansionClicked(account)">
             <v-expansion-panel-title>
               <div class="flex w-full items-center">
                 {{ account.name }}
-                <v-chip
-                  v-if="account.external"
-                  variant="tonal"
-                  :color="account.balance >= 0 ? 'success' : 'error'"
-                  class="ml-auto mr-4"
-                >
+                <v-chip v-if="account.external" variant="tonal" :color="account.balance >= 0 ? 'success' : 'error'"
+                  class="ml-auto mr-4">
                   {{ account.balance >= 0 ? "" : "-" }}${{
                     account.balance.toString().replace("-", "")
-                  }}</v-chip
-                >
+                  }}</v-chip>
               </div>
             </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -70,8 +48,7 @@
                       {{ account.creator }}
                     </p>
                     <p>
-                      <span class="font-bold">Created On: </span
-                      >{{ account.allocation_date }}
+                      <span class="font-bold">Created On: </span>{{ account.allocation_date }}
                     </p>
                   </div>
                   <div class="flex flex-col ml-2">
@@ -88,26 +65,18 @@
                       {{ bal(account, account.pending) }}
                     </p>
                     <p>
-                      <span class="font-bold">Total Transactions: </span
-                      >{{ bal(account, account.used) }}
+                      <span class="font-bold">Total Transactions: </span>{{ bal(account, account.used) }}
                     </p>
                   </div>
                 </div>
                 <div class="flex flex-col justify-center ml-4">
-                  <v-btn
-                    @click="openNewTransaction"
-                    v-if="!profileStore.getIsGuest"
-                    class="my-2 bg-warg-accent text-warg-grey"
-                    variant="tonal"
-                  >
+                  <v-btn @click="openNewTransaction" v-if="!profileStore.getIsGuest"
+                    class="my-2 bg-warg-accent text-warg-grey" variant="tonal">
                     New Transaction
                     <v-icon icon="mdi-plus" class="ml-1" />
                   </v-btn>
-                  <v-btn
-                    class="my-2 bg-warg-grey text-warg-accent"
-                    variant="tonal"
-                    @click="switchTransaction(account.id)"
-                  >
+                  <v-btn class="my-2 bg-warg-grey text-warg-accent" variant="tonal"
+                    @click="switchTransaction(account.id)">
                     View All Transactions
                     <v-icon icon="mdi-book-open-variant" class="ml-1" />
                   </v-btn>
@@ -119,10 +88,7 @@
       </div>
     </div>
     <v-dialog v-model="newTransactionModal" width="800">
-      <NewTransactionModal
-        :account-id="activeAccount.id"
-        @closeModal="newTransactionModal = false"
-      />
+      <NewTransactionModal :account-id="activeAccount.id" @closeModal="newTransactionModal = false" />
     </v-dialog>
   </warg-page>
 </template>
@@ -137,6 +103,7 @@ import AccountModal from "../components/AccountModal.vue";
 import NewTransactionModal from "../components/NewTransactionModal.vue";
 import { useRouter } from "vue-router";
 import { Account } from "../types";
+import { moneyToInt, intToMoney } from "../helpers";
 
 export default defineComponent({
   name: "NewHome",
@@ -166,7 +133,7 @@ export default defineComponent({
 
     const bal = (acc: Account, n: number): string => {
       if (acc.external) {
-        return "$" + n.toLocaleString("en-US");
+        return "$" + intToMoney(n);
       }
       return "Loading...";
     };
