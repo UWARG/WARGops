@@ -10,14 +10,14 @@
     <v-form v-model="valid" :lazy-validation="false" ref="form" class="p-4">
       <div class="flex">
         <v-text-field
-          class="mr-2"
+          class="mr-2 flex-1"
           label="Waterloo ID"
           variant="outlined"
           v-model="accountInfo.waterloo_id"
           :rules="[rules.required]"
         />
         <v-text-field
-          class="ml-2"
+          class="ml-2 flex-1"
           label="Point of Contact"
           variant="outlined"
           v-model="accountInfo.point_of_contact"

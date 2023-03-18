@@ -83,6 +83,8 @@ import { useTransactionStore } from "../store/transactions";
 import { useProfileStore } from "../store/profile";
 import StatusChip from "./StatusChip.vue";
 import TypeChip from "./TypeChip.vue";
+
+
 export default defineComponent({
   name: "EditTransactionModal",
   components: {

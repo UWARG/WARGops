@@ -19,7 +19,7 @@
       <div class="flex">
         <v-select label="Type" class="mr-2 flex-1" v-model="newTransaction.type" :items="[
           { title: 'Deposit', value: 0 },
-          { title: 'Rembursment', value: 1 },
+          { title: 'Reimbursement', value: 1 },
           { title: 'Procurement', value: 2 },
         ]" variant="outlined">
           <template v-slot:selection="{ item }">
@@ -46,11 +46,12 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from "vue";
-import {  NewTransaction } from "../types";
+import { NewTransaction } from "../types";
 import { rules } from "../helpers";
 import StatusChip from "./StatusChip.vue";
 import TypeChip from "./TypeChip.vue";
 import { useTransactionStore } from "../store/transactions";
+import { moneyToInt, intToMoney } from "../helpers";
 
 export default defineComponent({
   name: "NewTransactionModal",
@@ -75,7 +76,7 @@ export default defineComponent({
     };
 
     const submit = () => {
-      newTransaction.amount = Number(newTransaction.amount);
+      newTransaction.amount = moneyToInt(newTransaction.amount as any);
       transactionStore.createTransaction(newTransaction).then(() => {
         context.emit("closeModal");
         transactionStore.loadTransactions(props.accountId);
@@ -91,7 +92,7 @@ export default defineComponent({
       name: "",
       amount: 0,
       notes: "",
-      type: 0,
+      type: 2,
       account_id: props.accountId,
       status: 0,
     });
