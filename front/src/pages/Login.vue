@@ -8,7 +8,7 @@
                 <img src="../assets/discord_logo.svg" width="23" height="23" class="mr-2 -ml-2" />
                 Login with Discord
             </v-btn>
-            <p class="my-2">Alternativly <span class="text-yellow-600 cursor-pointer" @click="signInAsGuest"> Continue as
+            <p class="my-2">alternatively <span class="text-yellow-600 cursor-pointer" @click="signInAsGuest"> Continue as
                     Guest</span></p>
         </div>
         <img src="../assets/wave-bottom.svg" class="absolute -bottom-[20vh] right-0 w-[120vw] z-0" />
