@@ -31,7 +31,16 @@
             variant="outlined"
             :rules="[rules.required]"
             v-model="accountInfo.name"
+          /> 
+          <v-autocomplete
+            label="Term"
+            variant="outlined"
+            :rules="[rules.required]"
+            v-model="accountInfo.allocation_date"
+            :items="dates"
+            placeholder="Select..."
           />
+
           <v-text-field
             label="Source"
             class="w-full"
@@ -81,7 +90,7 @@ export default defineComponent({
       name: "",
       source: "",
       active: true,
-      allocation_date: new Date().toISOString(),
+      allocation_date: "",
       expiry_date: new Date().toISOString(),
       creator: useProfileStore().profile.UserID,
       point_of_contact: "",
@@ -95,6 +104,18 @@ export default defineComponent({
 
     const date = ref(new Date());
 
+    const terms = ["Spring", "Fall", "Winter"];
+    const dates = () => {
+      let arr = [];
+      let curr = new Date();
+      for (let year = 2020; year <= curr.getFullYear()+1; year++) {
+        for (let i = 0; i < 3; i++){
+          arr.push(terms[(Math.floor(curr.getMonth()/4)+i)%3] + " " + year); 
+        } 
+      }
+      return arr;
+    }
+
     return {
       closeModal,
       submit,
@@ -102,6 +123,7 @@ export default defineComponent({
       valid,
       rules,
       date,
+      dates,
     };
   },
 });
