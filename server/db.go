@@ -50,7 +50,6 @@ func (db DB) CreateAccount(ctx context.Context, acc NewAccount) error {
 	return nil
 }
 
-// @Alexander Tsarapkine
 func (db DB) GetAccount(ctx context.Context, id string) (Account, error) {
 	var acc Account
 	if err := db.QueryRowContext(ctx,
@@ -94,7 +93,7 @@ func (db DB) GetAccount(ctx context.Context, id string) (Account, error) {
 			switch t.Type {
 			case TypeReimbursement, TypeProcurement:
 				acc.Balance -= t.Amount
-				acc.Pending += t.Amount
+				acc.Pending -= t.Amount
 			}
 		}
 	}
