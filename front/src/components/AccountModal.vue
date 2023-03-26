@@ -105,16 +105,25 @@ export default defineComponent({
     const date = ref(new Date());
 
     const terms = ["Spring", "Fall", "Winter"];
-    const dates = () => {
-      let arr = [];
-      let curr = new Date();
-      for (let year = 2020; year <= curr.getFullYear()+1; year++) {
-        for (let i = 0; i < 3; i++){
-          arr.push(terms[(Math.floor(curr.getMonth()/4)+i)%3] + " " + year); 
-        } 
-      }
-      return arr;
+    // const dates = () => {
+    //   let arr = [];
+    //   let curr = new Date();
+    //   for (let year = 2020; year <= curr.getFullYear()+1; year++) {
+    //     for (let i = 0; i < 3; i++){
+    //       arr.push(terms[(Math.floor(curr.getMonth()/4)+i)%3] + " " + year); 
+    //     } 
+    //   }
+    //   return arr;
+    // }
+   
+    let dates = [];
+    let curr = new Date();
+    for (let year = 2020; year <= curr.getFullYear()+1; year++) {
+      for (let i = 0; i < 3; i++){
+        dates.push(terms[(Math.floor(curr.getMonth()/4)+i)%3] + " " + year); 
+      } 
     }
+  
 
     return {
       closeModal,
