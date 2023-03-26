@@ -40,7 +40,6 @@
             :items="dates"
             placeholder="Select..."
           />
-
           <v-text-field
             label="Source"
             class="w-full"
@@ -105,17 +104,7 @@ export default defineComponent({
     const date = ref(new Date());
 
     const terms = ["Winter", "Spring", "Fall" ];
-    // const dates = () => {
-    //   let arr = [];
-    //   let curr = new Date();
-    //   for (let year = 2020; year <= curr.getFullYear()+1; year++) {
-    //     for (let i = 0; i < 3; i++){
-    //       arr.push(terms[(Math.floor(curr.getMonth()/4)+i)%3] + " " + year); 
-    //     } 
-    //   }
-    //   return arr;
-    // }
-   
+
     let dates = [];
     let curr = new Date();
     for (let year = 2020; year <= curr.getFullYear()+1; year++) {
@@ -123,7 +112,6 @@ export default defineComponent({
         dates.push(terms[(Math.floor(curr.getMonth()/4)+i)%3] + " " + year); 
       } 
     }
-  
 
     return {
       closeModal,
