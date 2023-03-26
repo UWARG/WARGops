@@ -104,7 +104,7 @@ export default defineComponent({
 
     const date = ref(new Date());
 
-    const terms = ["Spring", "Fall", "Winter"];
+    const terms = ["Winter", "Spring", "Fall" ];
     // const dates = () => {
     //   let arr = [];
     //   let curr = new Date();
