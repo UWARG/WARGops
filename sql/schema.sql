@@ -3,6 +3,7 @@ CREATE TABLE accounts (
 	waterloo_id VARCHAR(255) NOT NULL UNIQUE,
 	name VARCHAR(255) NOT NULL UNIQUE,
 	source VARCHAR(255) NOT NULL,
+	term VARCHAR(32) NOT NULL,
 	allocation_date TIMESTAMP NOT NULL,
 	expiry_date TIMESTAMP NOT NULL,
 	active BOOLEAN NOT NULL,
@@ -13,7 +14,8 @@ CREATE TABLE accounts (
 
 CREATE TABLE transactions (
 	id VARCHAR(64) NOT NULL PRIMARY KEY,
-	name VARCHAR(255) UNIQUE, -- todo: make this not null
+	name VARCHAR(255) UNIQUE,
+	-- todo: make this not null
 	account_id VARCHAR(64) NOT NULL REFERENCES accounts (id),
 	creator VARCHAR(32) NOT NULL,
 	type INTEGER NOT NULL,

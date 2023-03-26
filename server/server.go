@@ -63,7 +63,9 @@ func (f *Server) ListAccounts(w http.ResponseWriter, r *http.Request) *Response 
 // (POST /accounts)
 func (f *Server) CreateAccount(w http.ResponseWriter, r *http.Request) *Response {
 	newAccount := NewAccount{}
+
 	if err := json.NewDecoder(r.Body).Decode(&newAccount); err != nil {
+		fmt.Println("Error: ", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return &Response{
 			body:        "Invalid JSON",

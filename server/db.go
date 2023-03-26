@@ -24,6 +24,7 @@ func (db DB) CreateAccount(ctx context.Context, acc NewAccount) error {
 		waterloo_id,
 		name,
 		source,
+		term,
 		allocation_date,
 		expiry_date,
 		active,
@@ -31,12 +32,13 @@ func (db DB) CreateAccount(ctx context.Context, acc NewAccount) error {
 		point_of_contact,
 		creation_date
 	) VALUES (
-		$1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+		$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
 	)`,
 		acc.ID,
 		acc.WaterlooID,
 		acc.Name,
 		acc.Source,
+		acc.Term,
 		acc.AllocationDate,
 		acc.ExpiryDate,
 		acc.Active,
@@ -59,6 +61,7 @@ func (db DB) GetAccount(ctx context.Context, id string) (Account, error) {
 		&acc.WaterlooID,
 		&acc.Name,
 		&acc.Source,
+		&acc.Term,
 		&acc.AllocationDate,
 		&acc.ExpiryDate,
 		&acc.Active,
@@ -123,6 +126,7 @@ func (db DB) ListAccounts(ctx context.Context) ([]Account, error) {
 			&acc.WaterlooID,
 			&acc.Name,
 			&acc.Source,
+			&acc.Term,
 			&acc.AllocationDate,
 			&acc.ExpiryDate,
 			&acc.Active,

@@ -9,7 +9,8 @@ INSERT INTO
         active,
         creator,
         point_of_contact,
-        creation_date
+        creation_date,
+        term
     )
 VALUES
     (
@@ -22,7 +23,8 @@ VALUES
         "true",
         "john doe",
         "admin@gmail.com",
-        '1998-04-16'
+        '1998-04-16',
+        "Fall 2020"
     );
 
 INSERT INTO

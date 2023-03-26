@@ -76,7 +76,9 @@
         ]
       },
       "post": {
-		"x-go-middlewares": ["authLeads"],
+        "x-go-middlewares": [
+          "authLeads"
+        ],
         "summary": "Create a new account.",
         "description": "",
         "operationId": "create_account",
@@ -138,8 +140,8 @@
             "content": {
               "application/json": {
                 "schema": {
-					"type": "$ref",
-					"$ref": "#/components/schemas/Account"
+                  "type": "$ref",
+                  "$ref": "#/components/schemas/Account"
                 }
               }
             }
@@ -154,7 +156,10 @@
     },
     "/transactions": {
       "post": {
-		"x-go-middlewares": ["auth", "authLeads"],
+        "x-go-middlewares": [
+          "auth",
+          "authLeads"
+        ],
         "summary": "Create a new transaction.",
         "description": "",
         "operationId": "create_transaction",
@@ -319,7 +324,9 @@
     },
     "/transactions/{account_id}/{transaction_id}:approve": {
       "post": {
-		"x-go-middlewares": ["authLeads"],
+        "x-go-middlewares": [
+          "authLeads"
+        ],
         "summary": "Approve a transaction.",
         "description": "",
         "operationId": "approve_transaction",
@@ -380,7 +387,9 @@
     },
     "/transactions/{account_id}/{transaction_id}:hold": {
       "post": {
-		"x-go-middlewares": ["authLeads"],
+        "x-go-middlewares": [
+          "authLeads"
+        ],
         "summary": "Hold back a transaction, and reset it to pending",
         "description": "",
         "operationId": "hold_transaction",
@@ -441,7 +450,10 @@
     },
     "/transactions/{account_id}/{transaction_id}:pay": {
       "post": {
-		"x-go-middlewares": ["auth", "authLeads"],
+        "x-go-middlewares": [
+          "auth",
+          "authLeads"
+        ],
         "summary": "Mark a transaction as paid.",
         "description": "",
         "operationId": "pay_transaction",
@@ -502,7 +514,9 @@
     },
     "/transactions/{account_id}/{transaction_id}:reject": {
       "post": {
-		"x-go-middlewares": ["authLeads"],
+        "x-go-middlewares": [
+          "authLeads"
+        ],
         "summary": "Reject a transaction.",
         "description": "",
         "operationId": "reject_transaction",
@@ -627,6 +641,9 @@
           "source": {
             "type": "string"
           },
+          "term": {
+            "type": "string"
+          },
           "allocation_date": {
             "type": "string",
             "format": "date-time"
@@ -649,6 +666,7 @@
         "required": [
           "point_of_contact",
           "creator",
+          "term",
           "active",
           "expiry_date",
           "allocation_date",
@@ -671,6 +689,9 @@
             "type": "string"
           },
           "source": {
+            "type": "string"
+          },
+          "term": {
             "type": "string"
           },
           "allocation_date": {

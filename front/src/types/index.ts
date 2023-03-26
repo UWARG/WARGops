@@ -13,7 +13,7 @@ export interface Account {
   balance: number;
   pending: number;
   used: number;
-
+  term: string;
   external: false;
 }
 
